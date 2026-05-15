@@ -3,18 +3,25 @@ import { ActionButton } from "@/src/components/action-button";
 import { AlphaCard } from "@/src/components/alpha-card";
 import { ScreenShell } from "@/src/components/screen-shell";
 import { StateMessage } from "@/src/components/state-message";
+import { env } from "@/src/config/env";
+import { useNetworkStatus } from "@/src/hooks/use-network-status";
 import { useAuth } from "@clerk/clerk-expo";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 
 export default function ReflectionScreen() {
   const { getToken } = useAuth();
+  const { isOffline } = useNetworkStatus();
   const [body, setBody] = useState("");
   const [reflectionId, setReflectionId] = useState<string | null>(null);
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   async function saveReflection() {
     if (!body.trim()) return;
+    if (isOffline) {
+      setState("error");
+      return;
+    }
     setState("saving");
     try {
       const token = await getToken();
@@ -55,15 +62,21 @@ export default function ReflectionScreen() {
         <ActionButton
           label={state === "saving" ? "Saving privately" : "Save reflection"}
           onPress={saveReflection}
-          disabled={state === "saving" || !body.trim()}
+          disabled={state === "saving" || !body.trim() || isOffline}
         />
+        {isOffline ? (
+          <StateMessage
+            title="Offline"
+            body="Keep your reflection on this screen and save when your connection returns."
+          />
+        ) : null}
         {state === "error" ? (
           <StateMessage
             title="Reflection was not saved"
             body="Check auth, network, encryption key, and backend availability. Your typed text stays on this screen."
           />
         ) : null}
-        {state === "saved" ? (
+        {state === "saved" && env.featureAlphaFeedback ? (
           <AlphaCard title="Did writing this feel useful?">
             <View className="gap-2">
               <ActionButton label="Useful" variant="secondary" onPress={() => rate("useful")} />

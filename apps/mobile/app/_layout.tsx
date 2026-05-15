@@ -1,9 +1,12 @@
 import { ClerkProvider } from "@clerk/clerk-expo";
+import { initCrashReporting } from "@/src/lib/crash-reporting";
 import { tokenCache } from "@/src/lib/token-cache";
 import { RootProviders } from "@/src/providers/root-providers";
 import { Stack } from "expo-router";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
+
+initCrashReporting();
 
 export default function RootLayout() {
   return (

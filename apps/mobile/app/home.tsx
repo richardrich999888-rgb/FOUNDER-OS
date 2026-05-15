@@ -8,6 +8,8 @@ import { ActionButton } from "@/src/components/action-button";
 import { AlphaCard } from "@/src/components/alpha-card";
 import { ScreenShell } from "@/src/components/screen-shell";
 import { StateMessage } from "@/src/components/state-message";
+import { env } from "@/src/config/env";
+import { useNetworkStatus } from "@/src/hooks/use-network-status";
 import { useAuth } from "@clerk/clerk-expo";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
@@ -16,6 +18,7 @@ import { Text, TextInput, View } from "react-native";
 
 export default function HomeScreen() {
   const { getToken } = useAuth();
+  const { isOffline } = useNetworkStatus();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<MemorySearchItem[]>([]);
   const [searchState, setSearchState] = useState<"idle" | "loading" | "error" | "done">("idle");
@@ -27,6 +30,10 @@ export default function HomeScreen() {
 
   async function runSearch() {
     if (!query.trim()) return;
+    if (isOffline) {
+      setSearchState("error");
+      return;
+    }
     setSearchState("loading");
     try {
       const response = await searchMemory(query, await getToken());
@@ -86,10 +93,16 @@ export default function HomeScreen() {
             placeholder="What pattern are you trying to understand?"
             className="rounded-lg border border-slate-200 bg-white p-3 text-base"
           />
+          {isOffline ? (
+            <StateMessage
+              title="Offline"
+              body="You can still think through the question, but memory search needs a connection."
+            />
+          ) : null}
           <ActionButton
             label={searchState === "loading" ? "Searching" : "Search memory"}
             onPress={runSearch}
-            disabled={searchState === "loading"}
+            disabled={searchState === "loading" || isOffline}
           />
           {searchState === "error" ? (
             <StateMessage
@@ -111,7 +124,7 @@ export default function HomeScreen() {
               </Text>
             </View>
           ))}
-          {results.length ? (
+          {results.length && env.featureRetrievalEvaluation ? (
             <View className="gap-2">
               <Text className="text-sm font-semibold text-ballast-ink">Did search find it?</Text>
               <ActionButton

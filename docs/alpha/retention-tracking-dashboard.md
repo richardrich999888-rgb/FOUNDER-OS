@@ -21,6 +21,8 @@ Use the backend `/api/v1/analytics/retention-summary` endpoint for per-user summ
 
 For the first 10-25 testers, a manual spreadsheet is acceptable. Do not build an admin dashboard before alpha learning requires it.
 
+The web scaffold lives at `/dashboard/alpha` and intentionally displays only metric categories until a real admin auth and aggregation layer exists.
+
 ## Weekly Review
 
 Every Friday, classify each tester:

@@ -4,10 +4,12 @@ from uuid import UUID
 from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.errors import ApiError
 from app.models.reflection import Reflection
 from app.models.weekly_insight import WeeklyInsight
 from app.schemas.weekly_insight import WeeklyInsightRead
-from app.services.ai.openai_client import synthesize_weekly_reflections
+from app.services.ai.audit import audit_ai_output
+from app.services.ai.openai_client import SYNTHESIS_MODEL, synthesize_weekly_reflections
 from app.services.security.encryption import decrypt_text, encrypt_text
 
 
@@ -26,8 +28,23 @@ async def create_weekly_insight(
     )
     reflections = list(result.scalars())
     decrypted = [decrypt_text(reflection.body_encrypted) for reflection in reversed(reflections)]
-    summary = await synthesize_weekly_reflections(decrypted)
     source_reflection_ids = [reflection.id for reflection in reflections]
+    try:
+        summary = await synthesize_weekly_reflections(decrypted)
+    except ApiError as exc:
+        await audit_ai_output(
+            session=session,
+            user_id=user_id,
+            output_type="weekly_insight",
+            provider="openai",
+            model=SYNTHESIS_MODEL,
+            status="failed",
+            source_count=len(decrypted),
+            prompt_text="\n".join(decrypted),
+            error_code=exc.code,
+        )
+        await session.commit()
+        raise
 
     insight = WeeklyInsight(
         user_id=user_id,
@@ -37,6 +54,17 @@ async def create_weekly_insight(
         source_reflection_ids=source_reflection_ids,
     )
     session.add(insight)
+    await audit_ai_output(
+        session=session,
+        user_id=user_id,
+        output_type="weekly_insight",
+        provider="openai",
+        model=SYNTHESIS_MODEL,
+        status="succeeded",
+        source_count=len(decrypted),
+        prompt_text="\n".join(decrypted),
+        output_text=summary,
+    )
     await session.commit()
     await session.refresh(insight)
 

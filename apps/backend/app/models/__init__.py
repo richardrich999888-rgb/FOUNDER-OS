@@ -1,4 +1,5 @@
 from app.models.ai_memory import AiMemory
+from app.models.ai_output_audit import AiOutputAudit
 from app.models.ai_output_quality_tag import AiOutputQualityTag
 from app.models.analytics_event import AnalyticsEvent
 from app.models.export import Export
@@ -13,6 +14,7 @@ from app.models.weekly_insight import WeeklyInsight
 
 __all__ = [
     "AiMemory",
+    "AiOutputAudit",
     "AiOutputQualityTag",
     "AnalyticsEvent",
     "Export",

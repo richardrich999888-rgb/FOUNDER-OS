@@ -3,17 +3,23 @@ import { ActionButton } from "@/src/components/action-button";
 import { AlphaCard } from "@/src/components/alpha-card";
 import { ScreenShell } from "@/src/components/screen-shell";
 import { StateMessage } from "@/src/components/state-message";
+import { useNetworkStatus } from "@/src/hooks/use-network-status";
 import { useAuth } from "@clerk/clerk-expo";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
 export default function WeeklyInsightScreen() {
   const { getToken } = useAuth();
+  const { isOffline } = useNetworkStatus();
   const [insight, setInsight] = useState<WeeklyInsight | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
 
   async function generate() {
     setState("loading");
+    if (isOffline) {
+      setState("error");
+      return;
+    }
     try {
       const token = await getToken();
       const response = await createWeeklyInsight(token);
@@ -48,8 +54,14 @@ export default function WeeklyInsightScreen() {
         <ActionButton
           label={state === "loading" ? "Synthesizing" : "Generate weekly insight"}
           onPress={generate}
-          disabled={state === "loading"}
+          disabled={state === "loading" || isOffline}
         />
+        {isOffline ? (
+          <StateMessage
+            title="Offline"
+            body="Weekly synthesis needs a connection. Your existing reflections remain private."
+          />
+        ) : null}
         {state === "error" ? (
           <StateMessage
             title="Insight unavailable"
