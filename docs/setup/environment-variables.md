@@ -19,6 +19,10 @@
 ## Backend
 
 - `DATABASE_URL`: PostgreSQL connection string.
+- `DATABASE_SSL`: use `true` for Railway public production URLs; local dev can use `false`.
+- `DATABASE_POOL_SIZE`: base async SQLAlchemy connection pool size.
+- `DATABASE_MAX_OVERFLOW`: extra temporary DB connections allowed during bursts.
+- `RUN_STARTUP_DATABASE_CHECKS`: validates DB, pgvector, and migrations on API boot.
 - `CLERK_ISSUER`: Clerk issuer URL.
 - `CLERK_JWKS_URL`: Clerk JSON Web Key Set URL.
 - `CLERK_SECRET_KEY`: Clerk backend secret.

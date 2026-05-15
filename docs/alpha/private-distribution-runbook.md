@@ -67,3 +67,11 @@ Do not invite testers until:
 - export/delete controls are visible
 - privacy policy URL is live
 - tester consent language is sent
+
+## Official Sources Checked
+
+- Expo EAS build profiles: `https://docs.expo.dev/build/eas-json/`
+- Expo EAS environment variables: `https://docs.expo.dev/eas/environment-variables`
+- Expo Sentry setup: `https://docs.expo.dev/guides/using-sentry`
+- Google Play closed testing: `https://support.google.com/googleplay/android-developer/answer/9845334`
+- Google Play Data safety: `https://support.google.com/googleplay/android-developer/answer/10787469`
