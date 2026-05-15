@@ -5,6 +5,8 @@ dist/
 build/
 coverage/
 pnpm-lock.yaml
+.ruff_cache/
+.pytest_cache/
 
 # Existing strategy/research notes are preserved as authored.
 docs/product/

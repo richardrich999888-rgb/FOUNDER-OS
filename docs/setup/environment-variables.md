@@ -25,5 +25,12 @@
 - `OPENAI_API_KEY`: OpenAI API key.
 - `ANTHROPIC_API_KEY`: optional Anthropic API key.
 - `VOICE_STORAGE_BUCKET`: future secure voice file storage bucket.
+- `FIELD_ENCRYPTION_KEY`: Fernet key used to encrypt reflection, memory, and insight text.
 
 Never commit real `.env` files.
+
+Generate the encryption key locally:
+
+```bash
+scripts/generate-field-key.sh
+```

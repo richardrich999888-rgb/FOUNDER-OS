@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     voice_storage_bucket: str = ""
     log_level: str = "INFO"
+    field_encryption_key: str = ""
     cors_origins: list[str] = ["http://localhost:3000", "http://localhost:8081"]
 
 
