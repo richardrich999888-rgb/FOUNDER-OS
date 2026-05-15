@@ -33,3 +33,13 @@ This repository is intentionally simple:
 - Mobile distribution: Expo EAS for iOS and Android builds.
 
 Read [docs/setup/local-development.md](docs/setup/local-development.md) first.
+
+## Launch Posture
+
+Ballast should launch as cognitive observability, not therapy, wellness, generic journaling, or productivity software.
+
+The first MVP success signal is not downloads or signups. It is whether a founder says:
+
+> This understood something about me.
+
+Launch execution lives in [docs/launch](docs/launch). Start with [docs/launch/README.md](docs/launch/README.md).

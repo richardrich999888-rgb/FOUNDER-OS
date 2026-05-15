@@ -23,6 +23,7 @@ web-build/
 .DS_Store
 .idea/
 .vscode/
+.ruff_cache/
 
 # logs
 *.log
