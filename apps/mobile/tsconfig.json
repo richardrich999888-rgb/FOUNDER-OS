@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["nativewind/types", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@ballast/shared": ["../../packages/shared/src/index.ts"]
+    }
+  },
+  "include": ["app", "src", "nativewind-env.d.ts"]
+}

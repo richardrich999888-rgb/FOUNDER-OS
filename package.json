@@ -1,0 +1,22 @@
+{
+  "name": "ballast",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --filter @ballast/web --filter @ballast/mobile --parallel dev",
+    "dev:mobile": "pnpm --filter @ballast/mobile dev",
+    "dev:web": "pnpm --filter @ballast/web dev",
+    "dev:backend": "cd apps/backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "lint": "pnpm --recursive lint",
+    "typecheck": "pnpm --recursive typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "setup": "bash scripts/setup.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}

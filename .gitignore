@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+.pnpm-store/
+__pycache__/
+.venv/
+*.pyc
+*.egg-info/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# builds
+.next/
+dist/
+build/
+coverage/
+.expo/
+web-build/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# logs
+*.log
+logs/

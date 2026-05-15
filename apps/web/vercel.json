@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @ballast/web build",
+  "framework": "nextjs"
+}
