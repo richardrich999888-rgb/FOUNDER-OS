@@ -5,8 +5,14 @@
     "scheme": "ballast",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f6f8f7"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ballast.app",
@@ -17,7 +23,13 @@
     },
     "android": {
       "package": "com.ballast.app",
-      "permissions": ["RECORD_AUDIO"]
+      "versionCode": 1,
+      "permissions": ["RECORD_AUDIO"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#f6f8f7"
+      },
+      "blockedPermissions": ["android.permission.READ_EXTERNAL_STORAGE"]
     },
     "plugins": ["expo-router", "expo-secure-store"],
     "experiments": {
@@ -26,9 +38,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "replace-with-eas-project-id"
       }
     }
   }

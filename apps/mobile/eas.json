@@ -12,9 +12,14 @@
       }
     },
     "preview": {
-      "distribution": "internal",
       "environment": "preview",
+      "channel": "preview",
+      "android": {
+        "buildType": "app-bundle",
+        "autoIncrement": "versionCode"
+      },
       "env": {
+        "EXPO_PUBLIC_API_URL": "https://replace-with-railway-api",
         "EXPO_PUBLIC_ALPHA_DISTRIBUTION": "testflight",
         "EXPO_PUBLIC_FEATURE_ALPHA_FEEDBACK": "true",
         "EXPO_PUBLIC_FEATURE_RETRIEVAL_EVALUATION": "true",
@@ -24,7 +29,13 @@
     "production": {
       "autoIncrement": true,
       "environment": "production",
+      "channel": "production",
+      "android": {
+        "buildType": "app-bundle",
+        "autoIncrement": "versionCode"
+      },
       "env": {
+        "EXPO_PUBLIC_API_URL": "https://replace-with-railway-api",
         "EXPO_PUBLIC_ALPHA_DISTRIBUTION": "production",
         "EXPO_PUBLIC_FEATURE_ALPHA_FEEDBACK": "true",
         "EXPO_PUBLIC_FEATURE_RETRIEVAL_EVALUATION": "true",
@@ -33,6 +44,17 @@
     }
   },
   "submit": {
-    "production": {}
+    "preview": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    },
+    "production": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft"
+      }
+    }
   }
 }
