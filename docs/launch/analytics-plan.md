@@ -56,3 +56,7 @@ Track:
 - account deletions
 
 Do not optimize onboarding conversion before the insight loop works.
+
+## Backend Event Taxonomy
+
+The backend allows only the event names defined in `apps/backend/app/schemas/analytics.py`. This prevents accidental logging of private content under ad hoc event names.

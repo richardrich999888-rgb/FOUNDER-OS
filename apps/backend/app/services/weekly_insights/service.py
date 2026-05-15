@@ -27,12 +27,14 @@ async def create_weekly_insight(
     reflections = list(result.scalars())
     decrypted = [decrypt_text(reflection.body_encrypted) for reflection in reversed(reflections)]
     summary = await synthesize_weekly_reflections(decrypted)
+    source_reflection_ids = [reflection.id for reflection in reflections]
 
     insight = WeeklyInsight(
         user_id=user_id,
         week_start=resolved_week_start,
         summary_encrypted=encrypt_text(summary),
         themes=[],
+        source_reflection_ids=source_reflection_ids,
     )
     session.add(insight)
     await session.commit()
@@ -43,6 +45,7 @@ async def create_weekly_insight(
         week_start=insight.week_start,
         summary=summary,
         themes=insight.themes,
+        source_reflection_ids=insight.source_reflection_ids,
         created_at=insight.created_at,
     )
 

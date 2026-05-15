@@ -20,3 +20,10 @@ class ReflectionRead(BaseModel):
 
 class ReflectionList(BaseModel):
     items: list[ReflectionRead]
+
+
+class ReflectionFeedbackCreate(BaseModel):
+    usefulness: str = Field(pattern="^(useful|somewhat|not_useful)$")
+    felt_generic: str | None = Field(default=None, pattern="^(yes|somewhat|no)$")
+    felt_invasive: str | None = Field(default=None, pattern="^(yes|somewhat|no)$")
+    note: str | None = Field(default=None, max_length=2000)

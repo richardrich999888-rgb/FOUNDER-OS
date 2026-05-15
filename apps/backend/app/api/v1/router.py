@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
     ai,
+    analytics,
     auth,
     exports,
     health,
@@ -19,6 +20,7 @@ api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(reflections.router, prefix="/reflections", tags=["reflections"])
 api_router.include_router(memory.router, prefix="/memory", tags=["memory"])
 api_router.include_router(ai.router, prefix="/ai", tags=["ai"])
+api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 api_router.include_router(wearable.router, prefix="/wearable", tags=["wearable"])
 api_router.include_router(exports.router, prefix="/exports", tags=["exports"])
 api_router.include_router(voice.router, prefix="/voice", tags=["voice"])

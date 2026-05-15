@@ -44,7 +44,9 @@ async def synthesize_weekly_reflections(reflections: list[str]) -> str:
                 "content": (
                     "Create a weekly insight from these reflections. Include: "
                     "1) observed pattern, 2) tension or recurring tradeoff, "
-                    "3) one useful question for next week. Keep it under 220 words.\n\n"
+                    "3) one useful question for next week. When naming a pattern, cite the "
+                    "reflection numbers that support it, for example [R2, R5]. Keep it under "
+                    "220 words.\n\n"
                     f"{prompt}"
                 ),
             },
