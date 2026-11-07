@@ -1,6 +1,7 @@
+import { eraseAccount } from '@/lib/intelligence/store';
 import { authorize } from '@/lib/security/authorize';
 import { getDb } from '@/db';
-import { accounts,aiRequests } from '@/db/schema';
+import { accounts } from '@/db/schema';
 import { and,eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { emptyState,event,seedMemories,assertOrigin } from '@/lib/twin/core';
@@ -30,7 +31,7 @@ export async function POST(request:Request){try{
  }
  if(!current)return json({error:'Start your twin first.'},409);if((body as {version?:unknown}).version!==current.version)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
  const state=structuredClone(current.state),now=new Date().toISOString();
- if(data.action==='erase'){authorize(user,'erase',user.userId);const deleted=await db.delete(accounts).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version))).returning();if(!deleted.length)return json({error:'Your data changed. Refresh before deleting.'},409);await db.delete(aiRequests).where(eq(aiRequests.userId,user.userId));return json({initialized:false,model:modelStatus()});}
+ if(data.action==='erase'){if(!await eraseAccount(user,current.version,current.generation))return json({error:'Your data changed. Refresh before deleting.'},409);return json({initialized:false,model:modelStatus()});}
  if(data.action==='memory.add'){if(state.memories.length>=300)return json({error:'The prototype supports up to 300 memories.'},400);state.memories.unshift({id:crypto.randomUUID(),text:data.text,category:data.category,source:'You told Twin',status:'confirmed',createdAt:now,updatedAt:now});event(state,'Memory added','Confirmed by you.');}
  if(data.action.startsWith('memory.')&&data.action!=='memory.add'){const item=state.memories.find(m=>m.id===('id'in data?data.id:''));if(!item)return json({error:'Memory not found.'},404);
   if(data.action==='memory.delete'){state.memories=state.memories.filter(m=>m.id!==data.id);event(state,'Memory forgotten','Removed from active memory.');}
@@ -42,6 +43,6 @@ export async function POST(request:Request){try{
  if(data.action==='document.add'){if(state.documents.length>=30)return json({error:'The prototype supports up to 30 documents.'},400);state.documents.unshift({id:crypto.randomUUID(),name:data.name,text:data.text,createdAt:now});event(state,'Document imported','Searchable text saved in your private account.');}
  if(data.action==='document.delete'){if(!state.documents.some(d=>d.id===data.id))return json({error:'Document not found.'},404);state.documents=state.documents.filter(d=>d.id!==data.id);event(state,'Document deleted','Removed from active search.');}
  if(data.action==='profile.update'){state.name=data.name;state.aiConsent=data.aiConsent;event(state,'Preferences updated',data.aiConsent?'AI context sharing allowed when a model is configured.':'AI context sharing is off.');}
- authorize(user,data.action,user.userId);const updated=await db.update(accounts).set({state:JSON.stringify(state),version:current.version+1}).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version))).returning();if(!updated.length)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
+ authorize(user,data.action,user.userId);const updated=await db.update(accounts).set({state:JSON.stringify(state),version:current.version+1}).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version),eq(accounts.generation,current.generation))).returning();if(!updated.length)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
  return json({state,version:current.version+1,initialized:true,model:modelStatus()});
  }catch(e){return fail(e);}}

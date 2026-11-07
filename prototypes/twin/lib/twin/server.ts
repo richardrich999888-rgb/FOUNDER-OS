@@ -18,7 +18,7 @@ export async function load(user: Identity) {
   authorize(user, "account.read", user?.userId);
   const userId = user.userId;
   const [row] = await getDb().select().from(accounts).where(eq(accounts.userId, userId));
-  return row ? { state: JSON.parse(row.state) as State, version: row.version } : null;
+  return row ? { state: JSON.parse(row.state) as State, version: row.version, generation: row.generation } : null;
 }
 export function modelStatus() {
   const vars = env as unknown as Record<string, string | undefined>;

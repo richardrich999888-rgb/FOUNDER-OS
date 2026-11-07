@@ -24,7 +24,7 @@ test("production bundle fails closed without verified identity configuration", a
     log: new Log(LogLevel.ERROR),
   });
   try {
-    for (const endpoint of ["/api/twin", "/api/chat"])
+    for (const endpoint of ["/api/twin", "/api/chat", "/api/intelligence"])
       for (const spoof of [false, true]) {
         const r = await mf.dispatchFetch(`https://direct-worker.test${endpoint}`, {
           method: endpoint === "/api/chat" ? "POST" : "GET",

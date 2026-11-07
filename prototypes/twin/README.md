@@ -42,6 +42,7 @@ npm run typecheck
 npm run lint
 npm run build
 npm run test:built
+npm run eval:intelligence
 ```
 
 D1 schema is in `db/schema.ts`; generated migrations are in `drizzle/`. Apply the generated migration to the local D1 binding before previewing authenticated mutations. The existing live Sites deployment is separate and was not changed by this patch. This branch intentionally denies private API access until its verified authentication adapter is configured. The old loopback mock sign-in does not authenticate this branch.
@@ -65,3 +66,13 @@ Configure `OPENAI_API_KEY` as a server-only secret and `OPENAI_MODEL` as an expl
 Voice capture, email/calendar OAuth, push scheduling, autonomous external actions, encrypted on-device storage, native store builds, backups/restore, formal security assessment and multi-user commercial onboarding remain future work. The manifest supports a standalone web-app presentation; it is not a full offline PWA. Deletion removes active database records; provider backups have separate retention. Imported documents can contain third-party personal data: users should choose only relevant material they are entitled to share.
 
 A mobile-native implementation can reuse the state types and API contract, while replacing Sites identity with an explicitly designed mobile authentication flow. It cannot simply ship the current private-web authentication as a store app.
+
+## P0-003 persistent intelligence
+
+The existing Memory screen now includes evidence capture, proposal review, explicit legacy imports, commitment states and follow-up drafts, approved preference corrections, forgetting and reusable checklists. Existing account IDs and state are preserved. Export includes both legacy state and the intelligence records. Apply **both** SQL migrations in order; `0001_persistent_intelligence.sql` includes hand-authored transactional guards and invalidation triggers.
+
+D1 is authoritative. Nothing automatically imports private accounts, activates procedures, sends communications or executes external actions. Extraction is deliberately narrow and deterministic; the app can also accept reviewed typed proposals. Every canonical fact starts proposed. Forgetting operates on a complete source and its derived records, as explained by the confirmation dialog.
+
+Read [research and architecture](../../docs/intelligence/research-and-architecture.md), [verification and blockers](../../docs/intelligence/verification-report.md), [security findings](../../docs/intelligence/security-findings.md), [benchmark report](../../docs/intelligence/benchmark-report.md), and [acceptance demonstration](../../docs/intelligence/acceptance-demo.md).
+
+P0-002 code exists in PR #2, but is not integrated: its principal, consent and receipt/deletion contracts need reconciliation with P0-001. The five new read-only tools have tested standalone grants and receipts; this does not demonstrate an actual agent run. Semantic embeddings, hosted login validation and real-user productivity measurement remain blocked/unmeasured. No deployment is authorized by this branch.

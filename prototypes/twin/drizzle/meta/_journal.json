@@ -8,6 +8,13 @@
       "when": 1794059924927,
       "tag": "0000_last_chameleon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794086701188,
+      "tag": "0001_persistent_intelligence",
+      "breakpoints": true
     }
   ]
 }
