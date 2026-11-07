@@ -367,6 +367,7 @@ test('18. route: Live AI end-to-end through the real adapter and fake provider',
     assert.equal(ok.body.sources[0].sourceId, 'memory:r-startup');
     assert.ok(ok.body.sources[0].label && ok.body.sources[0].excerpt, 'UI-compatible source shape');
     assert.equal(ok.body.execution.receipts[0].status, 'succeeded');
+    assert.equal(ok.body.execution.grounding, 'cited', 'UI label contract (replyLabel)');
     assert.equal(receiptRows(mods, requestId).length, 1);
     assert.ok(!JSON.stringify(ok.body).includes('sk-route-test'));
 

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {emptyState,memoryReply,retrieve,assertOrigin,calendarFile,event} from '../lib/twin/core.ts';
+import {emptyState,memoryReply,retrieve,assertOrigin,calendarFile,event,replyLabel} from '../lib/twin/core.ts';
 const memory=(text,status='confirmed')=>({id:crypto.randomUUID(),text,status,category:'Context',source:'You told Twin',createdAt:'2026-11-07T00:00:00Z',updatedAt:'2026-11-07T00:00:00Z'});
 test('unconfirmed memories cannot influence recall or search',()=>{const s=emptyState();s.memories=[memory('My favorite color is teal.','suggested')];assert.equal(retrieve('teal',s).length,0);assert.doesNotMatch(memoryReply('What do you know about me?',s).text,/teal/);});
 test('confirmed memory retrieval preserves provenance',()=>{const s=emptyState();s.memories=[memory('I work on a Linux laptop.')];const r=memoryReply('What computer do I use? laptop',s);assert.equal(r.mode,'memory');assert.match(r.text,/laptop/);assert.match(r.sources[0].label,/You told Twin/);});
@@ -13,3 +13,13 @@ test('same-origin requests accepted; absent or foreign origins denied',()=>{asse
 test('calendar export encodes control characters instead of injecting events',()=>{const text=calendarFile({id:'one',title:'Demo\nEND:VEVENT\nBEGIN:VEVENT, test;',due:'2026-11-09T10:00:00Z',status:'open',createdAt:''});assert.equal((text.match(/^BEGIN:VEVENT$/gm)||[]).length,1);assert.match(text,/DTSTART:20261109T100000Z/);assert.match(text,/DTEND:20261109T103000Z/);});
 test('calendar export requires a valid date',()=>{assert.throws(()=>calendarFile({id:'one',title:'Demo',due:null,status:'open',createdAt:''}));});
 test('activity history remains bounded',()=>{const s=emptyState();for(let i=0;i<310;i++)event(s,'Update');assert.equal(s.activity.length,300);});
+test('reply labels distinguish cited, fallback, abstained and unchecked AI answers',()=>{
+ const ai=(grounding)=>replyLabel({mode:'ai',execution:{grounding,answerSource:'model',toolExecutions:0}});
+ assert.equal(replyLabel({mode:'memory'}),'Memory mode');
+ assert.match(ai('cited'),/cites your saved information/);
+ assert.match(ai('evidence_fallback'),/Excerpts/);
+ assert.match(ai('no_evidence'),/Not found/);
+ assert.match(ai('not_required'),/not checked/);
+ assert.match(replyLabel({mode:'ai'}),/not checked/,'missing execution fails closed');
+ assert.match(ai('unexpected'),/not checked/,'unknown grounding fails closed');
+});

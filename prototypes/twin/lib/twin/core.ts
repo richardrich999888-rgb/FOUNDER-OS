@@ -4,7 +4,24 @@ export type Document = { id:string; name:string; text:string; createdAt:string }
 export type Event = { id:string; title:string; detail:string; at:string };
 export type State = { name:string; aiConsent:boolean; createdAt:string; memories:Memory[]; tasks:Task[]; documents:Document[]; activity:Event[] };
 export type Proposal = { type:'memory'|'task'; text:string; category?:string };
-export type Reply = { text:string; mode:'memory'|'ai'; sources:{label:string;excerpt:string}[]; proposal?:Proposal };
+/** Grounding outcome reported by the agent runtime (lib/agent/runtime.ts). */
+export type Grounding = 'cited'|'no_evidence'|'not_required'|'evidence_fallback'|'none';
+export type ReplyExecution = { grounding:Grounding; answerSource:'model'|'runtime_abstention'|'runtime_evidence_fallback'|null; toolExecutions:number };
+export type Reply = { text:string; mode:'memory'|'ai'; sources:{label:string;excerpt:string}[]; proposal?:Proposal; execution?:ReplyExecution };
+/**
+ * User-facing label for a reply. Live AI answers state whether they were checked against the
+ * user's saved information, so an uncited model answer is never presented like a cited one.
+ * Any unrecognised or missing grounding value fails closed to the "not checked" label.
+ */
+export function replyLabel(reply:Pick<Reply,'mode'|'execution'>):string{
+ if(reply.mode==='memory')return 'Memory mode';
+ switch(reply.execution?.grounding){
+  case 'cited':return 'AI answer · cites your saved information';
+  case 'evidence_fallback':return 'Excerpts from your saved information';
+  case 'no_evidence':return 'Not found in your saved information';
+  default:return 'AI answer · not checked against your saved information';
+ }
+}
 // Generic examples only. No private account data is distributed with this source.
 export const seedMemories = [
  {text:'I prefer concise answers.',category:'Preference'},

@@ -129,7 +129,7 @@ Account erasure (`action: 'erase'`) now also deletes the user's receipts and run
 ## 8. Residual risks (not mitigated in P0-002)
 
 1. **Identity trust (P0-001).** See §0. This is the blocker for any non-Sites deployment.
-2. **Uncited prose on general requests.** If the model calls no tool, nothing it says is verified. It holds no personal data in that case (none is preloaded anymore), so any personal claim is invented. The client can detect this case (`grounding:'not_required'`, `toolExecutions:0`), but the UI does not yet surface the distinction.
+2. **Uncited prose on general requests.** If the model calls no tool, nothing it says is verified. It holds no personal data in that case (none is preloaded anymore), so any personal claim is invented. Mitigated in the UI: `replyLabel()` in `lib/twin/core.ts` labels such replies "AI answer · not checked against your saved information". A missing or unknown grounding value falls back to that same label. This is disclosure, not prevention.
 3. **False action claims without a tool attempt.** The taint rule only covers claims that follow an unregistered-tool attempt.
 4. **Semantic faithfulness.** A valid citation does not prove the sentence attached to it is accurate.
 5. **Lexical retrieval quality.** The existing retriever does no stemming ("writing" does not match "write"). One of the 110 evaluation scenarios fails for this reason, and the runtime correctly abstains. This is P0-003 territory: retrieval quality, not runtime safety.
