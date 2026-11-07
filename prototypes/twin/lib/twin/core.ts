@@ -16,9 +16,27 @@ export function emptyState(name='Friend'):State {return {name,aiConsent:false,cr
 export function event(state:State,title:string,detail=''){state.activity.unshift({id:crypto.randomUUID(),title,detail,at:new Date().toISOString()});state.activity=state.activity.slice(0,300);}
 const stopWords=new Set('what which that this with from about your mine have know does the and are for you me my is to of in a an i can do please tell show'.split(' '));
 export function tokens(text:string){return [...new Set(text.toLowerCase().match(/[\p{L}\p{N}]+/gu)||[])].filter(x=>x.length>1&&!stopWords.has(x));}
+/** Retrieved record with stable provenance. `sourceId` is an opaque, non-sensitive identifier. */
+export type RetrievedRecord = { kind:'memory'|'document'; sourceId:string; label:string; excerpt:string; createdAt:string; updatedAt:string; score:number };
+/** Maximum number of passages returned by deterministic retrieval. */
+export const RETRIEVAL_LIMIT = 5;
+/** Maximum characters per document passage (documents are split on blank lines, then chunked). */
+export const PASSAGE_CHARS = 650;
+/**
+ * Deterministic lexical retrieval over confirmed memories and user-imported documents.
+ * Score = number of distinct query tokens present in the record. Ties keep corpus order
+ * (Array.prototype.sort is stable), so results are reproducible for identical state.
+ * Suggested (unconfirmed) memories are never searchable.
+ */
+export function retrieveWithProvenance(query:string,state:State):RetrievedRecord[]{
+ const words=tokens(query);
+ const memoryRecords=state.memories.filter(m=>m.status==='confirmed').map(m=>({kind:'memory' as const,sourceId:`memory:${m.id}`,label:`${m.category} · ${m.source}`,excerpt:m.text,createdAt:m.createdAt,updatedAt:m.updatedAt}));
+ const documentRecords=state.documents.flatMap(d=>d.text.split(/\n\s*\n/).flatMap(p=>p.match(new RegExp(`[\\s\\S]{1,${PASSAGE_CHARS}}`,'g'))||[]).map((excerpt,index)=>({kind:'document' as const,sourceId:`document:${d.id}#${index}`,label:d.name,excerpt,createdAt:d.createdAt,updatedAt:d.createdAt})));
+ return [...memoryRecords,...documentRecords].map(r=>({...r,score:words.filter(w=>tokens(r.excerpt).includes(w)).length})).filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,RETRIEVAL_LIMIT);
+}
+/** Backwards-compatible retrieval used by Memory mode: label and excerpt only. */
 export function retrieve(query:string,state:State){
- const words=tokens(query);const records=[...state.memories.filter(m=>m.status==='confirmed').map(m=>({label:`${m.category} · ${m.source}`,excerpt:m.text})),...state.documents.flatMap(d=>d.text.split(/\n\s*\n/).flatMap(p=>p.match(/[\s\S]{1,650}/g)||[]).map(excerpt=>({label:d.name,excerpt})))];
- return records.map(r=>({...r,score:words.filter(w=>tokens(r.excerpt).includes(w)).length})).filter(r=>r.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(({label,excerpt})=>({label,excerpt}));
+ return retrieveWithProvenance(query,state).map(({label,excerpt})=>({label,excerpt}));
 }
 export function memoryReply(input:string,state:State):Reply {
  const message=input.trim();const remember=message.match(/^(?:remember(?: that)?|save (?:this|a) memory\s*:?)[\s:]+([\s\S]+)/i);

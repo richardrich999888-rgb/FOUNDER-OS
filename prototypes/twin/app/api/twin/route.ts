@@ -1,5 +1,5 @@
 import { getDb } from '@/db';
-import { accounts,aiRequests } from '@/db/schema';
+import { accounts,aiRequests,agentExecutionReceipts,agentRuns } from '@/db/schema';
 import { and,eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { emptyState,event,seedMemories,assertOrigin } from '@/lib/twin/core';
@@ -29,7 +29,7 @@ export async function POST(request:Request){try{
  }
  if(!current)return json({error:'Start your twin first.'},409);if((body as {version?:unknown}).version!==current.version)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
  const state=structuredClone(current.state),now=new Date().toISOString();
- if(data.action==='erase'){const deleted=await db.delete(accounts).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version))).returning();if(!deleted.length)return json({error:'Your data changed. Refresh before deleting.'},409);await db.delete(aiRequests).where(eq(aiRequests.userId,user.userId));return json({initialized:false,model:modelStatus()});}
+ if(data.action==='erase'){const deleted=await db.delete(accounts).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version))).returning();if(!deleted.length)return json({error:'Your data changed. Refresh before deleting.'},409);await db.delete(aiRequests).where(eq(aiRequests.userId,user.userId));await db.delete(agentExecutionReceipts).where(eq(agentExecutionReceipts.userId,user.userId));await db.delete(agentRuns).where(eq(agentRuns.userId,user.userId));return json({initialized:false,model:modelStatus()});}
  if(data.action==='memory.add'){if(state.memories.length>=300)return json({error:'The prototype supports up to 300 memories.'},400);state.memories.unshift({id:crypto.randomUUID(),text:data.text,category:data.category,source:'You told Twin',status:'confirmed',createdAt:now,updatedAt:now});event(state,'Memory added','Confirmed by you.');}
  if(data.action.startsWith('memory.')&&data.action!=='memory.add'){const item=state.memories.find(m=>m.id===('id'in data?data.id:''));if(!item)return json({error:'Memory not found.'},404);
   if(data.action==='memory.delete'){state.memories=state.memories.filter(m=>m.id!==data.id);event(state,'Memory forgotten','Removed from active memory.');}

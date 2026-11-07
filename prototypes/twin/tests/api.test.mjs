@@ -1,17 +1,11 @@
 // Exercises the real route handlers with an in-memory D1 adapter and a simulated dispatch identity.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs/promises';
 import path from 'node:path';
-import ts from 'typescript';
-const dir=path.resolve('.sites-runtime/handler-tests');await fs.mkdir(dir,{recursive:true});
-await fs.writeFile(path.join(dir,'context.mjs'),`export let current=null; export const setUser=(id)=>current=id?{userId:id,email:'qa@example.test',displayName:'QA',fullName:null}:null; export async function getChatGPTUser(){return current;}`);
-await fs.writeFile(path.join(dir,'env.mjs'),'export const env = {};');
-await fs.writeFile(path.join(dir,'db.mjs'),`import { DatabaseSync } from 'node:sqlite';import {drizzle} from 'drizzle-orm/d1';import fs from 'node:fs';const sql=new DatabaseSync(':memory:');sql.exec(fs.readFileSync('drizzle/0000_last_chameleon.sql','utf8'));class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async all(){const stmt=sql.prepare(this.query);const results=stmt.all(...this.args);return {results,success:true,meta:{changes:sql.prepare('SELECT changes() as n').get().n}};}async run(){return this.all();}async raw(){const stmt=sql.prepare(this.query);stmt.setReturnArrays(true);return stmt.all(...this.args);}async first(column){const result=sql.prepare(this.query).get(...this.args);return column?result?.[column]:result;}}const d1={prepare:q=>new Statement(q),batch:async statements=>Promise.all(statements.map(s=>s.all()))};const db=drizzle(d1);export const getDb=()=>db;`);
-const files={'schema.mjs':'db/schema.ts','core.mjs':'lib/twin/core.ts','server.mjs':'lib/twin/server.ts','twin.mjs':'app/api/twin/route.ts','chat.mjs':'app/api/chat/route.ts'};
-const aliases={'cloudflare:workers':'./env.mjs','@/app/chatgpt-auth':'./context.mjs','@/db/schema':'./schema.mjs','@/db':'./db.mjs','@/lib/twin/core':'./core.mjs','@/lib/twin/server':'./server.mjs'};
-for(const [out,input] of Object.entries(files)){let source=await fs.readFile(input,'utf8');for(const [from,to] of Object.entries(aliases))source=source.replaceAll(`'${from}'`,`'${to}'`);await fs.writeFile(path.join(dir,out),ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText);}
-const context=await import(path.join(dir,'context.mjs')),route=await import(path.join(dir,'twin.mjs')),chat=await import(path.join(dir,'chat.mjs'));
+import { buildModules } from './support/load-modules.mjs';
+// Shared loader: transpiles real sources (now including lib/agent) and stubs only platform bindings.
+const dir=await buildModules('handler-tests');
+const context=await import(path.join(dir,'__stubs/context.mjs')),route=await import(path.join(dir,'app/api/twin/route.mjs')),chat=await import(path.join(dir,'app/api/chat/route.mjs'));
 async function call(user,payload,origin='https://twin.test',isChat=false){context.setUser(user);const req=new Request(`https://twin.test/api/${isChat?'chat':'twin'}`,payload?{method:'POST',headers:{...(origin?{Origin:origin}:{}),'Content-Type':'application/json'},body:JSON.stringify(payload)}:undefined);const r=await (isChat?chat.POST(req):payload?route.POST(req):route.GET());return {status:r.status,...await r.json()};}
 let a,b,mid;
 test('API security and persistence flow',async t=>{
