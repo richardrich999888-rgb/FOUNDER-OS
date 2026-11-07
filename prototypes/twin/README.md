@@ -14,7 +14,7 @@ Run the commands below from `prototypes/twin` using Node 24 for the test suite. 
 
 ## Implemented
 
-- Request-authenticated, per-user D1 state with optimistic concurrency checks.
+- JWT-verified Cloudflare Access identity, explicit owner authorization, per-user D1 state and optimistic concurrency checks. Deployment configuration and account mapping are required; see the security rollout notes below.
 - Four generic onboarding examples, excluded from recall until the user confirms them. Private starter facts and account data are not included in this source export.
 - Add, edit, confirm, forget and search memories with source and timestamps.
 - Import plain-text and Markdown documents (60 KB / 60,000 characters maximum; 30 documents).
@@ -33,17 +33,28 @@ Memory mode searches only confirmed memories and user-imported text. Chat messag
 
 ## Run and verify
 
-Node 22+ is supported by the starter; tests use Node 24 type stripping and built-in SQLite. API tests exercise the actual route handlers with an in-memory D1 adapter and simulated dispatch identity, not a hosted browser session.
+Node 22+ is supported by the starter; tests use Node 24 type stripping and built-in SQLite. API tests exercise the actual route handlers and JWT adapter with generated RSA keys and synthetic JWKS. A second suite runs the real handlers, Web Crypto and local D1 in workerd. These are not hosted login tests.
 
 ```sh
 npm run install:ci
-node --experimental-strip-types --test tests/core.test.mjs
-node --test tests/api.test.mjs
-node node_modules/typescript/bin/tsc --noEmit
+npm test
+npm run typecheck
+npm run lint
 npm run build
+npm run test:built
 ```
 
-D1 schema is in `db/schema.ts`; generated migrations are in `drizzle/`. Apply the generated migration to the local D1 binding before previewing authenticated mutations. Hosted deployment applies migrations through Sites. Authentication for the published private app is handled by Sites; do not expose it as a public Worker without a replacement authentication boundary.
+D1 schema is in `db/schema.ts`; generated migrations are in `drizzle/`. Apply the generated migration to the local D1 binding before previewing authenticated mutations. The existing live Sites deployment is separate and was not changed by this patch. This branch intentionally denies private API access until its verified authentication adapter is configured. The old loopback mock sign-in does not authenticate this branch.
+
+## Security configuration and rollout
+
+Read [P0-001 research and rollout](../../docs/security/p0-001-research.md), [threat model](../../docs/security/p0-001-threat-model.md), and [verification report](../../docs/security/p0-001-verification.md) before deploying.
+
+Configure server bindings `TWIN_AUTH_PROVIDER=cloudflare-access`, `TWIN_AUTH_ISSUER=https://<team>.cloudflareaccess.com` and the exact `TWIN_AUTH_AUDIENCE` assigned to the Access application. Access must protect the chosen hostname and forward its signed `Cf-Access-Jwt-Assertion`. No unsigned Sites header fallback is available. Missing configuration returns 503; missing/invalid assertions under valid configuration return 401. Sign-in links reload `/` through the configured gateway.
+
+Existing D1 IDs/state/version are preserved. New provider identities use a separate namespace. For legacy users, provide operator-verified, one-to-one links using server-only `TWIN_AUTH_ACCOUNT_LINKS`; never match by email. No live account migration, Access application setup, production deployment or identity change has been performed. Deploying before configuration/link validation would deny existing users access. Keep the current deployment intact until staged validation and explicit deployment approval.
+
+The future tool interface permits only explicitly granted reads of confirmed personal memories. It is not wired to the LLM and enables no external actions or write approvals.
 
 ## Enable live AI
 

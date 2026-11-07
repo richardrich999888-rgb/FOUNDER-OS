@@ -1,3 +1,4 @@
+import { authorize } from '@/lib/security/authorize';
 import { env } from 'cloudflare:workers';
 import { z } from 'zod';
 import { getDb } from '@/db';
@@ -10,7 +11,7 @@ export async function POST(request:Request){try{
  assertOrigin(request.headers.get('origin'),request.url);const user=await identity(),raw=await request.text();if(raw.length>10000)return json({error:'Please keep your message under 4,000 characters.'},413);
  let body:unknown;try{body=JSON.parse(raw);}catch{return json({error:'Invalid request.'},400);}
  const parsed=z.object({message:z.string().trim().min(1).max(4000),mode:z.enum(['memory','ai']),requestId:z.string().uuid()}).safeParse(body);if(!parsed.success)return json({error:'Please enter a valid message.'},400);
- const data=await load(user.userId);if(!data)return json({error:'Start your twin first.'},409);const {message,mode,requestId}=parsed.data;
+ authorize(user,parsed.data.mode==='memory'?'chat.memory':'chat.ai',user.userId);const data=await load(user);if(!data)return json({error:'Start your twin first.'},409);const {message,mode,requestId}=parsed.data;
  if(mode==='memory')return json(memoryReply(message,data.state));
  if(!modelStatus().configured)return json({error:'Live AI is not connected yet. Memory mode works now.'},503);if(!data.state.aiConsent)return json({error:'Enable AI context sharing in Settings first.'},403);
  const db=getDb(),now=Date.now(),recent=await db.select().from(aiRequests).where(and(eq(aiRequests.userId,user.userId),gte(aiRequests.createdAt,now-86400000)));
