@@ -43,3 +43,7 @@ The first MVP success signal is not downloads or signups. It is whether a founde
 > This understood something about me.
 
 Launch execution lives in [docs/launch](docs/launch). Start with [docs/launch/README.md](docs/launch/README.md).
+
+## Twin personal-agent prototype
+
+The [Twin source prototype](prototypes/twin/README.md) contains the personal-memory UI, reviewed memories and tasks, text imports, account-scoped API handlers, and tests. It is an independent Vinext/Cloudflare application outside the root workspace; run its setup commands from `prototypes/twin`. It is not yet integrated with Ballast's backend or mobile app. The source includes generic onboarding examples and no private account data or API credentials.
