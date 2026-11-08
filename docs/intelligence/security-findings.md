@@ -38,7 +38,7 @@ The source-scrub, long-query and import regressions were reproduced before remed
 
 A prompt instruction can be stored as a quoted fact after user review; this does not confer authority. The model is not trusted to enforce permissions. Provider output content safety and the accuracy of user-attested claims are not proved by these tests.
 
-## P0-002 integration blockers (not patched in its branch)
+## Original P0-002 integration blockers (source branch unchanged)
 
 At inspected `697d407` and subsequent `a90b174`, the runtime principal is a TypeScript brand constructed from `{userId}` and a consent snapshot, not a P0-001 registered/expiring Identity. Its source branch predates P0-001; raw-string corpus reads and owner/ID assumptions differ. Consent can change during a model wait; ledger/receipt and deletion lifecycles lack the new generation boundary. The P0-002 baseline also had one deadline error-classification test failure and one live-provider skip. None of those are relabelled as passes here.
 
@@ -55,3 +55,11 @@ Integrate only after preserving P0-001 modules, reconciling both 0001 migrations
 - Outcomes are explicitly user-attested; there is no independent proof that an external workflow succeeded. Learned checklists do not execute actions.
 - Existing live-AI usage counts are basic limits, not an atomic distributed spend-control system. Require a provider spend cap before enabling broad use.
 - No approval-token replay surface was introduced: approvals are same-origin authenticated mutations with current epoch and state checks. Durable cross-session delegated approvals are not implemented.
+
+## Integration remediation on 2026-11-08
+
+The original P0-002 branch remains unchanged. This P0-003 branch selectively incorporates its provider-neutral runtime with new registered P0-001 principals, tool subsets, run-wide epoch/generation/consent checks, atomic quota admission and generation-bound receipts. A timed-out non-cooperative D1 write cannot insert after its SQL deadline or account recreation. Graph evidence cites record ID/version separately from source provenance so sibling records remain distinct. Compatibility reads use the existing filtered legacy state.
+
+Independent candidate review found two additional correctness bugs: local tool timeouts were misreported as successful empty recall; valid procedures over 4000 characters were silently dropped. Both are covered by new regressions. The runtime now returns failed `TOOL_TIMEOUT` or `TOOL_RESULT_TOO_LARGE` with no answer, preserving failed receipts. The complete procedure remains available through the existing memory API. The real workerd test also exposed an upstream module-global AbortController allocation; controller creation now occurs inside requests.
+
+See [blocker-remediation.md](blocker-remediation.md) for exact test results and remaining hosted/provider risks. No new ownership or stale-context disclosure bypass was reproduced in the candidate review; this is scoped review evidence, not a guarantee of absence.

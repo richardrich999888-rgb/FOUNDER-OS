@@ -46,6 +46,27 @@ export async function createHarness(name) {
   );
   const files = {
     "schema.mjs": "db/schema.ts",
+    "agent-schema.mjs": "db/agent-schema.ts",
+    "agent-route.mjs": "app/api/agent/route.ts",
+    ...Object.fromEntries(
+      [
+        "admission",
+        "authorization",
+        "deadline",
+        "errors",
+        "evidence",
+        "executor",
+        "instructions",
+        "limits",
+        "runtime",
+        "tool-registry",
+        "model-port",
+        "principal",
+        "receipts",
+        "intelligence-tools",
+        "local-run",
+      ].map((n) => [`agent-${n}.mjs`, `lib/agent/${n}.ts`]),
+    ),
     "intelligence-schema.mjs": "db/intelligence-schema.ts",
     "intelligence-route.mjs": "app/api/intelligence/route.ts",
     ...Object.fromEntries(
@@ -150,6 +171,23 @@ export async function createHarness(name) {
   const modules = {};
   for (const name of ["model", "extraction", "retrieval", "store", "service", "agent-adapter"])
     modules[`intelligence-${name}`] = await import(path.join(dir, `intelligence-${name}.mjs`));
+  for (const name of [
+    "admission",
+    "authorization",
+    "deadline",
+    "errors",
+    "evidence",
+    "executor",
+    "instructions",
+    "limits",
+    "runtime",
+    "tool-registry",
+    "principal",
+    "receipts",
+    "intelligence-tools",
+    "local-run",
+  ])
+    modules[`agent-${name}`] = await import(path.join(dir, `agent-${name}.mjs`));
   const intelligence = await import(path.join(dir, "intelligence-route.mjs"));
   async function intelligenceCall(user, payload) {
     const req = new Request("https://twin.test/api/intelligence", {
@@ -165,10 +203,25 @@ export async function createHarness(name) {
     );
     return { status: result.status, ...(await result.json()) };
   }
+  const agentRoute = await import(path.join(dir, "agent-route.mjs"));
+  async function agentCall(user, payload, extra = {}) {
+    const req = new Request("https://twin.test/api/agent", {
+      method: "POST",
+      headers: {
+        Origin: "https://twin.test",
+        ...(user ? { "Cf-Access-Jwt-Assertion": await token(user) } : {}),
+        ...extra,
+      },
+      body: JSON.stringify(payload),
+    });
+    const result = await context.run(req.headers, () => agentRoute.POST(req));
+    return { httpStatus: result.status, ...(await result.json()) };
+  }
   for (const name of ["identity", "authorize", "tool-permissions", "audit", "server", "core"])
     modules[name] = await import(path.join(dir, `${name}.mjs`));
   return {
     call,
+    agentCall,
     intelligenceCall,
     raw,
     token,

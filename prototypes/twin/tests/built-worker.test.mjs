@@ -24,10 +24,10 @@ test("production bundle fails closed without verified identity configuration", a
     log: new Log(LogLevel.ERROR),
   });
   try {
-    for (const endpoint of ["/api/twin", "/api/chat", "/api/intelligence"])
+    for (const endpoint of ["/api/twin", "/api/chat", "/api/intelligence", "/api/agent"])
       for (const spoof of [false, true]) {
         const r = await mf.dispatchFetch(`https://direct-worker.test${endpoint}`, {
-          method: endpoint === "/api/chat" ? "POST" : "GET",
+          method: endpoint === "/api/chat" || endpoint === "/api/agent" ? "POST" : "GET",
           headers: {
             Origin: "https://direct-worker.test",
             ...(spoof
@@ -37,7 +37,7 @@ test("production bundle fails closed without verified identity configuration", a
                 }
               : {}),
           },
-          ...(endpoint === "/api/chat"
+          ...(endpoint === "/api/chat" || endpoint === "/api/agent"
             ? {
                 body: JSON.stringify({
                   message: "Read private data",

@@ -45,7 +45,7 @@ npm run test:built
 npm run eval:intelligence
 ```
 
-D1 schema is in `db/schema.ts`; generated migrations are in `drizzle/`. Apply the generated migration to the local D1 binding before previewing authenticated mutations. The existing live Sites deployment is separate and was not changed by this patch. This branch intentionally denies private API access until its verified authentication adapter is configured. The old loopback mock sign-in does not authenticate this branch.
+D1 schema is in `db/schema.ts`; generated migrations are in `drizzle/`. Apply the three versioned migrations (0000, 0001, 0002) in order to the local D1 binding before previewing authenticated mutations. The existing live Sites deployment is separate and was not changed by this patch. This branch intentionally denies private API access until its verified authentication adapter is configured. The old loopback mock sign-in does not authenticate this branch.
 
 ## Security configuration and rollout
 
@@ -55,7 +55,7 @@ Configure server bindings `TWIN_AUTH_PROVIDER=cloudflare-access`, `TWIN_AUTH_ISS
 
 Existing D1 IDs/state/version are preserved. New provider identities use a separate namespace. For legacy users, provide operator-verified, one-to-one links using server-only `TWIN_AUTH_ACCOUNT_LINKS`; never match by email. No live account migration, Access application setup, production deployment or identity change has been performed. Deploying before configuration/link validation would deny existing users access. Keep the current deployment intact until staged validation and explicit deployment approval.
 
-The future tool interface permits only explicitly granted reads of confirmed personal memories. It is not wired to the LLM and enables no external actions or write approvals.
+The integrated local agent interface permits only explicitly granted read-only memory tools. It is not wired to a live model and enables no external actions or write approvals.
 
 ## Enable live AI
 
@@ -69,10 +69,12 @@ A mobile-native implementation can reuse the state types and API contract, while
 
 ## P0-003 persistent intelligence
 
-The existing Memory screen now includes evidence capture, proposal review, explicit legacy imports, commitment states and follow-up drafts, approved preference corrections, forgetting and reusable checklists. Existing account IDs and state are preserved. Export includes both legacy state and the intelligence records. Apply **both** SQL migrations in order; `0001_persistent_intelligence.sql` includes hand-authored transactional guards and invalidation triggers.
+The existing Memory screen now includes evidence capture, proposal review, explicit legacy imports, commitment states and follow-up drafts, approved preference corrections, forgetting and reusable checklists. Existing account IDs and state are preserved. Export includes both legacy state and the intelligence records. Apply **all three** SQL migrations in order: `0000`, `0001`, then `0002_verified_agent_runtime.sql`; `0001_persistent_intelligence.sql` includes hand-authored transactional guards and invalidation triggers.
 
 D1 is authoritative. Nothing automatically imports private accounts, activates procedures, sends communications or executes external actions. Extraction is deliberately narrow and deterministic; the app can also accept reviewed typed proposals. Every canonical fact starts proposed. Forgetting operates on a complete source and its derived records, as explained by the confirmation dialog.
 
 Read [research and architecture](../../docs/intelligence/research-and-architecture.md), [verification and blockers](../../docs/intelligence/verification-report.md), [security findings](../../docs/intelligence/security-findings.md), [benchmark report](../../docs/intelligence/benchmark-report.md), and [acceptance demonstration](../../docs/intelligence/acceptance-demo.md).
 
-P0-002 code exists in PR #2, but is not integrated: its principal, consent and receipt/deletion contracts need reconciliation with P0-001. The five new read-only tools have tested standalone grants and receipts; this does not demonstrate an actual agent run. Semantic embeddings, hosted login validation and real-user productivity measurement remain blocked/unmeasured. No deployment is authorized by this branch.
+Selected provider-neutral P0-002 runtime modules are now integrated through P0-001 verified identities, current account generation/epoch checks and D1 execution receipts. `POST /api/agent` runs one explicitly selected read-only tool with a deterministic local planner; it makes no model call. All five tools run through the real executor. The existing UI and `/api/chat` provider path are unchanged. Live-model orchestration still requires secure provider setup, adapter wiring and a real smoke test.
+
+See [blocker remediation](../../docs/intelligence/blocker-remediation.md) for current evidence, the local API contract and exact remaining prerequisites. Hosted login validation and real-user productivity measurement remain unverified. Semantic embeddings are optional and deferred; lexical/structured retrieval is usable without them. No deployment is authorized by this branch.

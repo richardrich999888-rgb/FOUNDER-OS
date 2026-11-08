@@ -51,7 +51,7 @@ export async function GET() {
         generation: undefined,
         consolidation: r.confirmation === "proposed" ? consolidation(s, r) : undefined,
       })),
-      runtimeIntegration: "blocked-p0-002-review",
+      runtimeIntegration: "local-runtime-verified-provider-pending",
     });
   } catch (error) {
     return errorResponse(error);

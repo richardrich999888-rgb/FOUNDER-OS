@@ -23,9 +23,11 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
   await fs.writeFile(
     entry,
     `import {context} from './context.mjs';
+    import * as agent from '@/app/api/agent/route';
     import * as intelligence from '@/app/api/intelligence/route';
     import * as twin from '@/app/api/twin/route';import * as chat from '@/app/api/chat/route';
     export default {fetch(request){return context.run(request.headers,()=>
+      new URL(request.url).pathname==='/api/agent'?agent.POST(request):
       new URL(request.url).pathname==='/api/intelligence'?(request.method==='POST'?intelligence.POST(request):intelligence.GET()):
       new URL(request.url).pathname==='/api/chat'?chat.POST(request):
       request.method==='POST'?twin.POST(request):twin.GET());}};`,
@@ -81,7 +83,21 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
             "INSERT INTO twin_accounts(user_id,state,version) VALUES('migration-control','{\"synthetic\":true}',7)",
           )
           .run();
+      if (file === "0001_persistent_intelligence.sql")
+        await db
+          .prepare(
+            "INSERT INTO twin_intelligence_records(owner,generation,id,kind,source_id,content,quote,created_at,updated_at,confirmation,validity,valid_from,privacy,version) SELECT owner,generation,'11111111-1111-4111-8111-111111111111','source','11111111-1111-4111-8111-111111111111','{\"upgradeControl\":true}','','2026-01-01','2026-01-01','proposed','valid','2026-01-01','private',0 FROM twin_intelligence_heads WHERE owner='migration-control'",
+          )
+          .run();
     }
+    assert.equal(
+      (
+        await db
+          .prepare("SELECT content FROM twin_intelligence_records WHERE owner='migration-control'")
+          .first()
+      ).content,
+      '{"upgradeControl":true}',
+    );
     async function token(subject, claims = {}, signer = pair.privateKey) {
       const now = Math.floor(Date.now() / 1000);
       return new SignJWT({
@@ -195,6 +211,37 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       200,
     );
     graph = await intel(jwtA);
+    const runId = crypto.randomUUID();
+    const agentResult = await request(
+      jwtA,
+      { requestId: runId, tool: "search_personal_memory", args: { query: "answers" } },
+      {},
+      "agent",
+    );
+    assert.equal(agentResult.status, 200, JSON.stringify(agentResult));
+    assert.equal(agentResult.execution.receipts[0].status, "succeeded");
+    assert.equal(agentResult.execution.planner, "deterministic-local");
+    assert.equal(
+      (await db.prepare("SELECT status FROM agent_runs WHERE request_id=?").bind(runId).first())
+        .status,
+      "completed",
+    );
+    assert.equal(
+      (
+        await request(
+          null,
+          {
+            requestId: crypto.randomUUID(),
+            tool: "search_personal_memory",
+            args: { query: "answers" },
+          },
+          { "oai-authenticated-user-id": "a" },
+          "agent",
+        )
+      ).status,
+      401,
+    );
+
     const other = await intel(jwtB);
     assert.equal(
       (
@@ -292,6 +339,11 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       200,
     );
     assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM twin_accounts").first()).n, 0);
+    assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM agent_runs").first()).n, 0);
+    assert.equal(
+      (await db.prepare("SELECT COUNT(*) AS n FROM agent_execution_receipts").first()).n,
+      0,
+    );
     assert.ok(networkCalls >= 1);
   } finally {
     await mf.dispose();

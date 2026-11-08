@@ -1,6 +1,6 @@
 # P0-003 benchmark report
 
-Run: 2026-11-07T21:52:41.512Z. Fixture SHA-256: `21760f6a4b0175e9e9fd2c7b9ed517553703912eab97a6e651c38e9d37177424`.
+Run: 2026-11-08T03:56:29.435Z. Fixture SHA-256: `21760f6a4b0175e9e9fd2c7b9ed517553703912eab97a6e651c38e9d37177424`.
 
 200 synthetic scenarios; 101 development and 99 same-author held-out scenarios. All 200 passed. Fixtures were frozen before first execution, hash-checked on every run, and were not changed to improve scores. The holdout was rerun after security fixes; it is no longer an unseen external validation set.
 
@@ -10,12 +10,12 @@ Run: 2026-11-07T21:52:41.512Z. Fixture SHA-256: `21760f6a4b0175e9e9fd2c7b9ed5175
 
 | Method                              | Recall@5       | MRR          | Local ranking p50 / p95                     |
 | ----------------------------------- | -------------- | ------------ | ------------------------------------------- |
-| Existing Twin keyword               | 100.0% (80/80) | 0.750        | 0.432 / 1.053 ms                            |
-| Structured D1 snapshot              | 100.0% (80/80) | 1.000        | 0.488 / 1.980 ms                            |
-| Evidence-gated lexical + structured | 100.0% (80/80) | 1.000        | 0.394 / 1.348 ms                            |
+| Existing Twin keyword               | 100.0% (80/80) | 0.750        | 0.741 / 1.294 ms                            |
+| Structured D1 snapshot              | 100.0% (80/80) | 1.000        | 0.719 / 1.720 ms                            |
+| Evidence-gated lexical + structured | 100.0% (80/80) | 1.000        | 0.657 / 1.661 ms                            |
 | Optional semantic embeddings        | Not measured   | Not measured | No authorized Workers AI/Vectorize bindings |
 
-Hybrid including actual owner-scoped SQL hydration: p50 2.368 ms, p95 4.872 ms, n=80. These are Node v24.22.1 in-memory SQLite measurements, not deployed Cloudflare network/CPU latency. Actual workerd/D1 transactional behavior is tested separately.
+Hybrid including actual owner-scoped SQL hydration: p50 3.468 ms, p95 5.263 ms, n=80. These are Node v24.22.1 in-memory SQLite measurements, not deployed Cloudflare network/CPU latency. Actual workerd/D1 transactional behavior is tested separately.
 
 Baseline Recall@5 also reaches 100%; this corpus demonstrates better ordering (MRR), not an improvement in recall. It is deliberately small and lexical overlap is high. No broad semantic advantage is claimed.
 
@@ -49,3 +49,5 @@ Run `npm run eval:intelligence` in `prototypes/twin` to verify the frozen fixtur
 ## Acceptance status
 
 The local synthetic targets for Recall@5 ≥90%, temporal accuracy ≥95%, extraction precision ≥95%, and zero observed critical disclosure/deletion/activation errors pass within this suite. Semantic comparison, independent held-out evaluation, live provider performance, deployed latency/cost and real-user workflow gains remain not measured. P0-003 is a locally verified private-alpha candidate, not a fully validated commercial intelligence engine.
+
+The 2026-11-08 rerun occurred alongside local build/check processes; timing variation is not an optimization claim. Agent runtime overhead is not included in these retrieval timings.
