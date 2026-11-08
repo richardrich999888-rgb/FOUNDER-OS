@@ -201,6 +201,12 @@ test('observation rendering neutralizes citation tokens in stored content', asyn
   assert.equal(result.grounding, 'cited', 'quoting the evidence no longer trips the fabricated-citation check');
 });
 
+test('personal-reference rule: triggers on self-reference, not on imperatives or general questions', async () => {
+  const { requiresPersonalLookup } = await import(`${mods.dir}/lib/agent/intent.mjs`);
+  for (const m of ['What is my passport?', 'Do I have any allergy?', 'Which marathon am I training for?', 'What did I say about a podcast?', 'Remember my sister?', 'What do you know about me?']) assert.ok(requiresPersonalLookup(m), m);
+  for (const m of ['What is a cap table?', 'Help me write a cover letter.', 'Explain compound interest.', 'Draft a polite follow-up email to an investor.']) assert.ok(!requiresPersonalLookup(m), m);
+});
+
 test('authorization policy is deny-by-default and ordered', () => {
   const tool = mods.tool.createSearchPersonalMemoryTool({ loadCorpus: async () => null });
   const base = { principal: principalFor(mods, 'alice'), tool, executionsUsed: 0, maxExecutions: 5, now: 0, deadlineAt: 10 };
@@ -234,6 +240,7 @@ test('DEFINITION OF DONE: "JARVIS, what do you remember about my startup plans?"
   assert.equal(result.receipts[0].tool, 'search_personal_memory');
   assert.equal(result.receipts[0].authorization, 'allow');
   assert.equal(result.receipts[0].status, 'succeeded');
+  assert.equal(result.receipts[0].initiator, 'model', 'the model selected the tool itself');
   // 5–6. grounded answer citing confirmed memories only
   assert.equal(result.answerSource, 'model');
   assert.equal(result.grounding, 'cited');
@@ -244,7 +251,7 @@ test('DEFINITION OF DONE: "JARVIS, what do you remember about my startup plans?"
   assert.ok(result.sources.every((s) => s.createdAt && s.citation));
   // Second model call saw the observation; first call allowed tools; total 2 iterations.
   assert.equal(result.iterations, 2);
-  assert.equal(model.calls[0].toolChoice, 'auto');
+  assert.equal(model.calls[0].toolChoice, 'required', 'personal question: lookup is required');
   // 7. receipts persisted
   const rows = receiptRows(mods, requestId);
   assert.equal(rows.length, 1);
@@ -285,8 +292,11 @@ test('general request needs no tool and returns no sources', async () => {
 test('document evidence carries stable passage identifiers', async () => {
   const d = deps(mods, { model: policyModel() });
   const result = await runAgent({ principal: principalFor(mods, 'alice'), requestId: newRequestId(), message: 'What are my investor update plans?' }, d);
-  assert.deepEqual(result.sources.map((s) => s.sourceId), ['document:d-plan#1']);
+  // Top-ranked source is the document passage, with a stable "document:<id>#<passage>" id.
+  // (Stemming also matches alice's own "startup plan" memory; ownership is asserted below.)
+  assert.equal(result.sources[0].sourceId, 'document:d-plan#1');
   assert.equal(result.sources[0].kind, 'document');
+  assert.ok(result.sources.every((s) => ['document:d-plan#1', 'document:d-plan#0', 'memory:m-startup', 'memory:m-cofounder'].includes(s.sourceId)));
 });
 
 test('uncited answer despite evidence falls back to verified evidence only', async () => {

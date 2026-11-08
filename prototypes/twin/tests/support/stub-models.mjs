@@ -25,7 +25,7 @@ export function policyModel() {
       calls.push(request);
       const user = request.items.find((i) => i.type === 'user_message').text;
       const observation = lastObservation(request.items);
-      if (!observation && request.toolChoice === 'auto' && PERSONAL.test(user)) {
+      if (!observation && request.toolChoice !== 'none' && PERSONAL.test(user)) {
         return { text: '', toolCalls: [{ callId: `call_${calls.length}`, name: 'search_personal_memory', argumentsJson: JSON.stringify({ query: user }) }], usage: usageFor(request, ''), truncated: false };
       }
       let text;

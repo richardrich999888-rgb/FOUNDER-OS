@@ -40,7 +40,8 @@ test('3. cross-user isolation: exact match on another user\'s memory returns no 
   const model = policyModel();
   const { result, d } = await run(model, 'What do I know about Zephyrine Robotics acquire plans?');
   assert.deepEqual(d.corpus.log, ['alice']);
-  assert.equal(result.grounding, 'no_evidence');
+  // Stemming lets "plans" match alice's OWN "startup plan" memory; isolation means nothing of bob's.
+  assert.ok(result.sources.every((s) => s.sourceId.startsWith('memory:a-') || s.sourceId.startsWith('document:a-')));
   assert.ok(!everything(result, model).includes('Zephyrine'.repeat(1) + ' Robotics for'), 'bob text absent');
   assert.ok(!everything(result, model).includes('nine million'));
 });
@@ -111,8 +112,9 @@ test('6b. taint: a model that tried an unregistered tool cannot assert an action
 });
 
 test('7. fabricated tool results: citations without a tool call are rejected', async () => {
+  // Non-personal message, so no runtime lookup happens and no evidence exists (8b covers the personal path).
   const model = scriptedModel([{ text: 'I searched your memory and you plan to sell the company [E1].' }]);
-  const { result, requestId } = await run(model, 'my plans');
+  const { result, requestId } = await run(model, 'Summarise the plan.');
   assert.equal(result.status, 'failed');
   assert.equal(result.errorCode, 'GROUNDING_FABRICATED_CITATION');
   assert.equal(result.answer, null);
@@ -122,8 +124,9 @@ test('7. fabricated tool results: citations without a tool call are rejected', a
 });
 
 test('7b. uncited claim of a search with no tool call is visibly marked as not tool-backed', async () => {
+  // Non-personal message (no runtime lookup). For personal messages the claim is discarded (8b).
   const model = scriptedModel([{ text: 'I looked through your memories: you love sailing.' }]);
-  const { result } = await run(model, 'what do I love');
+  const { result } = await run(model, 'Tell me a fun fact.');
   assert.equal(result.toolExecutions, 0);
   assert.deepEqual(result.receipts, []);
   assert.deepEqual(result.sources, []);
@@ -135,6 +138,44 @@ test('8. missing evidence: model prose after no_evidence is replaced by abstenti
   const { result } = await run(model, 'my passport number?');
   assert.equal(result.answerSource, 'runtime_abstention');
   assert.doesNotMatch(result.answer, /X1234567/);
+});
+
+test('8b. enforced lookup: a personal question answered without a tool call triggers a runtime lookup', async () => {
+  const reader = d1CorpusReader(mods);
+  const model = scriptedModel([{ text: "I couldn't find anything about that in your saved memories." }, (req) => ({ text: `Plan [${JSON.parse(req.items.at(-1).output).evidence[0].citation}]` })]);
+  const { result, requestId } = await run(model, 'What is my startup plan?', { reader });
+  assert.equal(model.calls[0].toolChoice, 'required');
+  assert.deepEqual(reader.log, ['alice'], 'lookup scoped to the principal');
+  assert.equal(result.receipts[0].initiator, 'runtime');
+  assert.equal(receiptRows(mods, requestId)[0].initiator, 'runtime', 'auditor can tell the model did not choose it');
+  assert.equal(JSON.parse(model.calls[1].items.find((i) => i.type === 'tool_call').argumentsJson).query, 'What is my startup plan?', "user's own words, not model text");
+  assert.equal(result.grounding, 'cited');
+  assert.doesNotMatch(result.answer, /couldn't find/, 'false search claim discarded');
+});
+
+test('8c. enforced lookup with no evidence ends in runtime abstention, not model prose', async () => {
+  const model = scriptedModel([{ text: 'I checked your memories: nothing about tattoos.' }, { text: 'You have a dragon tattoo.' }]);
+  const { result } = await run(model, 'What is my tattoo?');
+  assert.equal(result.receipts[0].initiator, 'runtime');
+  assert.equal(result.answerSource, 'runtime_abstention');
+  assert.doesNotMatch(result.answer, /dragon|checked/);
+});
+
+test('8d. non-personal messages are not forced; the model keeps tool choice', async () => {
+  const model = scriptedModel([{ text: 'A cap table lists company ownership.' }]);
+  const { result } = await run(model, 'What is a cap table?');
+  assert.equal(model.calls[0].toolChoice, 'auto');
+  assert.deepEqual(result.receipts, []);
+  assert.equal(result.grounding, 'not_required');
+});
+
+test('8e. enforced lookup obeys authorization: no scope, no read', async () => {
+  const reader = d1CorpusReader(mods);
+  const { result } = await run(scriptedModel([{ text: 'x' }, { text: 'y' }]), 'What is my plan?', { reader, consent: false });
+  assert.deepEqual(reader.log, []);
+  assert.equal(result.receipts[0].initiator, 'runtime');
+  assert.equal(result.receipts[0].errorCode, 'MISSING_SCOPE');
+  assert.equal(result.answerSource, 'runtime_abstention');
 });
 
 test('9. model provider timeout is bounded by the run deadline', async () => {
@@ -182,7 +223,7 @@ test('11. maximum iteration enforcement: 3 model calls, final one with tools dis
   const model = scriptedModel([(req, i) => ({ toolCalls: [call('search_personal_memory', { query: 'startup' }, `c${i}`)] })]);
   const { result, requestId } = await run(model, 'my startup');
   assert.equal(model.calls.length, 3);
-  assert.deepEqual(model.calls.map((c) => c.toolChoice), ['auto', 'auto', 'none']);
+  assert.deepEqual(model.calls.map((c) => c.toolChoice), ['required', 'auto', 'none']);
   assert.equal(result.iterations, 3);
   assert.equal(result.toolExecutions, 2);
   assert.equal(result.receipts.at(-1).errorCode, 'ITERATION_LIMIT_EXCEEDED');

@@ -64,6 +64,7 @@ export function createExecutionBudget(): ExecutionBudget {
 
 export type CallOutcome = Readonly<{
   callId: string;
+  initiator: 'model' | 'runtime';
   executionId: string;
   toolId: string;
   authorization: AuthorizationDecision;
@@ -105,11 +106,12 @@ async function deny(call: ModelToolCall, denial: Denial, ctx: ExecutorContext, b
     userId: ctx.principal.userId,
     callIndex,
     toolId: denial.toolId,
+    initiator: call.initiator ?? 'model',
     startedAt: now,
     completedAt: now,
     errorCode: denial.code,
   }));
-  return { callId: call.callId, executionId, toolId: denial.toolId, authorization: 'deny', status: 'denied', errorCode: denial.code, resultStatus: null, evidence: [] };
+  return { callId: call.callId, initiator: call.initiator ?? 'model', executionId, toolId: denial.toolId, authorization: 'deny', status: 'denied', errorCode: denial.code, resultStatus: null, evidence: [] };
 }
 
 /** Record a call the runtime refuses without evaluating it (e.g. iteration limit reached). */
@@ -140,7 +142,7 @@ export async function executeToolCall(call: ModelToolCall, ctx: ExecutorContext,
   budget.executionsUsed += 1;
   const executionId = ctx.newId();
   await boundedReceiptWrite(ctx.clock, ctx.auditDeadlineAt, () =>
-    ctx.receipts.begin({ executionId, requestId: ctx.requestId, userId: ctx.principal.userId, callIndex, toolId: tool.name, startedAt: ctx.clock.now() }),
+    ctx.receipts.begin({ executionId, requestId: ctx.requestId, userId: ctx.principal.userId, callIndex, toolId: tool.name, initiator: call.initiator ?? 'model', startedAt: ctx.clock.now() }),
   );
 
   let status: CallOutcome['status'] = 'succeeded';
@@ -165,5 +167,5 @@ export async function executeToolCall(call: ModelToolCall, ctx: ExecutorContext,
   await boundedReceiptWrite(ctx.clock, ctx.auditDeadlineAt, () =>
     ctx.receipts.complete(executionId, { status, completedAt: ctx.clock.now(), errorCode, sourceIds: evidence.map((e) => e.sourceId) }),
   );
-  return { callId: call.callId, executionId, toolId: tool.name, authorization: 'allow', status, errorCode, resultStatus, evidence };
+  return { callId: call.callId, initiator: call.initiator ?? 'model', executionId, toolId: tool.name, authorization: 'allow', status, errorCode, resultStatus, evidence };
 }

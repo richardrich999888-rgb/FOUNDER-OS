@@ -71,7 +71,7 @@ export async function runEvaluation(mods, { modelFor = (s) => adversary(s.model,
     const reader = d1CorpusReader(mods);
     const model = modelFor(s);
     const requestId = `eval-${s.id}`;
-    const deps = { model, registry: mods.registry.createToolRegistry([mods.tool.createSearchPersonalMemoryTool(reader)]), receipts: mods.receipts.createD1ReceiptStore(mods.db.getDb()), clock: mods.deadline.systemClock, newId: sequentialIds('eeeeeeee'), limits: L };
+    const deps = { model, registry: mods.registry.createToolRegistry([mods.tool.createSearchPersonalMemoryTool(reader)]), receipts: mods.receipts.createD1ReceiptStore(mods.db.getDb()), clock: mods.deadline.systemClock, newId: sequentialIds('eeeeeeee'), limits: L, personalLookupTool: 'search_personal_memory' };
     const t0 = performance.now();
     const r = await mods.runtime.runAgent({ principal: principalFor(mods, s.userId), requestId, message: s.message }, deps);
     const latencyMs = performance.now() - t0;

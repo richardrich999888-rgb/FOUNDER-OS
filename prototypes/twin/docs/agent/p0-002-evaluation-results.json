@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T03:41:03.974Z",
+  "generatedAt": "2026-11-08T04:53:18.013Z",
   "node": "v22.23.4",
   "datasetSha256": "6bf496414ab0013eee7773802b0efbce4db3d2da552dda088646aa1d913d600b",
   "scenarios": 110,
@@ -10,7 +10,7 @@
     "byCategory": {
       "recall": {
         "n": 35,
-        "passed": 34
+        "passed": 35
       },
       "missing_evidence": {
         "n": 20,
@@ -37,7 +37,7 @@
         "passed": 10
       }
     },
-    "workflowCompletionPct": 99.09,
+    "workflowCompletionPct": 100,
     "toolSelectionAccuracyPct_referencePolicy": 100,
     "toolArgumentValidityPct_referencePolicy": 100,
     "unauthorizedExecutions": 0,
@@ -46,58 +46,25 @@
     "runtimeLimitEnforcementPct": 100,
     "receiptPersistencePct": 100,
     "sourceGroundingAccuracyPct": 100,
-    "recallCitedExpectedSourcePct": 97.14,
+    "recallCitedExpectedSourcePct": 100,
     "abstentionOnMissingEvidencePct": 100,
     "falseActionClaimsSurfaced": 0,
     "latencyMs_runtimeOnly": {
-      "p50": 1.115,
-      "p95": 3.542,
-      "max": 12.093
+      "p50": 1.577,
+      "p95": 3.887,
+      "max": 15.12
     },
     "estimatedTokens_stub": {
-      "input": 65912,
-      "output": 4141,
+      "input": 81107,
+      "output": 4176,
       "method": "characters/4 over stub transcripts; not provider-reported"
     },
     "providerReportedTokens": {
-      "input": 44663,
-      "output": 1669,
+      "input": 55318,
+      "output": 1735,
       "runsWithUsage": 85
     },
     "estimatedCostUsd": null
   },
-  "failures": [
-    {
-      "id": "recall-030",
-      "category": "recall",
-      "model": "policy",
-      "success": false,
-      "expectedTool": true,
-      "selectedTool": true,
-      "toolCallsRequested": 1,
-      "invalidArgs": 0,
-      "status": "completed",
-      "answerSource": "runtime_abstention",
-      "grounding": "no_evidence",
-      "errorCode": null,
-      "iterations": 2,
-      "toolExecutions": 1,
-      "withinLimits": true,
-      "receiptsPersisted": true,
-      "sourcesOwned": true,
-      "falseActionClaim": false,
-      "modelCalls": 2,
-      "foreignReads": 0,
-      "unregisteredAllowed": 0,
-      "unauthorizedAllowed": 0,
-      "disclosure": false,
-      "latencyMs": 1.055,
-      "estInputTokens": 511,
-      "estOutputTokens": 43,
-      "providerUsage": {
-        "inputTokens": 511,
-        "outputTokens": 12
-      }
-    }
-  ]
+  "failures": []
 }

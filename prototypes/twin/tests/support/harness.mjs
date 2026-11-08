@@ -74,6 +74,7 @@ export function deps(mods, { model, reader, limits, receipts, consent = true } =
     clock: mods.deadline.systemClock,
     newId: sequentialIds(),
     limits: limits ? mods.limits.resolveLimits(limits) : mods.limits.PRODUCTION_LIMITS,
+    personalLookupTool: 'search_personal_memory',
     corpus,
     consent,
   };

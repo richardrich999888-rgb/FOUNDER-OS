@@ -23,12 +23,16 @@ export type AnswerSource = 'model' | 'runtime_abstention' | 'runtime_evidence_fa
 /** Sentinel stored instead of a model-supplied name that is not in the registry. */
 export const UNREGISTERED_TOOL_ID = 'unregistered';
 
+export type CallInitiator = 'model' | 'runtime';
+
 export type ReceiptStart = Readonly<{
   executionId: string;
   requestId: string;
   userId: string;
   callIndex: number;
   toolId: string;
+  /** 'runtime' marks a lookup the runtime enforced, not one the model selected. */
+  initiator: CallInitiator;
   startedAt: number;
 }>;
 
@@ -134,6 +138,7 @@ export function createD1ReceiptStore(db: Db): ReceiptStore {
           userId: r.userId,
           callIndex: r.callIndex,
           toolId: r.toolId,
+          initiator: r.initiator,
           authorization: 'deny',
           status: 'denied',
           startedAt: r.startedAt,

@@ -25,12 +25,21 @@ export type ModelRequest = Readonly<{
   instructions: string;
   items: readonly ConversationItem[];
   tools: readonly ToolSpec[];
-  /** 'none' forbids tool selection (used on the final permitted iteration). */
-  toolChoice: 'auto' | 'none';
+  /**
+   * 'none' forbids tool selection (final permitted iteration). 'required' asks the provider to
+   * call a tool; it is a hint only — the runtime enforces the lookup itself if it is ignored.
+   */
+  toolChoice: 'auto' | 'none' | 'required';
   maxOutputTokens: number;
 }>;
 
-export type ModelToolCall = Readonly<{ callId: string; name: string; argumentsJson: string }>;
+export type ModelToolCall = Readonly<{
+  callId: string;
+  name: string;
+  argumentsJson: string;
+  /** Who requested the call. Absent means the model. 'runtime' = enforced lookup. */
+  initiator?: 'model' | 'runtime';
+}>;
 export type ModelUsage = Readonly<{ inputTokens: number; outputTokens: number }>;
 
 export type ModelTurn = Readonly<{

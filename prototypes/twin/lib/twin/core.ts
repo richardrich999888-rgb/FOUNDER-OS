@@ -32,7 +32,21 @@ export const seedMemories = [
 export function emptyState(name='Friend'):State {return {name,aiConsent:false,createdAt:new Date().toISOString(),memories:[],tasks:[],documents:[],activity:[]};}
 export function event(state:State,title:string,detail=''){state.activity.unshift({id:crypto.randomUUID(),title,detail,at:new Date().toISOString()});state.activity=state.activity.slice(0,300);}
 const stopWords=new Set('what which that this with from about your mine have know does the and are for you me my is to of in a an i can do please tell show'.split(' '));
-export function tokens(text:string){return [...new Set(text.toLowerCase().match(/[\p{L}\p{N}]+/gu)||[])].filter(x=>x.length>1&&!stopWords.has(x));}
+/**
+ * Light, deterministic suffix stripping so inflections match ("meetings"/"meeting"/"meet",
+ * "preference"/"prefer", "writing"/"write"). Applied identically to queries and records, so
+ * consistency matters more than linguistic accuracy. First matching rule wins; a rule applies
+ * only if the remaining stem keeps >= MIN_STEM characters. Not a full Porter stemmer.
+ */
+const MIN_STEM=3;
+const SUFFIX_RULES:[string,string][]=[['ings',''],['ing',''],['ences',''],['ence',''],['ances',''],['ance',''],['ies','y'],['ied','y'],['ly',''],['es',''],['ed',''],['s','']];
+export function stem(word:string){
+ let w=word;
+ for(const [suffix,replacement] of SUFFIX_RULES){if(w.endsWith(suffix)&&w.length-suffix.length>=MIN_STEM){w=w.slice(0,-suffix.length)+replacement;break;}}
+ if(w.length>MIN_STEM&&w.endsWith('e'))w=w.slice(0,-1);
+ return w;
+}
+export function tokens(text:string){return [...new Set((text.toLowerCase().match(/[\p{L}\p{N}]+/gu)||[]).filter(x=>x.length>1&&!stopWords.has(x)).map(stem))];}
 /** Retrieved record with stable provenance. `sourceId` is an opaque, non-sensitive identifier. */
 export type RetrievedRecord = { kind:'memory'|'document'; sourceId:string; label:string; excerpt:string; createdAt:string; updatedAt:string; score:number };
 /** Maximum number of passages returned by deterministic retrieval. */

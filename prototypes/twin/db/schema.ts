@@ -11,6 +11,7 @@ export const agentExecutionReceipts = sqliteTable('agent_execution_receipts', {
   userId: text('user_id').notNull(),
   callIndex: integer('call_index').notNull(),
   toolId: text('tool_id').notNull(),
+  initiator: text('initiator', { enum: ['model', 'runtime'] }).notNull().default('model'),
   authorization: text('authorization', { enum: ['allow', 'deny'] }).notNull(),
   status: text('status', { enum: ['started', 'succeeded', 'failed', 'timed_out', 'denied'] }).notNull(),
   startedAt: integer('started_at').notNull(),

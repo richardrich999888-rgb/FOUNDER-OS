@@ -1,0 +1,1 @@
+ALTER TABLE `agent_execution_receipts` ADD `initiator` text DEFAULT 'model' NOT NULL;

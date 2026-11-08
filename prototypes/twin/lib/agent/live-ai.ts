@@ -11,7 +11,7 @@ import { createVerifiedPrincipal, type AuthenticatedIdentity } from './principal
 import type { ReceiptStore } from './receipts';
 import { runAgent, type AgentRunResult } from './runtime';
 import { createToolRegistry } from './tool-registry';
-import { createSearchPersonalMemoryTool, type PersonalCorpusReader } from './tools/search-personal-memory';
+import { SEARCH_PERSONAL_MEMORY, createSearchPersonalMemoryTool, type PersonalCorpusReader } from './tools/search-personal-memory';
 
 export type LiveAiInput = Readonly<{
   identity: AuthenticatedIdentity;
@@ -88,7 +88,7 @@ export async function handleLiveAiRequest(input: LiveAiInput, deps: LiveAiDepend
   const registry = createToolRegistry([createSearchPersonalMemoryTool(deps.corpus)]);
   const result = await runAgent(
     { principal, requestId: input.requestId, message: input.message },
-    { model: deps.model, registry, receipts: deps.receipts, clock: deps.clock, newId: deps.newId, limits: deps.limits ?? PRODUCTION_LIMITS },
+    { model: deps.model, registry, receipts: deps.receipts, clock: deps.clock, newId: deps.newId, limits: deps.limits ?? PRODUCTION_LIMITS, personalLookupTool: SEARCH_PERSONAL_MEMORY },
   );
   return presentRunResult(input.requestId, result);
 }

@@ -32,6 +32,8 @@ import type { RuntimeLimits } from './limits';
 import type { ConversationItem, ModelPort, ModelTurn } from './model-adapter';
 import type { VerifiedPrincipal } from './principal';
 import type { AnswerSource, ReceiptStore } from './receipts';
+import { requiresPersonalLookup } from './intent';
+import type { ModelToolCall } from './model-adapter';
 import type { ToolRegistry } from './tool-registry';
 
 export type AgentDependencies = Readonly<{
@@ -41,6 +43,12 @@ export type AgentDependencies = Readonly<{
   clock: Clock;
   newId: () => string;
   limits: RuntimeLimits;
+  /**
+   * Registered tool the runtime ENFORCES before answering personal-reference messages
+   * (see intent.ts). If the model's first turn makes no tool call, the runtime issues this call
+   * itself (initiator 'runtime') with the user's own words as the query. Omit to disable.
+   */
+  personalLookupTool?: string;
 }>;
 
 export type AgentRunInput = Readonly<{ principal: VerifiedPrincipal; requestId: string; message: string }>;
@@ -50,6 +58,7 @@ export type Grounding = 'cited' | 'no_evidence' | 'not_required' | 'evidence_fal
 export type ReceiptSummary = Readonly<{
   executionId: string;
   tool: string;
+  initiator: CallOutcome['initiator'];
   authorization: CallOutcome['authorization'];
   status: CallOutcome['status'];
   errorCode: ErrorCode | null;
@@ -139,21 +148,41 @@ async function processToolCalls(state: RunState, turn: ModelTurn, ctx: ExecutorC
   }
 }
 
-async function loop(deps: AgentDependencies, state: RunState, ctx: ExecutorContext): Promise<Verdict> {
+/** Maximum query length accepted by the lookup tool's schema (see search-personal-memory.ts). */
+const ENFORCED_QUERY_MAX_CHARS = 500;
+
+/** The runtime-initiated lookup: the user's own words, never model-written text. */
+function enforcedLookup(toolName: string, userText: string): ModelToolCall {
+  return { callId: 'runtime_lookup_1', name: toolName, argumentsJson: JSON.stringify({ query: userText.trim().slice(0, ENFORCED_QUERY_MAX_CHARS) }), initiator: 'runtime' };
+}
+
+async function loop(deps: AgentDependencies, state: RunState, ctx: ExecutorContext, userText: string): Promise<Verdict> {
   const { limits } = deps;
+  const lookupTool = deps.personalLookupTool && deps.registry.get(deps.personalLookupTool) ? deps.personalLookupTool : null;
+  const enforceLookup = lookupTool !== null && requiresPersonalLookup(userText);
   for (let iteration = 1; iteration <= limits.maxIterations; iteration += 1) {
     const finalIteration = iteration === limits.maxIterations;
+    const enforceNow = enforceLookup && iteration === 1 && !finalIteration;
     const remaining = ctx.deadlineAt - deps.clock.now();
     if (remaining <= 0) return degrade(state, 'DEADLINE_EXCEEDED');
     state.iterations = iteration;
+    const toolChoice = finalIteration ? 'none' : enforceNow ? 'required' : 'auto';
     const turn = await runBounded(
-      (signal) => deps.model.respond({ instructions: AGENT_INSTRUCTIONS, items: [...state.items], tools: deps.registry.specs(), toolChoice: finalIteration ? 'none' : 'auto', maxOutputTokens: limits.maxOutputTokens }, signal),
+      (signal) => deps.model.respond({ instructions: AGENT_INSTRUCTIONS, items: [...state.items], tools: deps.registry.specs(), toolChoice, maxOutputTokens: limits.maxOutputTokens }, signal),
       remaining,
       ctx.runSignal,
       'MODEL_TIMEOUT',
     );
     addUsage(state, turn);
-    if (turn.toolCalls.length === 0) return finalize(state, turn, limits);
+    if (turn.toolCalls.length === 0) {
+      // Enforcement: a personal-reference question may not be answered without a lookup. The
+      // model's unverified text is discarded and the runtime performs the receipted lookup.
+      if (enforceNow && lookupTool) {
+        await processToolCalls(state, { ...turn, toolCalls: [enforcedLookup(lookupTool, userText)] }, ctx, null);
+        continue;
+      }
+      return finalize(state, turn, limits);
+    }
     if (finalIteration) {
       await processToolCalls(state, turn, ctx, 'ITERATION_LIMIT_EXCEEDED');
       return degrade(state, 'ITERATION_LIMIT_EXCEEDED');
@@ -174,7 +203,7 @@ export async function runAgent(input: AgentRunInput, deps: AgentDependencies): P
     ...verdict,
     iterations: state.iterations,
     toolExecutions: state.budget.executionsUsed,
-    receipts: state.outcomes.map((o) => ({ executionId: o.executionId, tool: o.toolId, authorization: o.authorization, status: o.status, errorCode: o.errorCode })),
+    receipts: state.outcomes.map((o) => ({ executionId: o.executionId, tool: o.toolId, initiator: o.initiator, authorization: o.authorization, status: o.status, errorCode: o.errorCode })),
     usage: state.usage,
   });
   const audit = (write: () => Promise<void>) => boundedReceiptWrite(deps.clock, auditDeadlineAt, write);
@@ -190,7 +219,7 @@ export async function runAgent(input: AgentRunInput, deps: AgentDependencies): P
   const ctx: ExecutorContext = { principal: input.principal, requestId: input.requestId, registry: deps.registry, receipts: deps.receipts, clock: deps.clock, newId: deps.newId, limits: deps.limits, deadlineAt, auditDeadlineAt, runSignal: controller.signal };
   let verdict: Verdict;
   try {
-    verdict = await loop(deps, state, ctx);
+    verdict = await loop(deps, state, ctx, input.message);
   } catch (error) {
     // Receipt failure: discard everything (fail closed). Other errors: degrade conservatively.
     verdict = error instanceof ReceiptWriteError ? failed('RECEIPT_WRITE_FAILED') : degradeOnError(state, codeOf(error));

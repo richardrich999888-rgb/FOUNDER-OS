@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {emptyState,memoryReply,retrieve,assertOrigin,calendarFile,event,replyLabel} from '../lib/twin/core.ts';
+import {emptyState,memoryReply,retrieve,assertOrigin,calendarFile,event,replyLabel,stem,tokens} from '../lib/twin/core.ts';
 const memory=(text,status='confirmed')=>({id:crypto.randomUUID(),text,status,category:'Context',source:'You told Twin',createdAt:'2026-11-07T00:00:00Z',updatedAt:'2026-11-07T00:00:00Z'});
 test('unconfirmed memories cannot influence recall or search',()=>{const s=emptyState();s.memories=[memory('My favorite color is teal.','suggested')];assert.equal(retrieve('teal',s).length,0);assert.doesNotMatch(memoryReply('What do you know about me?',s).text,/teal/);});
 test('confirmed memory retrieval preserves provenance',()=>{const s=emptyState();s.memories=[memory('I work on a Linux laptop.')];const r=memoryReply('What computer do I use? laptop',s);assert.equal(r.mode,'memory');assert.match(r.text,/laptop/);assert.match(r.sources[0].label,/You told Twin/);});
@@ -22,4 +22,14 @@ test('reply labels distinguish cited, fallback, abstained and unchecked AI answe
  assert.match(ai('not_required'),/not checked/);
  assert.match(replyLabel({mode:'ai'}),/not checked/,'missing execution fails closed');
  assert.match(ai('unexpected'),/not checked/,'unknown grounding fails closed');
+});
+test('stemming matches inflections consistently and keeps short words intact',()=>{
+ for(const [a,b] of [['meetings','meet'],['meeting','meet'],['preference','prefer'],['writing','write'],['currently','current'],['reading','read'],['studies','study']])assert.equal(stem(a),stem(b),`${a}~${b}`);
+ for(const w of ['bus','red','see','lisbon'])assert.ok(stem(w).length>=3,w);
+ assert.deepEqual(tokens('the Meetings'),['meet']);
+});
+test('stemmed retrieval finds inflected memories (live-eval regression: recall-030, recall-008)',()=>{
+ const s=emptyState();s.memories=[memory('I write a long-form essay every Sunday morning.'),memory('I prefer meetings before noon.')];
+ assert.equal(retrieve('When do I do my writing?',s)[0].excerpt,'I write a long-form essay every Sunday morning.');
+ assert.equal(retrieve('meeting preference',s)[0].excerpt,'I prefer meetings before noon.');
 });
