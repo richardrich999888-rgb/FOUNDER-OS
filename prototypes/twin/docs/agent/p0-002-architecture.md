@@ -130,7 +130,7 @@ Account erasure (`action: 'erase'`) now also deletes the user's receipts and run
 
 1. **Identity trust (P0-001).** See §0. This is the blocker for any non-Sites deployment.
 2. **Uncited prose on general requests.** If the model calls no tool, nothing it says is verified. It holds no personal data in that case (none is preloaded anymore), so any personal claim is invented. Mitigated in the UI: `replyLabel()` in `lib/twin/core.ts` labels such replies "AI answer · not checked against your saved information". A missing or unknown grounding value falls back to that same label. This is disclosure, not prevention.
-3. **False action claims without a tool attempt.** The taint rule only covers claims that follow an unregistered-tool attempt.
+3. **False action claims without a tool attempt.** The taint rule only covers claims that follow an unregistered-tool attempt. **Observed in the live Qwen2.5-7B run:** 5 of 13 tool-skipping answers falsely claimed a memory search had been done. The UI label ("not checked against your saved information") is the only mitigation right now.
 4. **Semantic faithfulness.** A valid citation does not prove the sentence attached to it is accurate.
 5. **Lexical retrieval quality.** The existing retriever does no stemming ("writing" does not match "write"). One of the 110 evaluation scenarios fails for this reason, and the runtime correctly abstains. This is P0-003 territory: retrieval quality, not runtime safety.
 6. **Rate-limit atomicity on real D1** depends on single-statement atomicity. Tests run on SQLite (`node:sqlite`), not D1.
