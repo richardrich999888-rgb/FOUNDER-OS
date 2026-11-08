@@ -52,7 +52,8 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
   };
   const issuer = "https://worker-test.cloudflareaccess.com",
     audience = "c".repeat(64);
-  let networkCalls = 0;
+  let networkCalls = 0,
+    modelCalls = 0;
   const mf = new Miniflare({
     modules: true,
     script: bundle.outputFiles[0].text,
@@ -64,8 +65,27 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       TWIN_AUTH_PROVIDER: "cloudflare-access",
       TWIN_AUTH_ISSUER: issuer,
       TWIN_AUTH_AUDIENCE: audience,
+      TWIN_AGENT_ENDPOINT: "https://synthetic-model.test/v1/chat/completions",
+      TWIN_AGENT_MODEL: "synthetic-contract-model",
     },
     outboundService: async (request) => {
+      if (request.url === "https://synthetic-model.test/v1/chat/completions") {
+        modelCalls++;
+        const body = await request.json();
+        const message = body.messages.some((m) => m.role === "tool")
+          ? { content: "You prefer concise answers [E1]." }
+          : {
+              content: null,
+              tool_calls: [
+                {
+                  id: "worker-read",
+                  type: "function",
+                  function: { name: "search_personal_memory", arguments: '{"query":"answers"}' },
+                },
+              ],
+            };
+        return Response.json({ choices: [{ finish_reason: "stop", message }] });
+      }
       assert.equal(request.url, `${issuer}/cdn-cgi/access/certs`);
       networkCalls++;
       return Response.json({ keys: [key] });
@@ -242,6 +262,29 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       401,
     );
 
+    const beforeConsent = await request(jwtA);
+    assert.equal(
+      (
+        await request(jwtA, {
+          action: "profile.update",
+          version: beforeConsent.version,
+          name: "Synthetic",
+          aiConsent: true,
+        })
+      ).status,
+      200,
+    );
+    const modelResult = await request(
+      jwtA,
+      { mode: "ai", message: "What answers do I prefer?", requestId: crypto.randomUUID() },
+      {},
+      "chat",
+    );
+    assert.equal(modelResult.status, 200, JSON.stringify(modelResult));
+    assert.equal(modelResult.execution.grounding, "cited");
+    assert.equal(modelResult.execution.receipts[0].status, "succeeded");
+    assert.equal(modelCalls, 2);
+    graph = await intel(jwtA);
     const other = await intel(jwtB);
     assert.equal(
       (
@@ -309,9 +352,10 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       ).n,
       0,
     );
+    const raceVersion = (await request(jwtA)).version;
     const updates = await Promise.all(
       ["first", "second"].map((title) =>
-        request(jwtA, { action: "task.add", title, due: null, version: a.version }),
+        request(jwtA, { action: "task.add", title, due: null, version: raceVersion }),
       ),
     );
     assert.deepEqual(updates.map((r) => r.status).sort(), [200, 409]);

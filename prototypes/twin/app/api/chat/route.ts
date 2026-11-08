@@ -1,3 +1,6 @@
+import { runModelIntelligence } from "@/lib/agent/model-run";
+import { intelligenceDb } from "@/lib/intelligence/store";
+import { AgentError } from "@/lib/agent/errors";
 import { readSnapshot, reserveAiRequest } from '@/lib/intelligence/store';
 import { compatibleState } from '@/lib/intelligence/service';
 import { retrieveContext } from '@/lib/intelligence/retrieval';
@@ -18,6 +21,11 @@ export async function POST(request:Request){try{
  authorize(user,parsed.data.mode==='memory'?'chat.memory':'chat.ai',user.userId);const data=await load(user);if(!data)return json({error:'Start your twin first.'},409);const {message,mode,requestId}=parsed.data;
  const snapshot=await readSnapshot(user);data.state=compatibleState(snapshot);
  if(mode==='memory'){const reply=memoryReply(message,data.state);if(reply.proposal)return json(reply);const recalled=message.length<=500?retrieveContext(snapshot,{query:message}):{results:[]};if(recalled.results.length)return json({text:recalled.results.map((r,i)=>`[${i+1}] ${r.text}`).join('\n\n'),mode:'memory',sources:recalled.results.map(r=>({label:r.sourceLabel,excerpt:r.text}))});return json(reply);}
+ const agentVars=env as unknown as Record<string,string|undefined>;
+ if(agentVars.TWIN_AGENT_ENDPOINT && agentVars.TWIN_AGENT_MODEL){
+  try { const run=await runModelIntelligence(user,{mode:'model',message,requestId},intelligenceDb(),agentVars);return json(run.body,run.status); }
+  catch(error){if(error instanceof AgentError)return json({error:'Current authorization and context-sharing consent are required.'},403);throw error;}
+ }
  if(!modelStatus().configured)return json({error:'Live AI is not connected yet. Memory mode works now.'},503);if(!data.state.aiConsent)return json({error:'Enable AI context sharing in Settings first.'},403);
  const db=getDb(),now=Date.now(),recent=await db.select().from(aiRequests).where(and(eq(aiRequests.userId,user.userId),gte(aiRequests.createdAt,now-86400000)));
  if(recent.some(r=>r.id===requestId))return json({error:'This request was already submitted.'},409);if(recent.length>=40||recent.filter(r=>r.createdAt>now-60000).length>=3)return json({error:'The prototype AI usage limit has been reached. Try again later or use Memory mode.'},429);if(!await reserveAiRequest(user,snapshot,requestId,now))return json({error:'Your account context changed. Review it and retry.'},409);

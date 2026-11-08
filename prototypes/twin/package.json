@@ -15,7 +15,8 @@
     "test": "node --experimental-strip-types --test tests/core.test.mjs tests/api.test.mjs tests/security.test.mjs tests/worker-security.test.mjs tests/intelligence.test.mjs tests/agent-integration.test.mjs",
     "typecheck": "tsc --noEmit",
     "test:built": "node --test tests/built-worker.test.mjs",
-    "eval:intelligence": "node tests/evaluate-intelligence.mjs"
+    "eval:intelligence": "node tests/evaluate-intelligence.mjs",
+    "test:live-agent": "node scripts/live-intelligence.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

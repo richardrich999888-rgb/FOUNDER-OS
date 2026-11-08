@@ -62,6 +62,7 @@ export type AgentDependencies = Readonly<{
   /** Mandatory current identity, generation, epoch and destination consent gate. */
   validateContext: () => Promise<void>;
   evidenceOnly?: boolean;
+  requireEvidence?: boolean;
 }>;
 
 export type AgentRunInput = Readonly<{
@@ -147,7 +148,12 @@ function degrade(state: RunState, code: ErrorCode | null): Verdict {
 }
 
 /** Apply the answer policy to the model's final text. */
-function finalize(state: RunState, turn: ModelTurn, limits: RuntimeLimits): Verdict {
+function finalize(
+  state: RunState,
+  turn: ModelTurn,
+  limits: RuntimeLimits,
+  requireEvidence = false,
+): Verdict {
   const text = turn.text.trim();
   if (!text) return degrade(state, "MODEL_EMPTY_RESPONSE");
   if (text.length > limits.maxAnswerChars) return degrade(state, "MODEL_MALFORMED_RESPONSE");
@@ -172,7 +178,7 @@ function finalize(state: RunState, turn: ModelTurn, limits: RuntimeLimits): Verd
   }
   // No evidence. If any tool call was attempted, the request concerned personal data that we
   // could not verify: abstain deterministically rather than return unverifiable model prose.
-  if (state.outcomes.length)
+  if (state.outcomes.length || requireEvidence)
     return {
       status: "completed",
       errorCode: null,
@@ -273,7 +279,7 @@ async function loop(
           return failed(unsuccessful?.errorCode ?? "TOOL_FAILED");
         return degrade(state, null);
       }
-      return finalize(state, turn, limits);
+      return finalize(state, turn, limits, deps.requireEvidence);
     }
     if (finalIteration) {
       await processToolCalls(state, turn, ctx, "ITERATION_LIMIT_EXCEEDED");

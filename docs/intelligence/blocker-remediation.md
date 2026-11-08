@@ -1,5 +1,7 @@
 # P0-003 blocker remediation — 2026-11-08
 
+Current update: [model integration and remaining acceptance gates](completion-status.md). The report below records the preceding delivery.
+
 Status: **local runtime integration verified; hosted authentication, live-model orchestration and human productivity validation remain open.** This report supersedes the integration-blocked status at `cad7346`. No production deployment, identity setting, live account data, message recipient or provider billing was changed.
 
 ## Blocker disposition

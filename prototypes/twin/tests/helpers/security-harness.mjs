@@ -65,6 +65,8 @@ export async function createHarness(name) {
         "receipts",
         "intelligence-tools",
         "local-run",
+        "model-run",
+        "chat-completions-adapter",
       ].map((n) => [`agent-${n}.mjs`, `lib/agent/${n}.ts`]),
     ),
     "intelligence-schema.mjs": "db/intelligence-schema.ts",
@@ -186,6 +188,8 @@ export async function createHarness(name) {
     "receipts",
     "intelligence-tools",
     "local-run",
+    "model-run",
+    "chat-completions-adapter",
   ])
     modules[`agent-${name}`] = await import(path.join(dir, `agent-${name}.mjs`));
   const intelligence = await import(path.join(dir, "intelligence-route.mjs"));

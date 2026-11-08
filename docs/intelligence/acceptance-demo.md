@@ -1,5 +1,7 @@
 # P0-003 acceptance demonstration
 
+Current integration and acceptance status: [completion-status.md](completion-status.md).
+
 Run from `prototypes/twin` on Node 24:
 
 ```sh

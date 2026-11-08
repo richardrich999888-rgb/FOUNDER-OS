@@ -1,5 +1,7 @@
 # P0-003 security findings and verification scope
 
+Current integration and acceptance status: [completion-status.md](completion-status.md).
+
 The authenticated account owner is the sole authority. Documents, extraction JSON, prompts, source labels and proposed procedures are untrusted data. All new writes are direct reviewed user operations; no model receives a write/permission tool. Existing P0-001 JWT signature/issuer/audience/algorithm/expiry controls remain intact.
 
 ## Fixed in this branch

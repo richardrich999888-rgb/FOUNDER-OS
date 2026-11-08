@@ -599,3 +599,193 @@ test("valid long procedures fail with a size limit instead of disappearing", asy
   assert.equal(r.execution.receipts[0].status, "failed");
   assert.equal(r.execution.receipts[0].errorCode, "TOOL_RESULT_TOO_LARGE");
 });
+
+const modelEnv = {
+  TWIN_AGENT_ENDPOINT: "http://127.0.0.1:8080/v1/chat/completions",
+  TWIN_AGENT_MODEL: "synthetic-contract-test",
+};
+const chatResponse = (message) =>
+  Response.json({
+    choices: [{ finish_reason: "stop", message }],
+    usage: { prompt_tokens: 10, completion_tokens: 5 },
+  });
+test("model HTTP mode executes verified tools and persists receipts through the chat adapter", async () => {
+  const u = await user("model-http", true);
+  await capture(u, "I prefer concise answers.");
+  const original = globalThis.fetch;
+  Object.assign(h.env, modelEnv);
+  let calls = 0;
+  globalThis.fetch = async (url, options) => {
+    if (String(url) !== modelEnv.TWIN_AGENT_ENDPOINT) return original(url, options);
+    calls++;
+    assert.equal(options.redirect, "manual");
+    const body = JSON.parse(options.body);
+    assert.equal(body.model, modelEnv.TWIN_AGENT_MODEL);
+    assert.equal(body.tools.length, 5);
+    if (calls === 1)
+      return chatResponse({
+        content: null,
+        tool_calls: [
+          {
+            id: "lookup",
+            type: "function",
+            function: { name: "search_personal_memory", arguments: '{"query":"concise"}' },
+          },
+        ],
+      });
+    const observation = JSON.parse(body.messages.find((x) => x.role === "tool").content);
+    assert.ok(observation.evidence.some((e) => e.content.includes("concise")));
+    return chatResponse({ content: "You prefer concise answers [E1]." });
+  };
+  try {
+    const r = await h.agentCall("model-http", {
+      mode: "model",
+      message: "What answers do I prefer?",
+      requestId: crypto.randomUUID(),
+    });
+    assert.equal(r.httpStatus, 200, JSON.stringify(r));
+    assert.equal(r.execution.planner, "chat-completions");
+    assert.equal(r.execution.grounding, "cited");
+    assert.equal(r.execution.receipts[0].status, "succeeded");
+    assert.equal(calls, 2);
+    calls = 0;
+    const viaChat = await h.call(
+      "model-http",
+      { mode: "ai", message: "What answers do I prefer?", requestId: crypto.randomUUID() },
+      undefined,
+      true,
+    );
+    assert.equal(viaChat.status, 200, JSON.stringify(viaChat));
+    assert.equal(viaChat.execution.planner, "chat-completions");
+    assert.equal(viaChat.execution.grounding, "cited");
+    assert.equal(
+      h.db.sql
+        .prepare("SELECT status FROM agent_runs WHERE request_id=?")
+        .get(r.execution.requestId).status,
+      "completed",
+    );
+  } finally {
+    globalThis.fetch = original;
+    for (const key of Object.keys(modelEnv)) delete h.env[key];
+  }
+});
+
+test("model mode denies absent consent and request-selected destinations before disclosure", async () => {
+  const u = await user("model-denied");
+  let calls = 0;
+  const network = async () => {
+    calls++;
+    return chatResponse({ content: "x" });
+  };
+  const input = { mode: "model", message: "x", requestId: crypto.randomUUID() };
+  await assert.rejects(
+    () => m("model-run").runModelIntelligence(u, input, h.db.d1, modelEnv, network),
+    (e) => e.code === "AUTHORIZATION_REVOKED",
+  );
+  await assert.rejects(() =>
+    m("model-run").runModelIntelligence(
+      u,
+      { ...input, endpoint: "https://attacker.test" },
+      h.db.d1,
+      modelEnv,
+      network,
+    ),
+  );
+  assert.equal(calls, 0);
+  assert.equal((await h.agentCall("model-denied", input)).httpStatus, 503);
+});
+
+test("model route cannot release unsupported personal claims or post-revocation answers", async () => {
+  const u = await user("model-claims", true);
+  const run = (fn) =>
+    m("model-run").runModelIntelligence(
+      u,
+      { mode: "model", message: "What is my secret preference?", requestId: crypto.randomUUID() },
+      h.db.d1,
+      modelEnv,
+      fn,
+    );
+  const unsupported = await run(async () =>
+    chatResponse({ content: "Your secret preference is fictional." }),
+  );
+  assert.equal(unsupported.body.execution.grounding, "no_evidence");
+  assert.doesNotMatch(unsupported.body.text, /fictional/);
+  const revoked = await run(async () => {
+    const a = await h.call("model-claims");
+    await h.call("model-claims", {
+      action: "profile.update",
+      name: "Synthetic",
+      aiConsent: false,
+      version: a.version,
+    });
+    return chatResponse({ content: "Do not disclose this stale answer." });
+  });
+  assert.equal(revoked.status, 409);
+  assert.equal(revoked.body.text, null);
+  assert.equal(revoked.body.execution.errorCode, "AUTHORIZATION_REVOKED");
+});
+
+test("chat adapter rejects unsafe destinations, malformed calls and oversized streamed responses", async () => {
+  const adapter = m("chat-completions-adapter");
+  for (const endpoint of [
+    "http://remote.test/v1",
+    "file:///tmp/x",
+    "https://user:secret@host.test/v1",
+    "https://host.test/v1?key=x",
+  ])
+    assert.throws(() => adapter.createChatCompletionsModel({ endpoint, model: "x" }));
+  assert.throws(
+    () =>
+      adapter.parseChatCompletionsBody({
+        choices: [{ message: { tool_calls: [{ id: "x", function: { name: "read" } }] } }],
+      }),
+    (e) => e.code === "MODEL_MALFORMED_RESPONSE",
+  );
+  let cancelled = false;
+  const model = adapter.createChatCompletionsModel({
+    endpoint: modelEnv.TWIN_AGENT_ENDPOINT,
+    model: "x",
+    fetchImpl: async () =>
+      new Response(
+        new ReadableStream({
+          pull(c) {
+            c.enqueue(new Uint8Array(600000));
+          },
+          cancel() {
+            cancelled = true;
+          },
+        }),
+      ),
+  });
+  await assert.rejects(
+    () =>
+      model.respond(
+        { instructions: "x", items: [], tools: [], toolChoice: "none", maxOutputTokens: 10 },
+        new AbortController().signal,
+      ),
+    (e) => e.code === "MODEL_MALFORMED_RESPONSE",
+  );
+  assert.equal(cancelled, true);
+});
+
+test("model redirects fail closed without following a second destination", async () => {
+  let calls = 0;
+  const model = m("chat-completions-adapter").createChatCompletionsModel({
+    endpoint: modelEnv.TWIN_AGENT_ENDPOINT,
+    model: "test",
+    fetchImpl: async (_url, options) => {
+      calls++;
+      assert.equal(options.redirect, "manual");
+      return new Response(null, { status: 302, headers: { Location: "https://attacker.test" } });
+    },
+  });
+  await assert.rejects(
+    () =>
+      model.respond(
+        { instructions: "x", items: [], tools: [], toolChoice: "none", maxOutputTokens: 10 },
+        new AbortController().signal,
+      ),
+    (e) => e.code === "MODEL_UNAVAILABLE",
+  );
+  assert.equal(calls, 1);
+});

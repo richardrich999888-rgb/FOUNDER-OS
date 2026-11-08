@@ -1,5 +1,7 @@
 # P0-003 verification and delivery report
 
+Current update: [model integration and remaining acceptance gates](completion-status.md). The report below records the preceding delivery.
+
 Status at original delivery `cad7346`: **locally verified private-alpha candidate; hosted validation and P0-002 integration blocked**. **Superseded on 2026-11-08 by [blocker remediation](blocker-remediation.md): local runtime integration is now verified, with 105 tests passing.** The results and iteration history below preserve the original baseline. No production deployment, identity setting, real account or live user data was modified. No automatic merge is authorized.
 
 ## Baseline and branch selection

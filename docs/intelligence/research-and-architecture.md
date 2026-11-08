@@ -1,5 +1,7 @@
 # JARVIS P0-003 — research and architecture
 
+Current integration and acceptance status: [completion-status.md](completion-status.md).
+
 Evidence collected 7 November 2026 (UTC). This is a private-alpha implementation, not a claim of deployed security or general human-level memory. The authoritative store is D1. No additional memory server, vector database, model service, or runtime dependency was added.
 
 ## Repository decision
