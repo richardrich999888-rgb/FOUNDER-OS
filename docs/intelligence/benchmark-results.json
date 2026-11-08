@@ -1,0 +1,2238 @@
+{
+  "schemaVersion": 1,
+  "fixtureHash": "21760f6a4b0175e9e9fd2c7b9ed517553703912eab97a6e651c38e9d37177424",
+  "fixtureFrozenAt": "2026-11-07T21:37:29.523Z",
+  "measuredAt": "2026-11-08T04:27:02.661Z",
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "database": "Node SQLite in-memory, actual D1 SQL/transactions; workerd separately tested",
+    "modelCalls": 0,
+    "embeddingCalls": 0,
+    "paidProviderCostUsd": 0,
+    "cloudflareBilledCost": "not measured; local execution only"
+  },
+  "scope": "English synthetic templates; same-author holdout, not an independent benchmark",
+  "metrics": {
+    "scenarios": 200,
+    "passed": 200,
+    "retrieval": {
+      "legacy": {
+        "n": 80,
+        "recallAt5": 1,
+        "mrr": 0.75
+      },
+      "structured": {
+        "n": 80,
+        "recallAt5": 1,
+        "mrr": 1
+      },
+      "hybrid": {
+        "n": 80,
+        "recallAt5": 1,
+        "mrr": 1
+      }
+    },
+    "commitmentExtraction": {
+      "n": 40,
+      "truePositive": 20,
+      "predicted": 20,
+      "expected": 20,
+      "precision": 1,
+      "recall": 1,
+      "deadlineAccuracy": 1
+    },
+    "temporal": {
+      "n": 20,
+      "correct": 20,
+      "accuracy": 1
+    },
+    "contradiction": {
+      "n": 15,
+      "correct": 15,
+      "accuracy": 1
+    },
+    "forget": {
+      "n": 15,
+      "correct": 15,
+      "accuracy": 1
+    },
+    "isolation": {
+      "n": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "procedure": {
+      "n": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "abstention": {
+      "n": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "sourceGrounding": {
+      "n": 80,
+      "correct": 80
+    },
+    "deletedResults": 0,
+    "unauthorizedDisclosures": 0,
+    "unauthorizedActivations": 0,
+    "scriptedPreparationReduction": 0.6666666666666669
+  },
+  "development": {
+    "scenarios": 101,
+    "passed": 101,
+    "retrieval": {
+      "legacy": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 0.75
+      },
+      "structured": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 1
+      },
+      "hybrid": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 1
+      }
+    },
+    "commitmentExtraction": {
+      "n": 20,
+      "truePositive": 10,
+      "predicted": 10,
+      "expected": 10,
+      "precision": 1,
+      "recall": 1,
+      "deadlineAccuracy": 1
+    },
+    "temporal": {
+      "n": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "contradiction": {
+      "n": 8,
+      "correct": 8,
+      "accuracy": 1
+    },
+    "forget": {
+      "n": 8,
+      "correct": 8,
+      "accuracy": 1
+    },
+    "isolation": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "procedure": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "abstention": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "sourceGrounding": {
+      "n": 40,
+      "correct": 40
+    },
+    "deletedResults": 0,
+    "unauthorizedDisclosures": 0,
+    "unauthorizedActivations": 0,
+    "scriptedPreparationReduction": 0.6666666666666667
+  },
+  "holdout": {
+    "scenarios": 99,
+    "passed": 99,
+    "retrieval": {
+      "legacy": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 0.75
+      },
+      "structured": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 1
+      },
+      "hybrid": {
+        "n": 40,
+        "recallAt5": 1,
+        "mrr": 1
+      }
+    },
+    "commitmentExtraction": {
+      "n": 20,
+      "truePositive": 10,
+      "predicted": 10,
+      "expected": 10,
+      "precision": 1,
+      "recall": 1,
+      "deadlineAccuracy": 1
+    },
+    "temporal": {
+      "n": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "contradiction": {
+      "n": 7,
+      "correct": 7,
+      "accuracy": 1
+    },
+    "forget": {
+      "n": 7,
+      "correct": 7,
+      "accuracy": 1
+    },
+    "isolation": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "procedure": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "abstention": {
+      "n": 5,
+      "correct": 5,
+      "accuracy": 1
+    },
+    "sourceGrounding": {
+      "n": 40,
+      "correct": 40
+    },
+    "deletedResults": 0,
+    "unauthorizedDisclosures": 0,
+    "unauthorizedActivations": 0,
+    "scriptedPreparationReduction": 0.6666666666666667
+  },
+  "latencyMs": {
+    "legacy": {
+      "n": 80,
+      "p50": 0.4179229999999734,
+      "p95": 1.2424510000000737
+    },
+    "structured": {
+      "n": 80,
+      "p50": 0.46144699999968,
+      "p95": 1.5356369999999515
+    },
+    "hybrid": {
+      "n": 80,
+      "p50": 0.4161589999998796,
+      "p95": 1.2868539999999484
+    },
+    "hybridWithDatabase": {
+      "n": 80,
+      "p50": 2.2306250000001455,
+      "p95": 6.2559119999996256
+    }
+  },
+  "sqlStatementsAfterCorpusSetup": 4985,
+  "optionalSemantic": {
+    "status": "not measured",
+    "reason": "No authorized Workers AI/Vectorize test bindings or credentials; not adopted"
+  },
+  "workflowCompletion": {
+    "status": "not measured",
+    "reason": "Scripted checklist preparation proxy; no real human study or verified external actions"
+  },
+  "cases": [
+    {
+      "id": "retrieval-fact-1",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-1",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-1",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-1",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-1",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-1",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-2",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-2",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-2",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-2",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-2",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-2",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-3",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-3",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-3",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-3",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-3",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-3",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-4",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-4",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-4",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-4",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-4",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-4",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-5",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-5",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-5",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-5",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-5",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-5",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-6",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-6",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-6",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-6",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-6",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-6",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-7",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-7",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-7",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-7",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-7",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-7",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-8",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-8",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-8",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-8",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-8",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-8",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-9",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-9",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-9",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-9",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-9",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-9",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-10",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-10",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-10",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-10",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-10",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-10",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-11",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-11",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-11",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-11",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-11",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-11",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-12",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-12",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-12",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-12",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-12",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-12",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-13",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-13",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-13",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-13",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-13",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-13",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-14",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-14",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-14",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-14",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-14",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-14",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-15",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-15",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-15",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-15",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-15",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-15",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-16",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-16",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-16",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-16",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-16",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-16",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-17",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-17",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-17",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-17",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-17",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-17",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-18",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-18",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-18",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-18",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-18",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-18",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-19",
+      "split": "development",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-19",
+      "split": "development",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-19",
+      "split": "development",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-19",
+      "split": "development",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-19",
+      "split": "development",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-19",
+      "split": "development",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "retrieval-fact-20",
+      "split": "holdout",
+      "category": "retrieval-fact",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-decision-20",
+      "split": "holdout",
+      "category": "retrieval-decision",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-commitment-20",
+      "split": "holdout",
+      "category": "retrieval-commitment",
+      "pass": true,
+      "ranks": {
+        "legacy": 1,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "retrieval-entity-20",
+      "split": "holdout",
+      "category": "retrieval-entity",
+      "pass": true,
+      "ranks": {
+        "legacy": 2,
+        "structured": 1,
+        "hybrid": 1
+      },
+      "grounded": true
+    },
+    {
+      "id": "temporal-20",
+      "split": "holdout",
+      "category": "temporal",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "extract-positive-20",
+      "split": "holdout",
+      "category": "extract-positive",
+      "pass": true,
+      "expected": 1,
+      "predicted": 1,
+      "truePositive": 1,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-1",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-2",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-3",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-4",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-5",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-6",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-7",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-8",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-9",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-10",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-11",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-12",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-13",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-14",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-15",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-16",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-17",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-18",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-19",
+      "split": "development",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "extract-negative-20",
+      "split": "holdout",
+      "category": "extract-negative",
+      "pass": true,
+      "expected": 0,
+      "predicted": 0,
+      "truePositive": 0,
+      "deadlineCorrect": true
+    },
+    {
+      "id": "contradiction-1",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-1",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-2",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-2",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-3",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-3",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-4",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-4",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-5",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-5",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-6",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-6",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-7",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-7",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-8",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-8",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-9",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-9",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-10",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-10",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-11",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-11",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-12",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-12",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-13",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-13",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-14",
+      "split": "holdout",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-14",
+      "split": "holdout",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "contradiction-15",
+      "split": "development",
+      "category": "contradiction",
+      "pass": true,
+      "conflictDetected": true
+    },
+    {
+      "id": "forget-15",
+      "split": "development",
+      "category": "forget",
+      "pass": true,
+      "deletedResults": 0,
+      "scrubbed": true
+    },
+    {
+      "id": "isolation-1",
+      "split": "development",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-1",
+      "split": "development",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-1",
+      "split": "development",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-2",
+      "split": "holdout",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-2",
+      "split": "holdout",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-2",
+      "split": "holdout",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-3",
+      "split": "development",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-3",
+      "split": "development",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-3",
+      "split": "development",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-4",
+      "split": "holdout",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-4",
+      "split": "holdout",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-4",
+      "split": "holdout",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-5",
+      "split": "development",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-5",
+      "split": "development",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-5",
+      "split": "development",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-6",
+      "split": "holdout",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-6",
+      "split": "holdout",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-6",
+      "split": "holdout",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-7",
+      "split": "development",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-7",
+      "split": "development",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-7",
+      "split": "development",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-8",
+      "split": "holdout",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-8",
+      "split": "holdout",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-8",
+      "split": "holdout",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-9",
+      "split": "development",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-9",
+      "split": "development",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-9",
+      "split": "development",
+      "category": "abstention",
+      "pass": true
+    },
+    {
+      "id": "isolation-10",
+      "split": "holdout",
+      "category": "isolation",
+      "pass": true,
+      "disclosures": 0
+    },
+    {
+      "id": "procedure-10",
+      "split": "holdout",
+      "category": "procedure",
+      "pass": true,
+      "unauthorizedActivation": 0,
+      "stepsPreserved": true,
+      "scriptedPreparation": {
+        "before": 6,
+        "after": 2,
+        "reduction": 0.6666666666666667
+      }
+    },
+    {
+      "id": "abstention-10",
+      "split": "holdout",
+      "category": "abstention",
+      "pass": true
+    }
+  ]
+}

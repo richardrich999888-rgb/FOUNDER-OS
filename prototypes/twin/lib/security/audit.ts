@@ -1,6 +1,8 @@
 const actions = new Set([
   "authenticate",
   "account.read",
+  "intelligence.read",
+  "intelligence.write",
   "initialize",
   "memory.add",
   "memory.update",

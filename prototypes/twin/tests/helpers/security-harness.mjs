@@ -27,21 +27,56 @@ export async function createHarness(name) {
     `import { DatabaseSync } from 'node:sqlite';
     import { drizzle } from 'drizzle-orm/d1'; import fs from 'node:fs';
     export const sql = new DatabaseSync(':memory:');
-    sql.exec(fs.readFileSync('drizzle/0000_last_chameleon.sql','utf8'));
+    sql.exec('PRAGMA foreign_keys=ON');
+    for(const file of fs.readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(fs.readFileSync('drizzle/'+file,'utf8'));
+    export let failPattern=null;export const setFailPattern=p=>failPattern=p;
+    function guard(query){if(failPattern?.test(query))throw new Error('INJECTED_FAILURE');}
     export let queries = 0;
     class Statement {
       constructor(query,args=[]) { this.query=query; this.args=args; }
       bind(...args) { return new Statement(this.query,args); }
-      async all() { queries++; const results=sql.prepare(this.query).all(...this.args); return {results,success:true,meta:{changes:sql.prepare('SELECT changes() as n').get().n}}; }
-      async run() { return this.all(); }
-      async raw() { queries++; const s=sql.prepare(this.query);s.setReturnArrays(true);return s.all(...this.args); }
-      async first(column) { queries++;const r=sql.prepare(this.query).get(...this.args);return column?r?.[column]:r; }
+      execute() { guard(this.query);queries++; const results=sql.prepare(this.query).all(...this.args); return {results,success:true,meta:{changes:sql.prepare('SELECT changes() as n').get().n}}; }
+      async all() { return this.execute(); }
+      async run() { return this.execute(); }
+      async raw() { guard(this.query);queries++; const s=sql.prepare(this.query);s.setReturnArrays(true);return s.all(...this.args); }
+      async first(column) { guard(this.query);queries++;const r=sql.prepare(this.query).get(...this.args);return column?r?.[column]:r; }
     }
-    const d1={prepare:q=>new Statement(q),batch:async s=>Promise.all(s.map(v=>v.all()))};
+    export const d1={prepare:q=>new Statement(q),batch:async statements=>{sql.exec('BEGIN');try{const results=[];for(const statement of statements)results.push(statement.execute());sql.exec('COMMIT');return results;}catch(e){sql.exec('ROLLBACK');throw e;}}};
     const db=drizzle(d1);export const getDb=()=>db;`,
   );
   const files = {
     "schema.mjs": "db/schema.ts",
+    "agent-schema.mjs": "db/agent-schema.ts",
+    "agent-route.mjs": "app/api/agent/route.ts",
+    ...Object.fromEntries(
+      [
+        "admission",
+        "authorization",
+        "deadline",
+        "errors",
+        "evidence",
+        "executor",
+        "instructions",
+        "limits",
+        "runtime",
+        "tool-registry",
+        "model-port",
+        "principal",
+        "receipts",
+        "intelligence-tools",
+        "local-run",
+        "model-run",
+        "chat-completions-adapter",
+      ].map((n) => [`agent-${n}.mjs`, `lib/agent/${n}.ts`]),
+    ),
+    "intelligence-schema.mjs": "db/intelligence-schema.ts",
+    "intelligence-route.mjs": "app/api/intelligence/route.ts",
+    ...Object.fromEntries(
+      ["model", "extraction", "retrieval", "store", "service", "agent-adapter"].map((n) => [
+        `intelligence-${n}.mjs`,
+        `lib/intelligence/${n}.ts`,
+      ]),
+    ),
     "core.mjs": "lib/twin/core.ts",
     "server.mjs": "lib/twin/server.ts",
     "twin.mjs": "app/api/twin/route.ts",
@@ -91,6 +126,8 @@ export async function createHarness(name) {
   };
   const context = await import(path.join(dir, "context.mjs"));
   const { env } = await import(path.join(dir, "env.mjs"));
+  const db = await import(path.join(dir, "db.mjs"));
+  env.DB = db.d1;
   const route = await import(path.join(dir, "twin.mjs")),
     chat = await import(path.join(dir, "chat.mjs"));
   async function token(subject, claims = {}, options = {}) {
@@ -134,10 +171,62 @@ export async function createHarness(name) {
     );
   }
   const modules = {};
+  for (const name of ["model", "extraction", "retrieval", "store", "service", "agent-adapter"])
+    modules[`intelligence-${name}`] = await import(path.join(dir, `intelligence-${name}.mjs`));
+  for (const name of [
+    "admission",
+    "authorization",
+    "deadline",
+    "errors",
+    "evidence",
+    "executor",
+    "instructions",
+    "limits",
+    "runtime",
+    "tool-registry",
+    "principal",
+    "receipts",
+    "intelligence-tools",
+    "local-run",
+    "model-run",
+    "chat-completions-adapter",
+  ])
+    modules[`agent-${name}`] = await import(path.join(dir, `agent-${name}.mjs`));
+  const intelligence = await import(path.join(dir, "intelligence-route.mjs"));
+  async function intelligenceCall(user, payload) {
+    const req = new Request("https://twin.test/api/intelligence", {
+      method: payload ? "POST" : "GET",
+      headers: {
+        Origin: "https://twin.test",
+        ...(user ? { "Cf-Access-Jwt-Assertion": await token(user) } : {}),
+      },
+      ...(payload ? { body: JSON.stringify(payload) } : {}),
+    });
+    const result = await context.run(req.headers, () =>
+      payload ? intelligence.POST(req) : intelligence.GET(),
+    );
+    return { status: result.status, ...(await result.json()) };
+  }
+  const agentRoute = await import(path.join(dir, "agent-route.mjs"));
+  async function agentCall(user, payload, extra = {}) {
+    const req = new Request("https://twin.test/api/agent", {
+      method: "POST",
+      headers: {
+        Origin: "https://twin.test",
+        ...(user ? { "Cf-Access-Jwt-Assertion": await token(user) } : {}),
+        ...extra,
+      },
+      body: JSON.stringify(payload),
+    });
+    const result = await context.run(req.headers, () => agentRoute.POST(req));
+    return { httpStatus: result.status, ...(await result.json()) };
+  }
   for (const name of ["identity", "authorize", "tool-permissions", "audit", "server", "core"])
     modules[name] = await import(path.join(dir, `${name}.mjs`));
   return {
     call,
+    agentCall,
+    intelligenceCall,
     raw,
     token,
     env,

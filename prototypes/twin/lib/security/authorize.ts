@@ -4,6 +4,8 @@ import { audit } from "./audit";
 
 const ownerActions = new Set([
   "account.read",
+  "intelligence.read",
+  "intelligence.write",
   "initialize",
   "memory.add",
   "memory.update",
