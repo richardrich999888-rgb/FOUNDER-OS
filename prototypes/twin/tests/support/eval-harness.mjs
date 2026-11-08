@@ -50,14 +50,26 @@ function judge(s, r, ctx) {
 const pct = (n, d) => (d === 0 ? null : Number(((100 * n) / d).toFixed(2)));
 const quantile = (xs, q) => { const s = [...xs].sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.ceil(q * s.length) - 1)] : null; };
 
-export async function runEvaluation(mods) {
+/** Wrap any ModelPort so the harness can inspect what the model was shown (isolation checks). */
+export function recording(model) {
+  const calls = [];
+  return { calls, respond: (request, signal) => { calls.push(request); return model.respond(request, signal); } };
+}
+
+/**
+ * Scenarios meaningful for a REAL model: everything except the scripted limit stressors, and
+ * one injection scenario per poisoned document (the three adversary variants are stub-only).
+ */
+export const LIVE_SCENARIO_FILTER = (s) => s.category !== 'limits' && (s.category !== 'prompt_injection' || Number(s.id.slice(-3)) % 3 === 0);
+
+export async function runEvaluation(mods, { modelFor = (s) => adversary(s.model, s), filter = () => true, onScenario = () => {} } = {}) {
   for (const [userId, c] of Object.entries(DATASET.corpus)) seedAccount(mods, userId, c);
   const registered = new Set(['search_personal_memory']);
   const L = mods.limits.PRODUCTION_LIMITS;
   const rows = [];
-  for (const s of DATASET.scenarios) {
+  for (const s of DATASET.scenarios.filter(filter)) {
     const reader = d1CorpusReader(mods);
-    const model = adversary(s.model, s);
+    const model = modelFor(s);
     const requestId = `eval-${s.id}`;
     const deps = { model, registry: mods.registry.createToolRegistry([mods.tool.createSearchPersonalMemoryTool(reader)]), receipts: mods.receipts.createD1ReceiptStore(mods.db.getDb()), clock: mods.deadline.systemClock, newId: sequentialIds('eeeeeeee'), limits: L };
     const t0 = performance.now();
@@ -90,7 +102,9 @@ export async function runEvaluation(mods) {
       latencyMs: Number(latencyMs.toFixed(3)),
       estInputTokens: model.calls.reduce((a, c) => a + estimateTokens(JSON.stringify(c.items) + c.instructions), 0),
       estOutputTokens: estimateTokens(r.answer ?? ''),
+      providerUsage: r.usage,
     });
+    onScenario(rows.at(-1));
   }
   return { rows, metrics: computeMetrics(rows) };
 }
@@ -119,6 +133,7 @@ export function computeMetrics(rows) {
     falseActionClaimsSurfaced: rows.filter((r) => r.falseActionClaim).length,
     latencyMs_runtimeOnly: { p50: quantile(lat, 0.5), p95: quantile(lat, 0.95), max: Math.max(...lat) },
     estimatedTokens_stub: { input: rows.reduce((a, r) => a + r.estInputTokens, 0), output: rows.reduce((a, r) => a + r.estOutputTokens, 0), method: 'characters/4 over stub transcripts; not provider-reported' },
+    providerReportedTokens: rows.some((r) => r.providerUsage) ? { input: rows.reduce((a, r) => a + (r.providerUsage?.inputTokens ?? 0), 0), output: rows.reduce((a, r) => a + (r.providerUsage?.outputTokens ?? 0), 0), runsWithUsage: rows.filter((r) => r.providerUsage).length } : null,
     estimatedCostUsd: null,
   };
 }

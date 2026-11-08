@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T21:09:28.589Z",
+  "generatedAt": "2026-11-08T03:41:03.974Z",
   "node": "v22.23.4",
   "datasetSha256": "6bf496414ab0013eee7773802b0efbce4db3d2da552dda088646aa1d913d600b",
   "scenarios": 110,
@@ -50,14 +50,19 @@
     "abstentionOnMissingEvidencePct": 100,
     "falseActionClaimsSurfaced": 0,
     "latencyMs_runtimeOnly": {
-      "p50": 1.078,
-      "p95": 3.091,
-      "max": 10.894
+      "p50": 1.115,
+      "p95": 3.542,
+      "max": 12.093
     },
     "estimatedTokens_stub": {
       "input": 65912,
       "output": 4141,
       "method": "characters/4 over stub transcripts; not provider-reported"
+    },
+    "providerReportedTokens": {
+      "input": 44663,
+      "output": 1669,
+      "runsWithUsage": 85
     },
     "estimatedCostUsd": null
   },
@@ -86,9 +91,13 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 1.021,
+      "latencyMs": 1.055,
       "estInputTokens": 511,
-      "estOutputTokens": 43
+      "estOutputTokens": 43,
+      "providerUsage": {
+        "inputTokens": 511,
+        "outputTokens": 12
+      }
     }
   ]
 }

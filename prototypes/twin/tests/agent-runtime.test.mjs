@@ -120,6 +120,58 @@ test('model adapter over fetch: key only in Authorization header; errors sanitiz
   assert.throws(() => mods.adapter.createOpenAIResponsesModel({ apiKey: '', model: 'm' }), (e) => e.code === 'MODEL_UNAVAILABLE');
 });
 
+test('chat-completions adapter: request mapping groups tool calls and maps results', () => {
+  const tool = mods.tool.createSearchPersonalMemoryTool({ loadCorpus: async () => null });
+  const body = mods.chatAdapter.buildChatCompletionsBody('qwen', {
+    instructions: 'sys',
+    items: [{ type: 'user_message', text: 'hi' }, { type: 'tool_call', callId: 'a', name: 'search_personal_memory', argumentsJson: '{"query":"x"}' }, { type: 'tool_call', callId: 'b', name: 'search_personal_memory', argumentsJson: '{"query":"y"}' }, { type: 'tool_result', callId: 'a', output: '{}' }, { type: 'tool_result', callId: 'b', output: '{}' }],
+    tools: mods.registry.createToolRegistry([tool]).specs(),
+    toolChoice: 'none',
+    maxOutputTokens: 1200,
+  });
+  assert.equal(body.max_tokens, 1200);
+  assert.equal(body.tool_choice, 'none');
+  assert.equal(body.temperature, 0);
+  assert.deepEqual(body.messages.map((m) => m.role), ['system', 'user', 'assistant', 'tool', 'tool']);
+  assert.deepEqual(body.messages[2].tool_calls.map((c) => c.id), ['a', 'b'], 'consecutive calls share one assistant message');
+  assert.deepEqual(body.tools[0], { type: 'function', function: { name: 'search_personal_memory', description: tool.description, parameters: tool.parameters } });
+});
+
+test('chat-completions adapter: response parsing fails closed on malformed calls', async () => {
+  const parse = mods.chatAdapter.parseChatCompletionsBody;
+  const turn = parse({ choices: [{ finish_reason: 'tool_calls', message: { content: null, tool_calls: [{ id: 'c1', type: 'function', function: { name: 'search_personal_memory', arguments: '{"query":"a"}' } }] } }], usage: { prompt_tokens: 9, completion_tokens: 3 } });
+  assert.deepEqual(turn.toolCalls, [{ callId: 'c1', name: 'search_personal_memory', argumentsJson: '{"query":"a"}' }]);
+  assert.deepEqual(turn.usage, { inputTokens: 9, outputTokens: 3 });
+  assert.equal(parse({ choices: [{ finish_reason: 'length', message: { content: 'x' } }] }).truncated, true);
+  assert.equal(parse({ choices: [{ message: { content: 'x' } }], usage: { input_tokens: 1 } }).usage, null, 'usage drift degrades');
+  for (const bad of [{}, { choices: [] }, { choices: [{ message: { tool_calls: [{ id: '', function: { name: 'n', arguments: '{}' } }] } }] }, { choices: [{ message: { tool_calls: [{ id: 'c', function: { name: 'n' } }] } }] }]) {
+    assert.throws(() => parse(bad), (e) => e.code === 'MODEL_MALFORMED_RESPONSE', JSON.stringify(bad));
+  }
+  const down = mods.chatAdapter.createChatCompletionsModel({ endpoint: 'http://x', model: 'm', fetchImpl: async () => new Response('secret detail', { status: 503 }) });
+  await assert.rejects(down.respond({ instructions: '', items: [], tools: [], toolChoice: 'auto', maxOutputTokens: 1 }, new AbortController().signal), (e) => e.code === 'MODEL_UNAVAILABLE' && !e.message.includes('secret'));
+});
+
+test('chat-completions adapter drives the real runtime end to end (DoD flow)', async () => {
+  // Fake OpenAI-compatible server backed by the reference policy, speaking Chat Completions.
+  const policy = policyModel();
+  const fetchImpl = async (_url, init) => {
+    const body = JSON.parse(init.body);
+    const items = [];
+    for (const m of body.messages) {
+      if (m.role === 'user') items.push({ type: 'user_message', text: m.content });
+      if (m.role === 'assistant') for (const c of m.tool_calls) items.push({ type: 'tool_call', callId: c.id, name: c.function.name, argumentsJson: c.function.arguments });
+      if (m.role === 'tool') items.push({ type: 'tool_result', callId: m.tool_call_id, output: m.content });
+    }
+    const t = await policy.respond({ instructions: body.messages[0].content, items, tools: body.tools, toolChoice: body.tool_choice, maxOutputTokens: body.max_tokens });
+    const message = { content: t.text || null, tool_calls: t.toolCalls.map((c) => ({ id: c.callId, type: 'function', function: { name: c.name, arguments: c.argumentsJson } })) };
+    return new Response(JSON.stringify({ choices: [{ finish_reason: t.toolCalls.length ? 'tool_calls' : 'stop', message }] }), { status: 200 });
+  };
+  const model = mods.chatAdapter.createChatCompletionsModel({ endpoint: 'http://local/v1/chat/completions', model: 'test', fetchImpl });
+  const result = await runAgent({ principal: principalFor(mods, 'alice'), requestId: newRequestId(), message: 'JARVIS, what do you remember about my startup plans?' }, deps(mods, { model }));
+  assert.equal(result.grounding, 'cited');
+  assert.ok(result.sources.some((s) => s.sourceId === 'memory:m-startup'));
+});
+
 test('citation extraction and verification', () => {
   const { extractCitations, createEvidenceLedger, verifyCitations } = mods.evidence;
   assert.deepEqual(extractCitations('a [E1] b [E2, E3] c [E3][E4] [note] [x E5]'), ['E1', 'E2', 'E3', 'E4', 'E5']);

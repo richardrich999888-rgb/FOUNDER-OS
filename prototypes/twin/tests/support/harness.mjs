@@ -13,6 +13,7 @@ export async function loadAgent(name) {
     receipts: await m('lib/agent/receipts.ts'),
     admission: await m('lib/agent/admission.ts'),
     adapter: await m('lib/agent/model-adapter.ts'),
+    chatAdapter: await m('lib/agent/chat-completions-adapter.ts'),
     evidence: await m('lib/agent/evidence.ts'),
     errors: await m('lib/agent/errors.ts'),
     executor: await m('lib/agent/executor.ts'),

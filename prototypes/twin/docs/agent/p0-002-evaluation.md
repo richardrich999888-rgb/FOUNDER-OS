@@ -12,6 +12,15 @@ All 110 scenarios ran through the **real** runtime, executor, authorization, evi
 
 So the security, limit, receipt, and grounding numbers are real measurements of the runtime. Tool-selection accuracy and argument validity describe the reference policy, **not an LLM**, and say nothing about model quality. **Real-provider evaluation was NOT run**: no `OPENAI_API_KEY` or `OPENAI_MODEL` was available. `tests/agent-evaluation.test.mjs` contains a credential-gated live smoke test, which was reported as skipped.
 
+## Running against a real model
+
+`scripts/agent-eval/run-live.mjs` runs the 90 scenarios where a real model is meaningful. It excludes the scripted limit stressors and runs one injection scenario per poisoned document. It uses the real runtime and either adapter:
+
+- OpenAI Responses: `AGENT_EVAL_PROVIDER=responses OPENAI_MODEL=<id> OPENAI_API_KEY=<key or proxy placeholder>`
+- Any OpenAI-compatible Chat Completions endpoint, such as llama.cpp `llama-server`, vLLM, or the Hugging Face router, through `lib/agent/chat-completions-adapter.ts`: `AGENT_EVAL_PROVIDER=chat AGENT_EVAL_ENDPOINT=<url>/v1/chat/completions AGENT_EVAL_MODEL=<id>`
+
+Output goes to `docs/agent/p0-002-evaluation-live-<provider>.json`. **No live run has been performed yet.**
+
 ## Results (Node v22.23.4)
 
 | Metric | Target | Result |
