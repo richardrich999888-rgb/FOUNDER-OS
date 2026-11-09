@@ -60,6 +60,39 @@ Per category: recall 23/35, missing_evidence 10/20, cross_user 15/15, unconfirme
 | Model **cited `[E1]` with no evidence** | 3 | Rejected, no answer (`GROUNDING_FABRICATED_CITATION`) | Fabrication blocked as designed. |
 | Generation exceeded the work deadline on CPU | 5 | Terminated at 43 s (`MODEL_TIMEOUT`) | A hardware throughput limit. Not a model or runtime defect. |
 
+### Iteration 2: after the fixes (same model, server, dataset, and limits)
+
+Fixes applied (commit "Enforce memory lookup for personal questions…"):
+1. **Enforced lookup.** On a personal-reference question, if the model makes no tool call, the runtime performs the receipted lookup itself (`initiator: runtime`).
+2. **Stemming** in retrieval.
+3. **Firmer citation instruction.**
+
+The first run is kept in `p0-002-evaluation-live-chat-iter1.json`; this run's rows are in `p0-002-evaluation-live-chat.json`.
+
+| Metric | Iteration 1 | Iteration 2 |
+|---|---|---|
+| **Workflow completion** (target ≥ 95%) | 70.0% (63/90) | **88.9% (80/90): target still missed** |
+| Tool selection | 84.71% | 96.47% |
+| Recall citing the expected source | 65.71% | 97.14% |
+| Abstention on missing evidence | 75% | 90% |
+| Unauthorized / cross-user / unregistered executions | 0 / 0 / 0 | 0 / 0 / 0 |
+| Limit enforcement, receipt persistence, source ownership | 100% / 100% / 100% | 100% / 100% / 100% |
+| False action claims surfaced | 0 | 0 |
+| Latency p50 / p95 | 10.6 s / 41.4 s | 11.8 s / 43.0 s |
+| Provider-reported tokens | 69,262 / 4,909 | 81,475 / 5,159 |
+
+Per category, iteration 2: recall 34/35, missing_evidence 16/20, cross_user 15/15, unconfirmed 5/5, prompt_injection 5/5, general 5/10.
+
+Remaining failures (10):
+
+| Cause | Count | Assessment |
+|---|---|---|
+| CPU generation exceeded the 43 s work deadline (`MODEL_TIMEOUT`) | 6 | A hardware throughput limit. The runtime terminated correctly. More of these than in iteration 1, because enforced lookups add a model turn. |
+| **General question answered with a citation key although no tool ran** (`GROUNDING_FABRICATED_CITATION`) | 3 | **A regression caused by fix 3.** The firmer citation instruction leads the model to add `[E1]` even when it has no evidence. The answer is correctly rejected, but the user gets an error instead of an answer. Iteration 1 had 1 such case. |
+| Missing-evidence question answered by citing an unrelated passage of the user's own data | 1 (missing-014) | The answer was not text-captured before the server stopped. All of its sources belong to the requester (no disclosure). Likely a loose stemmed match plus a model-written query. Not yet root-caused. |
+
+Excluding the 6 CPU timeouts, 80 of the 84 remaining scenarios completed (95.2%). That figure is given for diagnosis only; the acceptance metric is the 88.9% above, over all 90 scenarios.
+
 **Conclusion.** Every security and audit invariant held against a real, non-scripted model, including the poisoned-document scenarios. The completion target was missed, for three main reasons: tool-use discipline on personal questions, citation formatting, and lexical retrieval. False search claims are the highest-severity open issue: no data leaks, but the model claims a search it never performed.
 
 ## Results (Node v22.23.4)
