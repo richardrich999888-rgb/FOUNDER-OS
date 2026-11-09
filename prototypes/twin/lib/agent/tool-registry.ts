@@ -17,7 +17,7 @@ export type ToolParametersSchema = Readonly<{
   properties: Readonly<
     Record<
       string,
-      Readonly<{ type: "string" | "integer" | "number" | "boolean"; description: string }>
+      Readonly<{ type: "string" | "integer" | "number" | "boolean"; description: string; enum?: readonly string[]; format?: string; minLength?: number; maxLength?: number }>
     >
   >;
   required: readonly string[];

@@ -10,7 +10,7 @@ export type ModelRequest = Readonly<{
   items: readonly ConversationItem[];
   tools: readonly ToolSpec[];
   /** 'none' forbids tool selection (used on the final permitted iteration). */
-  toolChoice: "auto" | "none";
+  toolChoice: "auto" | "none" | "required";
   maxOutputTokens: number;
 }>;
 

@@ -123,6 +123,8 @@ function failed(code: ErrorCode): Verdict {
 
 /** Degrade without model text: evidence fallback, abstention, or failure. */
 function degrade(state: RunState, code: ErrorCode | null): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const evidence = state.ledger.all();
   if (evidence.length) {
     return {
@@ -154,6 +156,8 @@ function finalize(
   limits: RuntimeLimits,
   requireEvidence = false,
 ): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const text = turn.text.trim();
   if (!text) return degrade(state, "MODEL_EMPTY_RESPONSE");
   if (text.length > limits.maxAnswerChars) return degrade(state, "MODEL_MALFORMED_RESPONSE");
@@ -256,7 +260,7 @@ async function loop(
             instructions: AGENT_INSTRUCTIONS,
             items: [...state.items],
             tools: deps.registry.specs(),
-            toolChoice: finalIteration ? "none" : "auto",
+            toolChoice: finalIteration ? "none" : deps.requireEvidence && state.outcomes.length === 0 ? "required" : "auto",
             maxOutputTokens: limits.maxOutputTokens,
           },
           signal,

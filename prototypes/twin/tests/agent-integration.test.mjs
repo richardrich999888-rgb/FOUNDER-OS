@@ -789,3 +789,31 @@ test("model redirects fail closed without following a second destination", async
   );
   assert.equal(calls, 1);
 });
+
+test('evidence-required model requests a lookup first and still abstains if provider ignores it', async () => {
+  const u = await user('required-lookup');
+  const model = scripted([final('Invented personal answer')]);
+  const s = await session(u, {model});
+  s.deps.requireEvidence = true;
+  const r = await s.run();
+  assert.equal(model.calls[0].toolChoice, 'required');
+  assert.equal(r.grounding, 'no_evidence');
+  assert.notEqual(r.answer, 'Invented personal answer');
+});
+
+test('provider tool schemas expose the same status enum and text bounds enforced by execution', () => {
+  const registry=m('intelligence-tools').createIntelligenceRegistry(h.db.d1);
+  const properties=registry.get('find_commitments').parameters.properties;
+  assert.deepEqual(properties.status.enum,['active','confirmed','completed','overdue','no-deadline','follow-up']);
+  assert.equal(properties.person.maxLength,160);
+  assert.equal(registry.get('search_personal_memory').parameters.properties.query.maxLength,500);
+});
+
+test('model lookup denied by schema is a failed run, not successful missing evidence', async () => {
+ const u=await user('denied-lookup');
+ const s=await session(u,{model:scripted([turn('find_commitments',{status:'invented',person:'',project:''}),final('No commitments found')])});
+ s.deps.requireEvidence=true;
+ const r=await s.run();
+ assert.equal(r.status,'failed');assert.equal(r.errorCode,'INVALID_ARGUMENTS');assert.equal(r.answer,null);
+ assert.equal(r.receipts[0].status,'denied');
+});
