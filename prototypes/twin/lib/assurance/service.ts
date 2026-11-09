@@ -48,7 +48,10 @@ function publicWorkflow(w: Workflow) {
     updatedAt: w.updated_at,
     permissions:
       plan.success && plan.data.mode === "model"
-        ? ["Read saved context", "Share selected context with the configured inference server"]
+        ? [
+            "Read saved context",
+            "Share saved context with the configured inference server; optional semantic search may share up to 64 eligible records",
+          ]
         : ["Read saved context locally"],
     completionScope: "A bounded context read; no message sent or external action performed.",
     mayRequestResume:
