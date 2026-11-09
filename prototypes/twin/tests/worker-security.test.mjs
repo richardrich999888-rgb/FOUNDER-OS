@@ -24,9 +24,11 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
     entry,
     `import {context} from './context.mjs';
     import * as agent from '@/app/api/agent/route';
+    import * as assurance from '@/app/api/assurance/route';
     import * as intelligence from '@/app/api/intelligence/route';
     import * as twin from '@/app/api/twin/route';import * as chat from '@/app/api/chat/route';
     export default {fetch(request){return context.run(request.headers,()=>
+      new URL(request.url).pathname==='/api/assurance'?(request.method==='POST'?assurance.POST(request):assurance.GET(request)):
       new URL(request.url).pathname==='/api/agent'?agent.POST(request):
       new URL(request.url).pathname==='/api/intelligence'?(request.method==='POST'?intelligence.POST(request):intelligence.GET()):
       new URL(request.url).pathname==='/api/chat'?chat.POST(request):
@@ -53,13 +55,15 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
   const issuer = "https://worker-test.cloudflareaccess.com",
     audience = "c".repeat(64);
   let networkCalls = 0,
-    modelCalls = 0;
-  const mf = new Miniflare({
+    modelCalls = 0, embeddingCalls = 0;
+  const options = {
+    cf: false, // Use local metadata; never fetch workers.cloudflare.com during tests.
     modules: true,
     script: bundle.outputFiles[0].text,
     compatibilityDate: "2026-05-15",
     compatibilityFlags: ["nodejs_compat"],
     d1Databases: ["DB"],
+    d1Persist: path.join(dir, "restart-" + crypto.randomUUID()),
     log: new Log(LogLevel.ERROR),
     bindings: {
       TWIN_AUTH_PROVIDER: "cloudflare-access",
@@ -67,8 +71,17 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       TWIN_AUTH_AUDIENCE: audience,
       TWIN_AGENT_ENDPOINT: "https://synthetic-model.test/v1/chat/completions",
       TWIN_AGENT_MODEL: "synthetic-contract-model",
+      TWIN_EMBEDDING_ENDPOINT: "https://synthetic-model.test/v1/embeddings",
+      TWIN_EMBEDDING_MODEL: "synthetic-embedding",
+      TWIN_EMBEDDING_MIN_SCORE: ".31",
     },
     outboundService: async (request) => {
+      if (request.url === "https://synthetic-model.test/v1/embeddings") {
+        embeddingCalls++;
+        const body = await request.json();
+        assert.ok(body.input.length >= 2);
+        return Response.json({data:body.input.map((_,index)=>({index,embedding:[1,0]}))});
+      }
       if (request.url === "https://synthetic-model.test/v1/chat/completions") {
         modelCalls++;
         const body = await request.json();
@@ -90,9 +103,10 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       networkCalls++;
       return Response.json({ keys: [key] });
     },
-  });
+  };
+  const mf = new Miniflare(options);
   try {
-    const db = await mf.getD1Database("DB");
+    let db = await mf.getD1Database("DB");
     for (const file of (await fs.readdir("drizzle")).filter((f) => f.endsWith(".sql")).sort()) {
       const migration = await fs.readFile("drizzle/" + file, "utf8");
       for (const statement of migration.split("--> statement-breakpoint"))
@@ -284,6 +298,7 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
     assert.equal(modelResult.execution.grounding, "cited");
     assert.equal(modelResult.execution.receipts[0].status, "succeeded");
     assert.equal(modelCalls, 2);
+    assert.equal(embeddingCalls, 1);
     graph = await intel(jwtA);
     const other = await intel(jwtB);
     assert.equal(
@@ -352,6 +367,22 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       ).n,
       0,
     );
+    // Reuse the actual Worker/JWT/D1 fixture for P0-004, with no new identity mock.
+    assert.equal((await request(null,undefined,{},"assurance")).status,401);
+    let wf = (await request(jwtA,{action:"propose",idempotencyKey:crypto.randomUUID(),intent:"Prepare synthetic investor follow-up",plan:{mode:"local",tool:"search_personal_memory",args:{query:"synthetic"}},deadlineAt:Date.now()+60000},{},"assurance")).workflow;
+    for (const action of ["review","approve"]) {
+      const r=await request(jwtA,{action,id:wf.id,version:wf.version},{},"assurance");assert.equal(r.status,200,JSON.stringify(r));wf=r.workflow;
+    }
+    // Replace the Worker isolate, keeping only the durable D1 directory.
+    await mf.setOptions({...options,script:options.script+"\n// restarted isolate"});
+    db = await mf.getD1Database("DB");
+    const restored=(await request(jwtA,undefined,{},"assurance")).workflows.find(w=>w.id===wf.id);
+    assert.equal(restored.state,"AUTHORIZED");assert.equal(restored.version,wf.version);
+    assert.equal((await request(jwtB,{action:"execute",id:wf.id,version:wf.version},{},"assurance")).status,404);
+    const wfRuns=await Promise.all([1,2].map(()=>request(jwtA,{action:"execute",id:wf.id,version:wf.version},{},"assurance")));
+    assert.deepEqual(wfRuns.map(r=>r.status).sort(),[200,409]);
+    const completed=wfRuns.find(r=>r.status===200);assert.equal(completed.workflow.state,"COMPLETED");assert.equal(completed.evidence.conclusion,"VERIFIED");
+    assert.equal((await db.prepare("SELECT COUNT(*) n FROM twin_workflow_outcomes").first()).n,1);
     const raceVersion = (await request(jwtA)).version;
     const updates = await Promise.all(
       ["first", "second"].map((title) =>
@@ -388,6 +419,7 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       (await db.prepare("SELECT COUNT(*) AS n FROM agent_execution_receipts").first()).n,
       0,
     );
+    assert.equal((await db.prepare("SELECT COUNT(*) n FROM twin_workflows").first()).n,0);
     assert.ok(networkCalls >= 1);
   } finally {
     await mf.dispose();

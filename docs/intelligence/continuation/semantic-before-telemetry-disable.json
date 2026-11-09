@@ -1,0 +1,701 @@
+{
+  "measuredAt": "2026-11-09T07:05:38.144Z",
+  "category": "actual local embeddings; controlled planner; actual verified JWT, API, authorization, D1 adapter and receipts; not real generative model",
+  "model": "all-MiniLM-L6-v2",
+  "minimumScore": 0.31,
+  "thresholdSelection": "ceil((maximum of 12 separately listed calibration-negative similarities + .05)*100)/100; no positive labels in formula",
+  "plannerCalls": 96,
+  "embeddingCalls": 48,
+  "metrics": {
+    "previous-challenge": {
+      "positiveCount": 24,
+      "recallAt5": 0.9583333333333334,
+      "mrr": 0.9583333333333334,
+      "negativeCount": 0,
+      "abstentions": 0
+    },
+    "new-holdout": {
+      "positiveCount": 12,
+      "recallAt5": 1,
+      "mrr": 1,
+      "negativeCount": 12,
+      "abstentions": 11
+    }
+  },
+  "rows": [
+    {
+      "partition": "previous-challenge",
+      "query": "Orion pitch deck indigo",
+      "target": "deck",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 114.3760570000004
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Orion budget amber",
+      "target": "budget",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 57.768148999999994
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Zephyr investor call",
+      "target": "call",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 62.61792000000014
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Zephyr train departs",
+      "target": "travel",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 3,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 57.47749799999974
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "vegetarian lunch",
+      "target": "food",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 51.323669000000336
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "concise written replies",
+      "target": "reply",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 58.61662999999953
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "backup cabinet seven",
+      "target": "backup",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 53.54420500000015
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Nila invoices Thursday",
+      "target": "review",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 96.59136399999988
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "flight cancelled train",
+      "target": "reason",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 52.39727700000003
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Jos\u00e9 Mart\u00ednez Saffron",
+      "target": "name",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 49.455635999999686
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Juniper offline",
+      "target": "privacy",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 52.88440400000036
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "walk breakfast thirty",
+      "target": "routine",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 60.71480900000006
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Where is my investor presentation?",
+      "target": "deck",
+      "rank": 0,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 155.05844100000013
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Where is the financial workbook?",
+      "target": "budget",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 41.70825100000002
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "When does the fundraising conversation begin?",
+      "target": "call",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 58.47415900000033
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "When does my rail journey leave?",
+      "target": "travel",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 56.81956200000059
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "What meat-free food do I choose?",
+      "target": "food",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 50.32156500000019
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "What writing style do I prefer?",
+      "target": "reply",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 61.18055199999981
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Where is the spare disk?",
+      "target": "backup",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 52.81255599999986
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Who checks bills weekly?",
+      "target": "review",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 46.85404799999924
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Why did I avoid flying?",
+      "target": "reason",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 51.56614399999944
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Who owns the Saffron design?",
+      "target": "name",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 42.85665700000027
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "Which notes cannot go online?",
+      "target": "privacy",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 66.11533299999974
+    },
+    {
+      "partition": "previous-challenge",
+      "query": "What exercise follows my morning meal?",
+      "target": "routine",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 111.42585899999995
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Which folder contains the Orion slides?",
+      "target": "deck",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 225.91997099999935
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Where do we keep financial projections for Orion?",
+      "target": "budget",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 89.96622100000059
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What time am I speaking with Zephyr investors?",
+      "target": "call",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 58.89941100000033
+    },
+    {
+      "partition": "new-holdout",
+      "query": "When is Zephyr's railway departure?",
+      "target": "travel",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 3,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 59.43829199999891
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Do my midday meals contain meat?",
+      "target": "food",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 57.88785800000005
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Should you write long responses or short ones?",
+      "target": "reply",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 69.96266900000046
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Where can I find the spare storage device?",
+      "target": "backup",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 59.0562800000007
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Who checks the bills each week?",
+      "target": "review",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 56.50195200000053
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What caused me to take the train?",
+      "target": "reason",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 62.26308099999915
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Who handles design for Saffron?",
+      "target": "name",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 113.27361900000142
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Can Juniper meeting notes be uploaded?",
+      "target": "privacy",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 3,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 58.484363999999914
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What do I do for exercise after eating in the morning?",
+      "target": "routine",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 154.09825900000033
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Which hospital delivered me?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 53.68291399999907
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my national identification number?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 55.684228000000076
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my favourite ocean?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 58.57972100000006
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Which vaccine did I receive?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 62.99306799999977
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What was my childhood nickname?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 60.61048699999992
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Who is my grandmother?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 55.64519400000063
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my wedding date?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 56.91024599999946
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my credit card PIN?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 123.19621899999947
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Which school did my daughter attend?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 59.69031299999915
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my car registration?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 52.41293699999915
+    },
+    {
+      "partition": "new-holdout",
+      "query": "Which language did I learn first?",
+      "target": null,
+      "rank": null,
+      "abstained": true,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 54.204522
+    },
+    {
+      "partition": "new-holdout",
+      "query": "What is my favourite dessert?",
+      "target": null,
+      "rank": null,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 56.61835400000018
+    }
+  ],
+  "providerCharge": 0,
+  "telemetry": "Not explicitly disabled during this early run; rerun required for privacy validation"
+}

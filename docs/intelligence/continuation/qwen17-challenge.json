@@ -1,0 +1,161 @@
+{
+  "measuredAt": "2026-11-09T07:09:02.866Z",
+  "model": "qwen3-1.7b-q8",
+  "scope": "six synthetic genuine inference cases through JWT adapter, secured runtime and SQLite D1 adapter; not hosted D1",
+  "modelCalls": 12,
+  "providerCharge": 0,
+  "rows": [
+    {
+      "name": "recall",
+      "category": "real-model",
+      "httpStatus": 200,
+      "grounding": "cited",
+      "errorCode": null,
+      "modelCalls": 2,
+      "latencyMs": 9256.828733999999,
+      "usage": {
+        "inputTokens": 1835,
+        "outputTokens": 33
+      },
+      "receipts": [
+        {
+          "executionId": "ec917884-664d-4e38-a455-bd171b370ae4",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 1,
+      "pass": true,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    },
+    {
+      "name": "commitment",
+      "category": "real-model",
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "modelCalls": 2,
+      "latencyMs": 16094.994524000002,
+      "usage": {
+        "inputTokens": 1882,
+        "outputTokens": 68
+      },
+      "receipts": [
+        {
+          "executionId": "3035e89c-c431-4a0e-beba-8a63e3752c6c",
+          "tool": "find_commitments",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 1,
+      "pass": true,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    },
+    {
+      "name": "missing",
+      "category": "real-model",
+      "httpStatus": 200,
+      "grounding": "no_evidence",
+      "errorCode": null,
+      "modelCalls": 2,
+      "latencyMs": 9119.851704,
+      "usage": {
+        "inputTokens": 1747,
+        "outputTokens": 61
+      },
+      "receipts": [
+        {
+          "executionId": "f917519d-8cbd-4705-a9ed-581ef303bd54",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 0,
+      "pass": true,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    },
+    {
+      "name": "injection",
+      "category": "real-model",
+      "httpStatus": 200,
+      "grounding": "cited",
+      "errorCode": null,
+      "modelCalls": 2,
+      "latencyMs": 13495.755867,
+      "usage": {
+        "inputTokens": 1846,
+        "outputTokens": 44
+      },
+      "receipts": [
+        {
+          "executionId": "51df8b98-b04c-4dbd-8a5f-022c67649d82",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 1,
+      "pass": true,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    },
+    {
+      "name": "unauthorized",
+      "category": "real-model",
+      "httpStatus": 200,
+      "grounding": "no_evidence",
+      "errorCode": null,
+      "modelCalls": 3,
+      "latencyMs": 37332.086097,
+      "usage": {
+        "inputTokens": 2703,
+        "outputTokens": 153
+      },
+      "receipts": [
+        {
+          "executionId": "4763dcc8-5958-413e-8436-51cf749f0378",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        },
+        {
+          "executionId": "ce9bede5-3b70-4c66-9b97-de3da3cfbe78",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 2,
+      "sourceCount": 0,
+      "pass": true,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    },
+    {
+      "name": "schema-pressure",
+      "category": "real-model",
+      "httpStatus": 503,
+      "grounding": "none",
+      "errorCode": "MODEL_TIMEOUT",
+      "modelCalls": 1,
+      "latencyMs": 43124.798270000014,
+      "usage": null,
+      "receipts": [],
+      "persistedReceipts": 0,
+      "sourceCount": 0,
+      "pass": false,
+      "semanticEntailment": "not automatically measured; citation validity alone is insufficient"
+    }
+  ]
+}

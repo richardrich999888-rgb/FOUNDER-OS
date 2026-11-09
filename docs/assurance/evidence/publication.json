@@ -1,0 +1,32 @@
+{
+  "pullRequest": "https://github.com/richardrich999888-rgb/FOUNDER-OS/pull/5",
+  "draft": true,
+  "baseBranch": "feature/jarvis-p0-003-persistent-intelligence",
+  "headBranch": "feature/jarvis-p0-004-personal-agency-assurance",
+  "method": "Connected GitHub API; each returned tree SHA verified equal to its tested local Git tree",
+  "commits": [
+    {
+      "local": "f0baf48cc2dd0ccb0eb112be47caf58b0ce17ffc",
+      "remote": "c143487765af2b6450cba069714300ddbc313c42",
+      "tree": "c81c9a62c440de9d70c63729d66596e99ff26f60"
+    },
+    {
+      "local": "5518cbcd1f7b2d0f39109e1e46b373b946a4124f",
+      "remote": "3d8c19ce773ab73faa393c82a361b29ae8c874ad",
+      "tree": "190b078bf532a3c47d9050e7b8c5424a179e5205"
+    },
+    {
+      "local": "9cc6c2682d05ac14c06983c245c89aa00a629957",
+      "remote": "d7964620dbbc890e6816e699927c0d146edd56e7",
+      "tree": "34a3372ed55bb9994f311db27b2e9443cfa3a1c5"
+    },
+    {
+      "local": "c62afe42a75279cc39b9314eb964b3612208c761",
+      "remote": "dedc7e4b267f82d6da625688d02871cf7325d13c",
+      "tree": "5247973a88f2475700bafcc6d7fa173232aaf7bb"
+    }
+  ],
+  "productionChanges": false,
+  "deployed": false,
+  "merged": false
+}

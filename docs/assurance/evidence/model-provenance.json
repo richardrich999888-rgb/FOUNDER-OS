@@ -1,0 +1,21 @@
+{
+  "model": "Qwen3-1.7B-Q8_0.gguf",
+  "source": "https://huggingface.co/Qwen/Qwen3-1.7B-GGUF",
+  "revision": "90862c4b9d2787eaed51d12237eafdfe7c5f6077",
+  "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+  "bytes": 1834426016,
+  "llamaCppCommit": "7790a9231d85b8af26e87ee60d8ed7373f9713f0",
+  "localServer": {
+    "binding": "127.0.0.1",
+    "threads": 2,
+    "batchThreads": 2,
+    "slots": 1,
+    "context": 4096,
+    "reasoningBudget": 0,
+    "enableThinking": false,
+    "authentication": "ephemeral server API key via environment; not retained"
+  },
+  "sourceVerification": "SHA-256 independently read from reused model file during this task",
+  "embeddings": "disabled for these P0-004 smoke tests",
+  "cleanup": "owned loopback server terminated after test"
+}

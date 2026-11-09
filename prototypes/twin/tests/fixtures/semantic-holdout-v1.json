@@ -1,0 +1,101 @@
+{
+  "scope": "New synthetic held-out wording frozen before semantic evaluation; same author and corpus, not independent third-party validation",
+  "queries": [
+    {
+      "query": "Which folder contains the Orion slides?",
+      "target": "deck"
+    },
+    {
+      "query": "Where do we keep financial projections for Orion?",
+      "target": "budget"
+    },
+    {
+      "query": "What time am I speaking with Zephyr investors?",
+      "target": "call"
+    },
+    {
+      "query": "When is Zephyr's railway departure?",
+      "target": "travel"
+    },
+    {
+      "query": "Do my midday meals contain meat?",
+      "target": "food"
+    },
+    {
+      "query": "Should you write long responses or short ones?",
+      "target": "reply"
+    },
+    {
+      "query": "Where can I find the spare storage device?",
+      "target": "backup"
+    },
+    {
+      "query": "Who checks the bills each week?",
+      "target": "review"
+    },
+    {
+      "query": "What caused me to take the train?",
+      "target": "reason"
+    },
+    {
+      "query": "Who handles design for Saffron?",
+      "target": "name"
+    },
+    {
+      "query": "Can Juniper meeting notes be uploaded?",
+      "target": "privacy"
+    },
+    {
+      "query": "What do I do for exercise after eating in the morning?",
+      "target": "routine"
+    },
+    {
+      "query": "Which hospital delivered me?",
+      "target": null
+    },
+    {
+      "query": "What is my national identification number?",
+      "target": null
+    },
+    {
+      "query": "What is my favourite ocean?",
+      "target": null
+    },
+    {
+      "query": "Which vaccine did I receive?",
+      "target": null
+    },
+    {
+      "query": "What was my childhood nickname?",
+      "target": null
+    },
+    {
+      "query": "Who is my grandmother?",
+      "target": null
+    },
+    {
+      "query": "What is my wedding date?",
+      "target": null
+    },
+    {
+      "query": "What is my credit card PIN?",
+      "target": null
+    },
+    {
+      "query": "Which school did my daughter attend?",
+      "target": null
+    },
+    {
+      "query": "What is my car registration?",
+      "target": null
+    },
+    {
+      "query": "Which language did I learn first?",
+      "target": null
+    },
+    {
+      "query": "What is my favourite dessert?",
+      "target": null
+    }
+  ]
+}

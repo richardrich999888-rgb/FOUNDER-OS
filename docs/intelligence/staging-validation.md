@@ -8,7 +8,7 @@ This is the concrete remaining deployment gate. The existing owner-private Sites
 - `TWIN_AUTH_PROVIDER=cloudflare-access`, exact `TWIN_AUTH_ISSUER` and application `TWIN_AUTH_AUDIENCE`, pinned RS256/JWKS reachability and signed `Cf-Access-Jwt-Assertion` forwarding. A Sites unsigned user header is insufficient.
 - Two isolated synthetic test accounts with actual Access login sessions. For legacy compatibility, operator-verified one-to-one `TWIN_AUTH_ACCOUNT_LINKS` and a staging copy whose ownership is established independently of email.
 - Permission to deploy the reviewed commit to that restricted staging environment; no production change is implied.
-- For a subsequent live-model run: securely configured provider credential/model, explicit per-account context-sharing consent and spend cap. The current local agent route does not call a provider. Adapter wiring and a real smoke test are still required.
+- For hosted inference: a reachable approved model endpoint, optional securely stored provider credential, explicit per-account context-sharing consent and a spend cap. The current agent route includes a Chat Completions adapter; see remediation evidence for actual local model results. Loopback on this test machine is not reachable from a hosted Worker.
 
 ## Execution and evidence to retain
 
@@ -21,3 +21,13 @@ This is the concrete remaining deployment gate. The existing owner-private Sites
 7. If the provider integration is subsequently authorized, use synthetic consented data, real provider responses and usage accounting. Test consent revocation during a call; assert no stale final response or replay. Record tokens/cost/latency and provider trace ID securely. Do not reuse deterministic local runs as provider evidence.
 
 Current result for every hosted item above: **not executed — prerequisites unavailable**. Fill the evidence record with actual outcome, observed response, commit and test time; leave failures visible. Release only after these checks and explicit deployment approval.
+
+## Session revocation limitation
+
+JWT signature/issuer/audience/expiry validation is local. It does not consult an Access revocation endpoint on every request. Verify actual token lifetime and provider logout/revocation semantics in staging; do not claim immediate Access session revocation. Account generation and consent checks are separate application controls.
+
+## Executable harness and P0-004 extension
+
+The [staging-security runbook](../assurance/staging-security-runbook.md) now provides an executable runner using these existing security tests. From `prototypes/twin`, run `npm run test:staging -- --local` for synthetic local checks, or `npm run test:staging -- --hosted` for the prerequisite-gated hosted checks. Missing staging configuration exits **2 / BLOCKED**, without a passing hosted result. Set the manifest's suite to `p0-003` for the three-migration candidate; `p0-004` additionally requires reviewed migration `0003_personal_agency_assurance.sql`.
+
+See the [P0-004 readiness report](../assurance/release-readiness.md) for actual local results, separate genuine inference evidence and retained hosted/manual gates. The runner does not deploy, apply migrations, change identity settings or merge a pull request.

@@ -1,3 +1,4 @@
+import { traceHeaders } from "../assurance/telemetry";
 /**
  * ModelPort adapter for OpenAI-compatible Chat Completions endpoints
  * (llama.cpp `llama-server`, vLLM, Hugging Face router and similar).
@@ -171,7 +172,7 @@ export function createChatCompletionsModel(config: ChatCompletionsConfig): Model
   const doFetch = config.fetchImpl ?? fetch;
   return Object.freeze({
     async respond(request: ModelRequest, signal: AbortSignal): Promise<ModelTurn> {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      const headers: Record<string, string> = { "Content-Type": "application/json", ...traceHeaders() };
       if (config.apiKey) headers.Authorization = `Bearer ${config.apiKey}`;
       let response: Response;
       try {

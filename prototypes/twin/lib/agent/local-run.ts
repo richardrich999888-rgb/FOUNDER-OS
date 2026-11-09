@@ -9,10 +9,11 @@ import { createIntelligenceRegistry, intelligenceTools } from "./intelligence-to
 import { PRODUCTION_LIMITS } from "./limits";
 import { systemClock } from "./deadline";
 import type { ModelPort } from "./model-port";
+import type { RunControls } from "./run-controls";
 export const localRunSchema = z
   .object({ requestId: z.string().uuid(), tool: z.enum(intelligenceTools), args: z.unknown() })
   .strict();
-export async function runLocalIntelligence(user: Identity, input: unknown, db: D1Database) {
+export async function runLocalIntelligence(user: Identity, input: unknown, db: D1Database, controls: RunControls = {}) {
   const p = localRunSchema.parse(input),
     registry = createIntelligenceRegistry(db);
   const args = registry.get(p.tool)!.argsSchema.parse(p.args);
@@ -55,13 +56,16 @@ export async function runLocalIntelligence(user: Identity, input: unknown, db: D
         db,
         principal,
         p.requestId,
-        Date.now() + PRODUCTION_LIMITS.totalDeadlineMs,
+        Math.min(Date.now() + PRODUCTION_LIMITS.totalDeadlineMs, controls.deadlineAt ?? Infinity),
+        controls.workflow,
       ),
       clock: systemClock,
       newId: () => crypto.randomUUID(),
       limits: PRODUCTION_LIMITS,
       evidenceOnly: true,
-      validateContext: () => verifyCurrentPrincipal(principal, db).then(() => undefined),
+      plannerKind: "deterministic-local",
+      controls,
+      validateContext: async () => { await verifyCurrentPrincipal(principal, db); await controls.validateContext?.(); },
     },
   );
   return {

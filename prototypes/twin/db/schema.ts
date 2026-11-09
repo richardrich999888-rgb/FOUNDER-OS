@@ -22,3 +22,5 @@ export const aiRequests = sqliteTable(
 export * from "./intelligence-schema";
 
 export * from "./agent-schema";
+
+export * from "./assurance-schema";

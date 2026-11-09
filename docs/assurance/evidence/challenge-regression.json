@@ -1,0 +1,585 @@
+{
+  "measuredAt": "2026-11-09T07:43:10.885Z",
+  "fixtureHash": "5008ba7bca207666582798ea1977f6ce520817502ffd5b8231f3ee56676d35b6",
+  "scope": "Newly authored on 2026-11-09, separate from frozen baseline; not an external third-party holdout",
+  "category": "deterministic retrieval; no LLM",
+  "metrics": {
+    "legacy": {
+      "n": 24,
+      "recallAt5": 0.6666666666666666,
+      "mrr": 0.6666666666666666
+    },
+    "structured": {
+      "n": 24,
+      "recallAt5": 0.6666666666666666,
+      "mrr": 0.6666666666666666
+    },
+    "hybrid": {
+      "n": 24,
+      "recallAt5": 0.6666666666666666,
+      "mrr": 0.6666666666666666
+    }
+  },
+  "gates": [
+    {
+      "name": "foreignOwner",
+      "pass": true
+    },
+    {
+      "name": "foreignGeneration",
+      "pass": true
+    },
+    {
+      "name": "proposed",
+      "pass": true
+    },
+    {
+      "name": "deleted",
+      "pass": true
+    },
+    {
+      "name": "superseded",
+      "pass": true
+    },
+    {
+      "name": "restricted",
+      "pass": true
+    },
+    {
+      "name": "future",
+      "pass": true
+    },
+    {
+      "name": "expired",
+      "pass": true
+    },
+    {
+      "name": "badStart",
+      "pass": true
+    },
+    {
+      "name": "badEnd",
+      "pass": true
+    },
+    {
+      "name": "emptyQuote",
+      "pass": true
+    },
+    {
+      "name": "wrongKind",
+      "pass": true
+    },
+    {
+      "name": "falseQuote",
+      "pass": true
+    }
+  ],
+  "rows": [
+    {
+      "id": 0,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 1.3122450000000754
+    },
+    {
+      "id": 0,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 2.126459000000068
+    },
+    {
+      "id": 0,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.9868719999999485
+    },
+    {
+      "id": 1,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.18642099999988204
+    },
+    {
+      "id": 1,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.5759829999997237
+    },
+    {
+      "id": 1,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.5973030000000108
+    },
+    {
+      "id": 2,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.14382000000023254
+    },
+    {
+      "id": 2,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.5046219999999266
+    },
+    {
+      "id": 2,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.434001999999964
+    },
+    {
+      "id": 3,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.11194699999987279
+    },
+    {
+      "id": 3,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 10.672605999999632
+    },
+    {
+      "id": 3,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.385483000000022
+    },
+    {
+      "id": 4,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.07069799999999304
+    },
+    {
+      "id": 4,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.38573700000006284
+    },
+    {
+      "id": 4,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.3439929999999549
+    },
+    {
+      "id": 5,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.08181500000000597
+    },
+    {
+      "id": 5,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.4090639999999439
+    },
+    {
+      "id": 5,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.2941359999999804
+    },
+    {
+      "id": 6,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.07550600000013219
+    },
+    {
+      "id": 6,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.27468999999973676
+    },
+    {
+      "id": 6,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.32786899999973684
+    },
+    {
+      "id": 7,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.062193000000206666
+    },
+    {
+      "id": 7,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.29858500000000276
+    },
+    {
+      "id": 7,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.2614300000000185
+    },
+    {
+      "id": 8,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.05781699999988632
+    },
+    {
+      "id": 8,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.2534059999998135
+    },
+    {
+      "id": 8,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.281840000000102
+    },
+    {
+      "id": 9,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.08139800000026298
+    },
+    {
+      "id": 9,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.2648619999999937
+    },
+    {
+      "id": 9,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.25350899999966714
+    },
+    {
+      "id": 10,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.05081700000027922
+    },
+    {
+      "id": 10,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.3075679999997192
+    },
+    {
+      "id": 10,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.40922900000032314
+    },
+    {
+      "id": 11,
+      "partition": "literal",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.0824840000000222
+    },
+    {
+      "id": 11,
+      "partition": "literal",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.29856599999993705
+    },
+    {
+      "id": 11,
+      "partition": "literal",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.223461000000043
+    },
+    {
+      "id": 12,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.06321100000013757
+    },
+    {
+      "id": 12,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.38975499999969543
+    },
+    {
+      "id": 12,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.29418699999996534
+    },
+    {
+      "id": 13,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.0681750000003376
+    },
+    {
+      "id": 13,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.2596480000001975
+    },
+    {
+      "id": 13,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.233169000000089
+    },
+    {
+      "id": 14,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.151068000000123
+    },
+    {
+      "id": 14,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.3143059999997604
+    },
+    {
+      "id": 14,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.27856400000018766
+    },
+    {
+      "id": 15,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.08575800000016898
+    },
+    {
+      "id": 15,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.2419199999999364
+    },
+    {
+      "id": 15,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.2583190000000286
+    },
+    {
+      "id": 16,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.1269929999998567
+    },
+    {
+      "id": 16,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.3234890000003361
+    },
+    {
+      "id": 16,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.3214229999998679
+    },
+    {
+      "id": 17,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.0736800000004223
+    },
+    {
+      "id": 17,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.3098860000000059
+    },
+    {
+      "id": 17,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.23654800000031173
+    },
+    {
+      "id": 18,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.06713200000012876
+    },
+    {
+      "id": 18,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.2733680000001186
+    },
+    {
+      "id": 18,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.9174699999998666
+    },
+    {
+      "id": 19,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.08255299999973431
+    },
+    {
+      "id": 19,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.3675629999997909
+    },
+    {
+      "id": 19,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.22202500000003056
+    },
+    {
+      "id": 20,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.1687090000000353
+    },
+    {
+      "id": 20,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.2800659999998061
+    },
+    {
+      "id": 20,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.3043680000000677
+    },
+    {
+      "id": 21,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.06891900000027817
+    },
+    {
+      "id": 21,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.25191199999972014
+    },
+    {
+      "id": 21,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.3755719999999201
+    },
+    {
+      "id": 22,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 1,
+      "latencyMs": 0.07356499999968946
+    },
+    {
+      "id": 22,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 1,
+      "latencyMs": 0.26131500000019514
+    },
+    {
+      "id": 22,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 1,
+      "latencyMs": 0.2013120000001436
+    },
+    {
+      "id": 23,
+      "partition": "paraphrase",
+      "mode": "legacy",
+      "rank": 0,
+      "latencyMs": 0.05695800000012241
+    },
+    {
+      "id": 23,
+      "partition": "paraphrase",
+      "mode": "structured",
+      "rank": 0,
+      "latencyMs": 0.19295199999987744
+    },
+    {
+      "id": 23,
+      "partition": "paraphrase",
+      "mode": "hybrid",
+      "rank": 0,
+      "latencyMs": 0.29383000000007087
+    }
+  ],
+  "semanticTargetMet": false,
+  "paidInferenceCostUsd": 0
+}

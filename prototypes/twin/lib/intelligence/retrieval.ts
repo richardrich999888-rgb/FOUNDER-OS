@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Snapshot, type RecordNode, recordText, normalize, validInstant } from "./model";
+import { type Snapshot, type RecordNode, recordText, normalize, validInstant, IntelligenceError } from "./model";
 export const querySchema = z
   .object({
     query: z.string().trim().max(500).default(""),
@@ -84,6 +84,11 @@ export function eligibleRecords(s: Snapshot, now = Date.now()): RecordNode[] {
       r.validity !== "valid" ||
       r.privacy === "restricted" ||
       !r.content ||
+      r.kind !== r.content.kind ||
+      !validInstant(r.createdAt) || !validInstant(r.updatedAt) ||
+      !validInstant(r.validFrom) ||
+      (r.validTo !== null && !validInstant(r.validTo)) ||
+      (r.kind !== "source" && !r.quote.trim()) ||
       Date.parse(r.validFrom) > now ||
       (r.validTo !== null && Date.parse(r.validTo) <= now)
     )
@@ -109,7 +114,7 @@ export function eligibleRecords(s: Snapshot, now = Date.now()): RecordNode[] {
   return s.records.filter((r) => valid(r));
 }
 
-export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
+export function retrieveContext(s: Snapshot, input: unknown, now = Date.now(), semanticScores?: ReadonlyMap<string, number>) {
   const q = querySchema.parse(input),
     words = terms(q.query),
     byId = new Map(s.records.map((r) => [r.id, r]));
@@ -192,8 +197,9 @@ export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
         q.since ||
         q.until
       );
+      const semantic = q.mode === "hybrid" ? semanticScores?.get(r.id) ?? 0 : 0;
       const score =
-        hits * 3 +
+        semantic * 10 + hits * 3 +
         exact +
         (structured ? 2 : 0) +
         (r.content?.kind === "fact" &&
@@ -208,7 +214,7 @@ export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
           q.mode === "structured"
             ? structured || hits > 0
             : words.length
-              ? hits > 0 || (structured && q.mode === "hybrid")
+              ? hits > 0 || semantic > 0 || (structured && q.mode === "hybrid")
               : structured,
       };
     })
@@ -248,6 +254,9 @@ export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
       budget -= size;
       return true;
     });
+  // An eligible record that cannot fit is not missing evidence. Do not silently
+  // turn the bounded-context limit into a successful empty recall.
+  if (!results.length && selected.length) throw new IntelligenceError("LIMIT");
   return {
     status: results.length ? ("ok" as const) : ("no_evidence" as const),
     results,

@@ -1,0 +1,64 @@
+{
+  "cwd": "prototypes/twin",
+  "commands": [
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm test",
+      "exitCode": 0,
+      "logSha256": "d7e33ca8abe8c1507706d7a992cdc8f5dc0f0bfda2118f8ffc407b513262cd74"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a"
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run build",
+      "exitCode": 0,
+      "logSha256": "2b7d8637fd03846a66a6940c8caed206f51ea502b77f5b1315edc633814abf7a"
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run test:built",
+      "exitCode": 0,
+      "logSha256": "9a6ee692440ced05a3e88d06405ee2494688ef4f2e87c5eb342d8f11d30c6bf2"
+    },
+    {
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "logSha256": "594f7d736196609e2c34e1f1f011cb1c3a07831b1e8e03773b260e64d6751136"
+    },
+    {
+      "command": "node experiments/evaluate-semantic.mjs (telemetry opt-out)",
+      "exitCode": 0,
+      "logSha256": "2e063a86cc97bec48cb745088de0a7588d830541c64974d175174cd42be8d190"
+    },
+    {
+      "command": "npm run test:live-agent (Qwen3-1.7B)",
+      "exitCode": 0,
+      "logSha256": "f0713ff1f74048a0d360ee9fd12d4ddb7b9311413144bbd865e4e7b8cdc28695"
+    },
+    {
+      "command": "node scripts/live-adversarial.mjs (Qwen3-1.7B)",
+      "exitCode": 1,
+      "logSha256": "7f48bedb28e55b88885fa0e4c5ba9b9379902d7f62b6810ed2f7d99e7f03791f"
+    },
+    {
+      "command": "node scripts/live-semantic.mjs (seccomp-isolated embeddings + Qwen3-1.7B)",
+      "exitCode": 0,
+      "logSha256": "68669a7ff6eda916bde191d8b4fa5bdabd2d7ccf94b2640fd50e6e08d19e3d7e"
+    },
+    {
+      "command": "python experiments/embedding-calibration.py (seccomp)",
+      "exitCode": 0,
+      "logSha256": "92288d16f49e5cf31882d8fc93f7b1003d2fa561c7c0ea77352caf02ca36ee5f"
+    }
+  ],
+  "interruptedCommands": [
+    "Initial full-test check blocked for Miniflare metadata fetch; final no-fetch rerun passes",
+    "Two combined inference attempts blocked for Microsoft telemetry; not counted as completed; final kernel-isolated embedding run passes"
+  ]
+}

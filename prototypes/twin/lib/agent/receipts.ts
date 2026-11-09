@@ -1,5 +1,6 @@
 import { ReceiptWriteError, sanitizeErrorCode, type ErrorCode } from "./errors";
 import { principalBinding, type VerifiedPrincipal } from "./principal";
+import { span } from "../assurance/telemetry";
 export type ExecutionStatus = "started" | "succeeded" | "failed" | "timed_out" | "denied";
 export type AuthorizationDecision = "allow" | "deny";
 export type RunStatus = "running" | "completed" | "failed";
@@ -53,22 +54,23 @@ export function createD1ReceiptStore(
   principal: VerifiedPrincipal,
   requestId: string,
   deadlineAt: number,
+  workflow?: { id: string; version: number },
 ): ReceiptStore {
   const b = principalBinding(principal),
     owner = principal.userId,
     gen = b.generation,
     epoch = b.epoch;
   deadlineAt = Math.min(deadlineAt, b.identity.expiresAt);
-  const live = `EXISTS(SELECT 1 FROM twin_intelligence_heads h JOIN twin_accounts a ON a.user_id=h.owner AND a.generation=h.generation WHERE h.owner=? AND h.generation=? AND h.epoch=? ${b.destination === "provider" ? "AND json_extract(a.state,'$.aiConsent')=1" : ""})`;
-  const liveArgs = [owner, gen, epoch];
+  const live = `EXISTS(SELECT 1 FROM twin_intelligence_heads h JOIN twin_accounts a ON a.user_id=h.owner AND a.generation=h.generation WHERE h.owner=? AND h.generation=? AND h.epoch=? ${b.destination === "provider" ? "AND json_extract(a.state,'$.aiConsent')=1" : ""})${workflow ? ` AND EXISTS(SELECT 1 FROM twin_workflows w JOIN twin_workflow_authorizations a ON a.owner=w.owner AND a.id=w.authorization_id WHERE w.owner=? AND w.generation=? AND w.id=? AND w.version=? AND w.run_id=? AND w.state='RUNNING' AND w.lease_until>=${nowSql} AND a.expires_at>=${nowSql})` : ""}`;
+  const liveArgs = [owner, gen, epoch, ...(workflow ? [owner,gen,workflow.id,workflow.version,requestId] : [])];
   const runLive = `EXISTS(SELECT 1 FROM agent_runs WHERE request_id=? AND user_id=? AND generation=? AND status='running' AND deadline_at>=${nowSql})`;
   const runArgs = [requestId, owner, gen];
   async function write(sql: string, args: unknown[]) {
     try {
-      const r = await db
+      const r = await span("receipt.persist", () => db
         .prepare(sql)
         .bind(...args)
-        .all();
+        .all());
       if (r.results.length !== 1) throw new Error("rejected");
     } catch {
       throw new ReceiptWriteError();

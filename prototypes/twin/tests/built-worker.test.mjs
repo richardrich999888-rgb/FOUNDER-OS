@@ -16,6 +16,7 @@ test("production bundle fails closed without verified identity configuration", a
     path: path.join(root, file),
   }));
   const mf = new Miniflare({
+    cf: false, // Use local metadata; never fetch workers.cloudflare.com during tests.
     modules,
     modulesRoot: root,
     compatibilityDate: "2026-05-15",
@@ -24,7 +25,7 @@ test("production bundle fails closed without verified identity configuration", a
     log: new Log(LogLevel.ERROR),
   });
   try {
-    for (const endpoint of ["/api/twin", "/api/chat", "/api/intelligence", "/api/agent"])
+    for (const endpoint of ["/api/twin", "/api/chat", "/api/intelligence", "/api/agent", "/api/assurance"])
       for (const spoof of [false, true]) {
         const r = await mf.dispatchFetch(`https://direct-worker.test${endpoint}`, {
           method: endpoint === "/api/chat" || endpoint === "/api/agent" ? "POST" : "GET",

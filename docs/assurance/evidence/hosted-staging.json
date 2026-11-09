@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "mode": "hosted-cloudflare-observation",
+  "status": "BLOCKED",
+  "expectedCommit": null,
+  "checks": [],
+  "blockers": [
+    "TWIN_STAGING_CONFIG: reviewed staging manifest is missing"
+  ],
+  "realModel": "NOT_EXECUTED"
+}

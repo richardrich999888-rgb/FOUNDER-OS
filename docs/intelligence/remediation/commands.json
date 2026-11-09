@@ -1,0 +1,97 @@
+{
+  "workingDirectory": "prototypes/twin",
+  "commands": [
+    {
+      "phase": "baseline-tests",
+      "command": "npm test",
+      "exitCode": 0,
+      "logSha256": "9a62a91b2633288172bfbc8aeae5db86909cd75cac33c7969f8db683899274ec"
+    },
+    {
+      "phase": "baseline-typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696"
+    },
+    {
+      "phase": "baseline-lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a"
+    },
+    {
+      "phase": "baseline-build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "logSha256": "c96580afc9981fe38fafcd70b9c8648c042c76eddf09be744aa6330d4ebea36e"
+    },
+    {
+      "phase": "baseline-built",
+      "command": "npm run test:built",
+      "exitCode": 0,
+      "logSha256": "a1c4c51642013e4b44edb1f250db50dd29d6ab2962a57acf8575de7617cab19f"
+    },
+    {
+      "phase": "baseline-eval",
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "logSha256": "643cb75bd18943f2ab1c6c91d5a55037c94e931777c5dde8777b0d2875fac17e"
+    },
+    {
+      "phase": "final-tests",
+      "command": "npm test",
+      "exitCode": 0,
+      "logSha256": "6e58223e5cc6d82857e0ae534f47a3b6a0b22f0659c28cca8e6b3136971210aa"
+    },
+    {
+      "phase": "final-typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696"
+    },
+    {
+      "phase": "final-lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a"
+    },
+    {
+      "phase": "final-build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "logSha256": "46d201b576b06429b95cab7835121f9cd42c1eee159d551a1ab0e12a4391cebf"
+    },
+    {
+      "phase": "final-built",
+      "command": "npm run test:built",
+      "exitCode": 0,
+      "logSha256": "642f81eefeb439762aa36c083e27e990e7d497dc57562ab2657a2aa2d3aa1418"
+    },
+    {
+      "phase": "final-eval",
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "logSha256": "7a94f11ff54ceb3c8b3d61822156d262d4eba1f89b7e0d15d49bdd0cfe990791"
+    },
+    {
+      "phase": "final-challenge",
+      "command": "npm run eval:challenge",
+      "exitCode": 0,
+      "logSha256": "2949e0fdd29ccb3da0bc5c8075d4de28422616f9811256cfa3a69809ed630b15"
+    }
+  ],
+  "liveCommands": [
+    {
+      "command": "npm run test:live-agent",
+      "configuration": "Qwen3-0.6B-Q8_0 loopback",
+      "exitCode": 1,
+      "report": "real-model-final.json"
+    },
+    {
+      "command": "node scripts/live-adversarial.mjs",
+      "configuration": "Qwen3-0.6B-Q8_0 loopback before final schema correction",
+      "exitCode": 1,
+      "report": "real-model-challenge.json"
+    }
+  ]
+}

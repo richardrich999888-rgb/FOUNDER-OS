@@ -1,0 +1,21 @@
+{
+  "mode": "genuine-inference-local-security-runtime",
+  "status": "PASS",
+  "hostedAccess": "NOT_EXECUTED",
+  "model": "Qwen3-1.7B-Q8_0",
+  "modelCalls": 1,
+  "latencyMs": 31632.122022000003,
+  "usage": {
+    "inputTokens": 868,
+    "outputTokens": 24
+  },
+  "modelCost": null,
+  "workflowState": "COMPLETED",
+  "reconciliation": "VERIFIED",
+  "blockers": [],
+  "run": {
+    "status": "completed",
+    "error_code": null,
+    "tool_executions": 1
+  }
+}

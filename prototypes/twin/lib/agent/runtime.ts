@@ -51,6 +51,8 @@ import type { ConversationItem, ModelPort, ModelTurn } from "./model-port";
 import { isVerifiedPrincipal, type VerifiedPrincipal } from "./principal";
 import type { AnswerSource, ReceiptStore } from "./receipts";
 import type { ToolRegistry } from "./tool-registry";
+import type { RunControls } from "./run-controls";
+import { span, recordUsage } from "../assurance/telemetry";
 
 export type AgentDependencies = Readonly<{
   model: ModelPort;
@@ -63,6 +65,8 @@ export type AgentDependencies = Readonly<{
   validateContext: () => Promise<void>;
   evidenceOnly?: boolean;
   requireEvidence?: boolean;
+  controls?: RunControls;
+  plannerKind?: "deterministic-local";
 }>;
 
 export type AgentRunInput = Readonly<{
@@ -123,6 +127,8 @@ function failed(code: ErrorCode): Verdict {
 
 /** Degrade without model text: evidence fallback, abstention, or failure. */
 function degrade(state: RunState, code: ErrorCode | null): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const evidence = state.ledger.all();
   if (evidence.length) {
     return {
@@ -154,6 +160,8 @@ function finalize(
   limits: RuntimeLimits,
   requireEvidence = false,
 ): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const text = turn.text.trim();
   if (!text) return degrade(state, "MODEL_EMPTY_RESPONSE");
   if (text.length > limits.maxAnswerChars) return degrade(state, "MODEL_MALFORMED_RESPONSE");
@@ -249,14 +257,14 @@ async function loop(
     if (remaining <= 0) return degrade(state, "DEADLINE_EXCEEDED");
     state.iterations = iteration;
     await runBounded(() => deps.validateContext(), remaining, ctx.runSignal, "DEADLINE_EXCEEDED");
-    const turn = await runBounded(
+    const turn = await span(deps.plannerKind === "deterministic-local" ? "agent.plan" : "model.invoke", () => runBounded(
       (signal) =>
         deps.model.respond(
           {
             instructions: AGENT_INSTRUCTIONS,
             items: [...state.items],
             tools: deps.registry.specs(),
-            toolChoice: finalIteration ? "none" : "auto",
+            toolChoice: finalIteration ? "none" : deps.requireEvidence && state.outcomes.length === 0 ? "required" : "auto",
             maxOutputTokens: limits.maxOutputTokens,
           },
           signal,
@@ -264,7 +272,8 @@ async function loop(
       ctx.deadlineAt - deps.clock.now(),
       ctx.runSignal,
       "MODEL_TIMEOUT",
-    );
+    ), deps.plannerKind === "deterministic-local" ? {} : { "gen_ai.operation.name": "chat" });
+    recordUsage(turn.usage);
     await runBounded(
       () => deps.validateContext(),
       ctx.deadlineAt - deps.clock.now(),
@@ -286,6 +295,12 @@ async function loop(
       return degrade(state, "ITERATION_LIMIT_EXCEEDED");
     }
     await processToolCalls(state, turn, ctx, null);
+    // Assurance V1 promises a bounded evidence read, not a prose deliverable.
+    // Once the selected read batch finishes, another model call cannot strengthen its proof.
+    if (deps.controls?.workflow && deps.evidenceOnly) {
+      const unsuccessful = state.outcomes.find(o => o.status !== "succeeded");
+      return unsuccessful ? failed(unsuccessful.errorCode ?? "TOOL_FAILED") : degrade(state, null);
+    }
   }
   // Unreachable: the final iteration always returns. Kept as a fail-closed guard.
   return degrade(state, "ITERATION_LIMIT_EXCEEDED");
@@ -297,7 +312,7 @@ export async function runAgent(
   deps: AgentDependencies,
 ): Promise<AgentRunResult> {
   const startedAt = deps.clock.now();
-  const auditDeadlineAt = startedAt + deps.limits.totalDeadlineMs;
+  const auditDeadlineAt = Math.min(startedAt + deps.limits.totalDeadlineMs, deps.controls?.deadlineAt ?? Infinity);
   const deadlineAt = auditDeadlineAt - deps.limits.auditReserveMs;
   const state: RunState = {
     iterations: 0,
@@ -343,6 +358,9 @@ export async function runAgent(
 
   // Aborted when the run ends so any straggling cooperative work (fetch, D1) is cancelled.
   const controller = new AbortController();
+  const abort = () => controller.abort();
+  if (deps.controls?.signal?.aborted) controller.abort();
+  else deps.controls?.signal?.addEventListener("abort", abort, { once: true });
   const ctx: ExecutorContext = {
     principal: input.principal,
     requestId: input.requestId,
@@ -367,6 +385,7 @@ export async function runAgent(
         : degradeOnError(state, codeOf(error));
   } finally {
     controller.abort();
+    deps.controls?.signal?.removeEventListener("abort", abort);
   }
 
   try {
