@@ -1,6 +1,6 @@
 {
   "measuredAt": "2026-11-09T07:52:18.838801+00:00",
-  "implementationCommit": "9cc6c2682d05ac14c06983c245c89aa00a629957",
+  "implementationCommit": "d7964620dbbc890e6816e699927c0d146edd56e7",
   "p003IntegrationBase": "54c716487d0a326ae5bb87588e0d6a8f1aae6e4e",
   "inspectedRemediationAncestor": "734b2ce4f153ef46411b50e2ce5852716d4b8b93",
   "environment": {
@@ -84,5 +84,8 @@
     "reason": "No reviewed staging manifest or supplied staging credentials"
   },
   "browserQA": "NOT_EXECUTED",
-  "remoteCI": "No returned commit statuses or PR workflow runs for inspected upstream commit; local checks are not hosted CI"
+  "remoteCI": "No returned commit statuses or PR workflow runs for inspected upstream commit; local checks are not hosted CI",
+  "testedLocalImplementationCommit": "9cc6c2682d05ac14c06983c245c89aa00a629957",
+  "implementationTree": "34a3372ed55bb9994f311db27b2e9443cfa3a1c5",
+  "pullRequest": "https://github.com/richardrich999888-rgb/FOUNDER-OS/pull/5"
 }

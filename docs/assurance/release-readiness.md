@@ -2,6 +2,8 @@
 
 **Recommendation: proceed to independent review and an explicitly approved synthetic staging evaluation. Do not launch a hosted private alpha yet.** Local automated assurance checks pass. Hosted Access/D1 validation, browser review and broader model acceptance remain separate gates.
 
+Delivered as [draft PR #5](https://github.com/richardrich999888-rgb/FOUNDER-OS/pull/5). The published implementation commit is `d7964620dbbc890e6816e699927c0d146edd56e7`; its complete tree hash equals the tested local implementation, `34a3372ed55bb9994f311db27b2e9443cfa3a1c5`. [Publication mapping](evidence/publication.json) records the exact local/published commit pairs. The GitHub API creates new commit identities; file contents are unchanged.
+
 ## Source and repository audit
 
 Repository: `richardrich999888-rgb/FOUNDER-OS`; application: `prototypes/twin`.
@@ -13,7 +15,7 @@ Repository: `richardrich999888-rgb/FOUNDER-OS`; application: `prototypes/twin`.
 | P0-003 integration, draft PR #3 | `feature/jarvis-p0-003-persistent-intelligence`, `54c716487d0a326ae5bb87588e0d6a8f1aae6e4e`; verified descendant of P0-001; existing executor contracts already ported |
 | P0-003 remediation, PR #4 | Initially inspected `83c88e471dbb840b993c15054b5d3990b262d600`; incorporated the newer `734b2ce4f153ef46411b50e2ce5852716d4b8b93` after it appeared during delivery |
 | P0-004 branch | `feature/jarvis-p0-004-personal-agency-assurance` |
-| Final implementation under test | `9cc6c2682d05ac14c06983c245c89aa00a629957`; subsequent delivery changes contain documentation/evidence only |
+| Final implementation under test | Local `9cc6c2682d05ac14c06983c245c89aa00a629957`, published with identical tree as `d7964620dbbc890e6816e699927c0d146edd56e7`; subsequent delivery changes contain documentation/evidence only |
 | PR target | `feature/jarvis-p0-003-persistent-intelligence`; the PR includes the inspected PR #4 ancestry and does not merge it into the target |
 | Independent review / CI | PR #3 and #4 returned no submitted reviews. Upstream commit-status and PR-workflow queries returned empty lists. No independent approval or remote CI success is claimed. |
 

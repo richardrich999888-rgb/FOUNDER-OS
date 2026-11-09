@@ -1,5 +1,5 @@
 {
-  "reproductionBase": "5518cbcd1f7b2d0f39109e1e46b373b946a4124f",
+  "reproductionBase": "3d8c19ce773ab73faa393c82a361b29ae8c874ad",
   "regression": "Incomplete evidence is CANNOT_PROVE; contradictory surviving history remains DIVERGENT",
   "before": {
     "exitCode": 1,
@@ -7,11 +7,13 @@
     "expected": "CANNOT_PROVE",
     "logSha256": "70a8df5ee88c73a017eaec666070683316ecb4006b4b10c6bb359ba8fad6dd99"
   },
-  "fixCommit": "9cc6c2682d05ac14c06983c245c89aa00a629957",
+  "fixCommit": "d7964620dbbc890e6816e699927c0d146edd56e7",
   "after": {
     "exitCode": 0,
     "passed": 1,
     "failed": 0,
     "logSha256": "25bfcf9cc27fcd11281e5792ef4b89eebab25dce2096c97d2b3a23030c0de60c"
-  }
+  },
+  "localReproductionBase": "5518cbcd1f7b2d0f39109e1e46b373b946a4124f",
+  "localFixCommit": "9cc6c2682d05ac14c06983c245c89aa00a629957"
 }
