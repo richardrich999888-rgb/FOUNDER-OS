@@ -1,0 +1,19 @@
+{
+  "activeRuntime": "byte-identical to parent 3ba9dbf5835062d6fdcfc4b95f12131ab42ef760",
+  "commands": [
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    }
+  ],
+  "tests": 126,
+  "build": "Candidate build passed. Retained production source is byte-identical to parent whose production build and built-Worker tests passed; not rerun after reverting candidate-only production changes."
+}

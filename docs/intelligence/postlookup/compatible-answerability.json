@@ -1,0 +1,105 @@
+{
+  "measuredAt": "2026-11-09T08:39:37.665Z",
+  "category": "genuine local model and embeddings through verified JWT, API, authorization, D1 adapter and receipts; synthetic matched answerability cases",
+  "model": "qwen3-1.7b-q8",
+  "embeddingModel": "all-MiniLM-L6-v2",
+  "minimumScore": 0.31,
+  "telemetry": "ONNX platform telemetry explicitly disabled before session creation",
+  "thresholdSelection": "ceil((maximum of 12 separately listed calibration-negative similarities + .05)*100)/100; no positive labels in formula",
+  "plannerCalls": 11,
+  "embeddingCalls": 5,
+  "metrics": {
+    "live-answerability": {
+      "positiveCount": 3,
+      "recallAt5": 1,
+      "mrr": 1,
+      "negativeCount": 3,
+      "abstentions": 0
+    }
+  },
+  "rows": [
+    {
+      "partition": "live-answerability",
+      "query": "What is my favourite dessert?",
+      "target": null,
+      "rank": null,
+      "abstained": false,
+      "httpStatus": 503,
+      "errorCode": "MODEL_TIMEOUT",
+      "sourceCount": 0,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 43026.339114999995
+    },
+    {
+      "partition": "live-answerability",
+      "query": "What do I choose for lunch?",
+      "target": "food",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 23576.250265000002
+    },
+    {
+      "partition": "live-answerability",
+      "query": "How much is the Orion budget?",
+      "target": null,
+      "rank": null,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 2,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 14795.080570000006
+    },
+    {
+      "partition": "live-answerability",
+      "query": "Which folder holds the Orion budget spreadsheet?",
+      "target": "budget",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": null,
+      "sourceCount": 1,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 12908.167467000007
+    },
+    {
+      "partition": "live-answerability",
+      "query": "What is the price of the Zephyr train ticket?",
+      "target": null,
+      "rank": null,
+      "abstained": false,
+      "httpStatus": 503,
+      "errorCode": "MODEL_TIMEOUT",
+      "sourceCount": 0,
+      "receiptStatuses": [],
+      "latencyMs": 43017.017823999995
+    },
+    {
+      "partition": "live-answerability",
+      "query": "When does the Zephyr train depart?",
+      "target": "travel",
+      "rank": 1,
+      "abstained": false,
+      "httpStatus": 200,
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 3,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "latencyMs": 12769.448273000016
+    }
+  ],
+  "providerCharge": 0
+}

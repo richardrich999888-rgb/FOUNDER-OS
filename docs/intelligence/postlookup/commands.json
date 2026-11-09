@@ -1,0 +1,39 @@
+{
+  "category": "local deterministic; compatible singleton selection and post-lookup abstention candidate",
+  "commands": [
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run test:built",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run eval:intelligence",
+      "exitCode": 0
+    }
+  ],
+  "tests": 128,
+  "builtWorkerTests": 1,
+  "baselineCases": 200,
+  "earlierFailures": [
+    {
+      "command": "npm test",
+      "exitCode": 1,
+      "reason": "HTTP contract fixture expected five advertised tools on the first turn. Corrected to require exactly the sole search tool first and all five on subsequent turns; retained the deny and receipt assertions."
+    }
+  ]
+}
