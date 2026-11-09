@@ -1,0 +1,90 @@
+{
+  "measuredAt": "2026-11-09T11:07:12.422Z",
+  "category": "real local generative inference; synthetic JWT/API and SQLite D1 adapter; no provider-response substitution",
+  "model": "qwen3-1.7b-q8",
+  "modelCalls": 8,
+  "providerCharge": 0,
+  "scope": "Four targeted numeric literal cases, not general answer entailment or hosted verification",
+  "rows": [
+    {
+      "id": "supported-budget",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "modelCalls": 2,
+      "retrieved": true,
+      "sourceCount": 1,
+      "forbiddenReleased": false,
+      "requiredPresent": true,
+      "latencyMs": 9350.389147999998,
+      "usage": {
+        "inputTokens": 1862,
+        "outputTokens": 41
+      },
+      "receiptStatuses": [
+        "succeeded"
+      ]
+    },
+    {
+      "id": "invented-budget",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_UNSUPPORTED_NUMBER",
+      "modelCalls": 2,
+      "retrieved": true,
+      "sourceCount": 1,
+      "forbiddenReleased": false,
+      "requiredPresent": false,
+      "latencyMs": 18948.635251,
+      "usage": {
+        "inputTokens": 1891,
+        "outputTokens": 89
+      },
+      "receiptStatuses": [
+        "succeeded"
+      ]
+    },
+    {
+      "id": "supported-time",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "modelCalls": 2,
+      "retrieved": true,
+      "sourceCount": 1,
+      "forbiddenReleased": false,
+      "requiredPresent": true,
+      "latencyMs": 9491.665698000004,
+      "usage": {
+        "inputTokens": 1852,
+        "outputTokens": 36
+      },
+      "receiptStatuses": [
+        "succeeded"
+      ]
+    },
+    {
+      "id": "swapped-time",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "cited",
+      "errorCode": null,
+      "modelCalls": 2,
+      "retrieved": true,
+      "sourceCount": 1,
+      "forbiddenReleased": false,
+      "requiredPresent": false,
+      "latencyMs": 11997.883828000005,
+      "usage": {
+        "inputTokens": 1869,
+        "outputTokens": 46
+      },
+      "receiptStatuses": [
+        "succeeded"
+      ]
+    }
+  ]
+}

@@ -829,3 +829,66 @@ test('server-selected initial lookup maps to a named function without granting a
  assert.deepEqual(body.tool_choice,{type:'function',function:{name:'search_personal_memory'}});
  assert.equal(body.tools.length,5);
 });
+
+test('valid citation cannot launder a fabricated numeric budget into a personal answer', async () => {
+  const u = await user('numeric-budget');
+  await capture(u, 'I prefer the amber folder for the Orion budget spreadsheet.');
+  const s = await session(u, { model: scripted([
+    turn('search_personal_memory', { query: 'Orion budget' }),
+    final('Your Orion budget is INR 9000000 [E1].'),
+  ]) });
+  const r = await s.run();
+  assert.equal(r.errorCode, 'GROUNDING_UNSUPPORTED_NUMBER');
+  assert.equal(r.answerSource, 'runtime_evidence_fallback');
+  assert.doesNotMatch(r.answer, /9000000/);
+  assert.equal(r.receipts[0].status, 'succeeded');
+});
+
+test('numeric grounding keeps values atomic and does not borrow metadata or uncited sources', () => {
+  const {createEvidenceLedger, verifyCitations, hasSupportedNumericLiterals} = m('evidence');
+  const ledger = createEvidenceLedger();
+  ledger.add([
+    {sourceId:'memory:one',kind:'memory',label:'Misleading label INR 9000000',createdAt:2026,updatedAt:2027,
+      excerpt:'Budget INR 20 million; rate 5%; departure 18:15; deadline 2026-12-01T10:00:00Z; balance -20; charge $50. The reference is 2e3.'},
+    {sourceId:'memory:two',kind:'memory',label:'Other',createdAt:1,updatedAt:1,excerpt:'Unrelated cost INR 9000000.'},
+  ]);
+  const check = (answer) => {const c=verifyCitations(answer,ledger);return c.kind==='cited' && hasSupportedNumericLiterals(answer,c.cited);};
+  for (const answer of ['Budget INR 20 million [E1].','Rate 5% [E1].','Departure 18:15 [E1].',
+    'Deadline 2026-12-01T10:00:00Z [E1].','Balance -20 [E1].','Charge $50 [E1].','Reference 2e3 [E1].',
+    'Budget ＩＮＲ ２０ million [E1].','Budget INR 2\u200b0 million [E1].','No numeric assertion [E1].'])
+    assert.equal(check(answer),true,answer);
+  for (const answer of ['Budget INR 9000000 [E1].','Budget INR 20 billion [E1].','Budget USD 20 million [E1].',
+    'Rate 50% [E1].','Departure 15:18 [E1].','Deadline 2026-01-12T10:00:00Z [E1].',
+    'Balance +20 [E1].','Charge ₹50 [E1].','Charge -$50 [E1].','Charge $-50 [E1].',
+    'Charge - $50 [E1].','Reference 2e6 [E1].','Value 2027 [E1].',
+    '[E1, INR 9000000]','Budget INR ９００００００ [E1].','Budget INR 9\u200b000000 [E1].'])
+    assert.equal(check(answer),false,answer);
+  assert.equal(check('Cost INR 9000000 [E2].'),true);
+});
+
+test('numeric grounding rejects novel values across a deterministic mutation set', () => {
+  const {hasSupportedNumericLiterals} = m('evidence');
+  for(let value=11;value<=60;value++) {
+    const cited=[{citation:'E1',excerpt:`The budget is INR ${value} million.`}];
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value} million [E1].`,cited),true);
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value+100} million [E1].`,cited),false);
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value} billion [E1].`,cited),false);
+  }
+});
+
+test('numeric fallback retains authorization and fails closed if its run receipt cannot be saved', async () => {
+  const u=await user('numeric-receipt');await capture(u,'I prefer amber folders.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'amber'}),final('Budget INR 9000000 [E1].')])});
+  h.db.setFailPattern(/UPDATE agent_runs/);
+  try{const r=await s.run();noDisclosure(r);assert.equal(r.errorCode,'RECEIPT_WRITE_FAILED');}
+  finally{h.db.setFailPattern(null);}
+});
+
+test('numeric grounding records only a sanitized reason in the run receipt', async () => {
+  const u=await user('numeric-audit');await capture(u,'I prefer amber folders.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'amber'}),final('Budget INR 9000000 [E1].')])});
+  const r=await s.run();assert.equal(r.errorCode,'GROUNDING_UNSUPPORTED_NUMBER');
+  const row=h.db.sql.prepare('SELECT * FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(row.error_code,'GROUNDING_UNSUPPORTED_NUMBER');
+  assert.doesNotMatch(JSON.stringify(row),/9000000|amber|folders/);
+});

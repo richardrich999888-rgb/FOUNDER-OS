@@ -28,6 +28,7 @@ import { AgentError, ReceiptWriteError, codeOf, type ErrorCode } from "./errors"
 import {
   createEvidenceLedger,
   verifyCitations,
+  hasSupportedNumericLiterals,
   type CitedEvidence,
   type EvidenceLedger,
 } from "./evidence";
@@ -173,6 +174,8 @@ function finalize(
   if (check.kind === "fabricated") return degrade(state, "GROUNDING_FABRICATED_CITATION");
   if (hasEvidence) {
     if (check.kind === "uncited") return degrade(state, "GROUNDING_CITATION_MISSING");
+    if (!hasSupportedNumericLiterals(text, check.cited))
+      return degrade(state, "GROUNDING_UNSUPPORTED_NUMBER");
     return {
       status: "completed",
       errorCode: null,
