@@ -8,14 +8,15 @@
     "tests/worker-security.test.mjs",
     "tests/agent-integration.test.mjs",
     "tests/remediation.test.mjs",
+    "tests/semantic.test.mjs",
     "tests/assurance.test.mjs",
     "tests/migrations.test.mjs",
     "tests/staging-harness.test.mjs"
   ],
-  "logSha256": "ca5381d3e043c83caee4c4ac7fc657f0ba5495f3850278cd0a4ed8ad440caa7e",
+  "logSha256": "6357457e4ef7d91240da56be5ce2db0a231fd238c1cd216baac99d2f8e575c6e",
   "summary": [
-    "ℹ tests 98",
-    "ℹ pass 98",
+    "ℹ tests 106",
+    "ℹ pass 106",
     "ℹ fail 0",
     "ℹ skipped 0"
   ],

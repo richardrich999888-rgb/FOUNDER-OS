@@ -2,7 +2,7 @@
 
 ## Safe local execution
 
-Node >=22.13 is required (`node:sqlite` is used only in local tests). From the repository root:
+Node >=22.13, the pinned pnpm 11.25.0 (or Corepack), and the existing Linux install prerequisites (`flock`, GNU `timeout`) are required. `node:sqlite` is used only in local tests. From the repository root:
 
 ```sh
 cd prototypes/twin
@@ -21,7 +21,7 @@ node scripts/benchmark-assurance.mjs ../../docs/assurance/evidence/benchmark-loc
 
 The package manager and lockfile are unchanged. `install:ci` uses the repository's pinned pnpm flow. The application is independent of the older root monorepo scripts. The synthetic intelligence evaluation writes its existing benchmark output; preserve earlier evidence rather than overwrite it in a delivery commit.
 
-The local staging command reuses `security.test`, `worker-security.test`, `agent-integration.test` and `remediation.test`, then adds assurance, migration and harness preflight tests. It does not duplicate the JWT verifier or fake a hosted identity result. Local workerd uses real Web Crypto and D1 semantics with a synthetic JWKS endpoint. The test fixture also replaces a Worker isolate while retaining D1 and exercises two signed identities, migration preservation, concurrent transitions and rollback.
+The local staging command reuses `security.test`, `worker-security.test`, `agent-integration.test`, `remediation.test` and `semantic.test`, then adds assurance, migration and harness preflight tests. It does not duplicate the JWT verifier or fake a hosted identity result. Local workerd uses real Web Crypto and D1 semantics with a synthetic JWKS endpoint. The test fixture also replaces a Worker isolate while retaining D1 and exercises two signed identities, migration preservation, concurrent transitions and rollback.
 
 | Exit | Interpretation |
 |---|---|

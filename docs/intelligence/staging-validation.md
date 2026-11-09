@@ -25,3 +25,9 @@ Current result for every hosted item above: **not executed — prerequisites una
 ## Session revocation limitation
 
 JWT signature/issuer/audience/expiry validation is local. It does not consult an Access revocation endpoint on every request. Verify actual token lifetime and provider logout/revocation semantics in staging; do not claim immediate Access session revocation. Account generation and consent checks are separate application controls.
+
+## Executable harness and P0-004 extension
+
+The [staging-security runbook](../assurance/staging-security-runbook.md) now provides an executable runner using these existing security tests. From `prototypes/twin`, run `npm run test:staging -- --local` for synthetic local checks, or `npm run test:staging -- --hosted` for the prerequisite-gated hosted checks. Missing staging configuration exits **2 / BLOCKED**, without a passing hosted result. Set the manifest's suite to `p0-003` for the three-migration candidate; `p0-004` additionally requires reviewed migration `0003_personal_agency_assurance.sql`.
+
+See the [P0-004 readiness report](../assurance/release-readiness.md) for actual local results, separate genuine inference evidence and retained hosted/manual gates. The runner does not deploy, apply migrations, change identity settings or merge a pull request.

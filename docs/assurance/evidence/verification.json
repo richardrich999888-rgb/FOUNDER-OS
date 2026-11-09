@@ -1,0 +1,88 @@
+{
+  "measuredAt": "2026-11-09T07:52:18.838801+00:00",
+  "implementationCommit": "9cc6c2682d05ac14c06983c245c89aa00a629957",
+  "p003IntegrationBase": "54c716487d0a326ae5bb87588e0d6a8f1aae6e4e",
+  "inspectedRemediationAncestor": "734b2ce4f153ef46411b50e2ce5852716d4b8b93",
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "Linux; Node SQLite and local workerd/D1",
+    "dependencies": "Existing matching pinned dependencies reused; no new runtime dependency",
+    "paidProviderRequests": 0
+  },
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "observed": "159 passed; 0 failed; 0 skipped",
+      "logSha256": "439d62233be7f0554f928b5888051fd54b22884143da22732a60cf762ca6e4e2"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "observed": "passed",
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "observed": "passed; no lint warnings",
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "observed": "production build passed; no deployment",
+      "logSha256": "bd7e2a1013bef0ac0aabea6eb5dd47066b433ae82c27a2c98f019145fa77e6e3"
+    },
+    {
+      "command": "npm run test:built",
+      "exitCode": 0,
+      "observed": "1 test passed; 5 APIs, missing/spoofed identity configurations",
+      "logSha256": "152c5cbe4784308a29f6cc6acebfe90d821044be39a3c62f0f6ecbbf6f3183ec"
+    },
+    {
+      "command": "npm run test:staging -- --local --report ../../docs/assurance/evidence/local-staging-security.json",
+      "exitCode": 0,
+      "observed": "106 passed; hosted validation explicitly BLOCKED",
+      "logSha256": "856a12f4f0088d8ada847284ab8ff140ef1176740fbf9fcb4589a20cc1cdd10b"
+    },
+    {
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "observed": "200/200 frozen synthetic scenarios",
+      "logSha256": "6c3c96514970f9162b6975be733e29948402b19f0498fa37698056321cdf281f"
+    },
+    {
+      "command": "npm run eval:challenge",
+      "exitCode": 0,
+      "observed": "13/13 gates; lexical Recall@5 16/24 = 66.7%; semantic target NOT MET",
+      "logSha256": "05a33d26bbf36e0d9c099207673d80f68073a6492305191b3536864e2b5eecf8"
+    },
+    {
+      "command": "node scripts/benchmark-assurance.mjs ../../docs/assurance/evidence/benchmark-final.json",
+      "exitCode": 0,
+      "observed": "40 successful approved reads, 20 per diagnostic mode",
+      "logSha256": "8e65e18decf770a738d15d4819acaa1720e445e5342e9662d8b77dd768a3115d"
+    },
+    {
+      "command": "node scripts/live-assurance.mjs ../../docs/assurance/evidence/real-model-final.json",
+      "exitCode": 0,
+      "observed": "genuine configured local Qwen3-1.7B; 1 completed bounded read; VERIFIED",
+      "logSha256": "7089cfbaa8fb54d25e2732f2c01162e3126d676067526a0649a5627c136d1409"
+    },
+    {
+      "command": "drizzle-kit generate against a scratch copy of the migration metadata",
+      "exitCode": 0,
+      "observed": "No schema changes; no repository or hosted migration applied",
+      "logSha256": "ed5487fa80ddc74119e7dfa4f3549b25f1d323e3e8c5ecca9c745ed1fe09d1f4"
+    }
+  ],
+  "hosted": {
+    "command": "node scripts/staging-security.mjs --hosted --report ../../docs/assurance/evidence/hosted-staging.json",
+    "exitCode": 2,
+    "status": "BLOCKED",
+    "reason": "No reviewed staging manifest or supplied staging credentials"
+  },
+  "browserQA": "NOT_EXECUTED",
+  "remoteCI": "No returned commit statuses or PR workflow runs for inspected upstream commit; local checks are not hosted CI"
+}

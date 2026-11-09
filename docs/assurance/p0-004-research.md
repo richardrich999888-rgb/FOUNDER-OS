@@ -20,6 +20,8 @@ Reviewed 9 November 2026. This is an implementation decision record; vendor docu
 | [D1 retry guidance](https://developers.cloudflare.com/d1/best-practices/retry-queries/) | Idempotency matters for write retry; D1 may retry eligible read-only queries | No blind write or model retries. Up to three user-approved read attempts per workflow; each uses a new run ID and current authority. Duplicate proposals and execute requests cannot create duplicate workflow transitions. |
 | [Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/) | Application-side validation is distinct from the Access gateway boundary | Preserve P0-001 verifier, pinned issuer/audience/JWKS and opaque identities. Local synthetic signed tokens cannot prove hosted ingress or legacy mapping. Gateway redirect alone is insufficient. |
 
+D1 capacity reference: [platform limits](https://developers.cloudflare.com/d1/platform/limits/). The current specification counts a `batch()` call as one request against the per-invocation query limit. Our benchmark counts SQL statements, not billed rows or hosted API requests; validate runtime quotas on staging.
+
 ## Reliability choices
 
 - **Idempotency:** owner/generation-scoped proposal key binds the full proposal; changed input conflicts. Execute wins a single compare-and-swap transition before admission. Existing run/call uniqueness remains intact.
