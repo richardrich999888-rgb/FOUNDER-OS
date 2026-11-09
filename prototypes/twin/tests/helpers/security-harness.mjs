@@ -72,7 +72,7 @@ export async function createHarness(name) {
     "intelligence-schema.mjs": "db/intelligence-schema.ts",
     "intelligence-route.mjs": "app/api/intelligence/route.ts",
     ...Object.fromEntries(
-      ["model", "extraction", "retrieval", "store", "service", "agent-adapter"].map((n) => [
+      ["model", "extraction", "retrieval", "embeddings", "store", "service", "agent-adapter"].map((n) => [
         `intelligence-${n}.mjs`,
         `lib/intelligence/${n}.ts`,
       ]),
@@ -171,7 +171,7 @@ export async function createHarness(name) {
     );
   }
   const modules = {};
-  for (const name of ["model", "extraction", "retrieval", "store", "service", "agent-adapter"])
+  for (const name of ["model", "extraction", "retrieval", "embeddings", "store", "service", "agent-adapter"])
     modules[`intelligence-${name}`] = await import(path.join(dir, `intelligence-${name}.mjs`));
   for (const name of [
     "admission",

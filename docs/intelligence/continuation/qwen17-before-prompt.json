@@ -1,0 +1,34 @@
+{
+  "measuredAt": "2026-11-09T06:59:54.636Z",
+  "model": "qwen3-1.7b-q8",
+  "scope": "two synthetic real-model smoke cases; not production or scientific evaluation",
+  "modelCalls": 4,
+  "rows": [
+    {
+      "name": "confirmed-recall",
+      "pass": false,
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "latencyMs": 32552.685622000005,
+      "usage": {
+        "inputTokens": 1787,
+        "outputTokens": 27
+      },
+      "receiptCount": 1
+    },
+    {
+      "name": "missing-evidence",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "no_evidence",
+      "errorCode": null,
+      "latencyMs": 10299.94773,
+      "usage": {
+        "inputTokens": 1699,
+        "outputTokens": 39
+      },
+      "receiptCount": 1
+    }
+  ]
+}

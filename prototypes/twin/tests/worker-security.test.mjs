@@ -53,8 +53,9 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
   const issuer = "https://worker-test.cloudflareaccess.com",
     audience = "c".repeat(64);
   let networkCalls = 0,
-    modelCalls = 0;
+    modelCalls = 0, embeddingCalls = 0;
   const mf = new Miniflare({
+    cf: false, // Use local metadata; never fetch workers.cloudflare.com during tests.
     modules: true,
     script: bundle.outputFiles[0].text,
     compatibilityDate: "2026-05-15",
@@ -67,8 +68,17 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
       TWIN_AUTH_AUDIENCE: audience,
       TWIN_AGENT_ENDPOINT: "https://synthetic-model.test/v1/chat/completions",
       TWIN_AGENT_MODEL: "synthetic-contract-model",
+      TWIN_EMBEDDING_ENDPOINT: "https://synthetic-model.test/v1/embeddings",
+      TWIN_EMBEDDING_MODEL: "synthetic-embedding",
+      TWIN_EMBEDDING_MIN_SCORE: ".31",
     },
     outboundService: async (request) => {
+      if (request.url === "https://synthetic-model.test/v1/embeddings") {
+        embeddingCalls++;
+        const body = await request.json();
+        assert.ok(body.input.length >= 2);
+        return Response.json({data:body.input.map((_,index)=>({index,embedding:[1,0]}))});
+      }
       if (request.url === "https://synthetic-model.test/v1/chat/completions") {
         modelCalls++;
         const body = await request.json();
@@ -284,6 +294,7 @@ test("Cloudflare Worker HTTP identity boundary and D1 account isolation", async 
     assert.equal(modelResult.execution.grounding, "cited");
     assert.equal(modelResult.execution.receipts[0].status, "succeeded");
     assert.equal(modelCalls, 2);
+    assert.equal(embeddingCalls, 1);
     graph = await intel(jwtA);
     const other = await intel(jwtB);
     assert.equal(

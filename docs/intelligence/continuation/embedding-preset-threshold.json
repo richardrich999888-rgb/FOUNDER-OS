@@ -1,0 +1,242 @@
+{
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "threshold": 0.45,
+  "loadSeconds": 0.9499515269999392,
+  "corpusEncodeMs": 64.5949150002707,
+  "recallAt5": 0.7916666666666666,
+  "mrr": 0.7916666666666666,
+  "rows": [
+    {
+      "query": "Orion pitch deck indigo",
+      "target": "deck",
+      "rank": 1,
+      "topScore": 0.7966753224410925,
+      "latencyMs": 5.025981000471802
+    },
+    {
+      "query": "Orion budget amber",
+      "target": "budget",
+      "rank": 1,
+      "topScore": 0.7290282402405046,
+      "latencyMs": 4.750228999910178
+    },
+    {
+      "query": "Zephyr investor call",
+      "target": "call",
+      "rank": 1,
+      "topScore": 0.771759896967974,
+      "latencyMs": 5.727953999667079
+    },
+    {
+      "query": "Zephyr train departs",
+      "target": "travel",
+      "rank": 1,
+      "topScore": 0.8292114691463425,
+      "latencyMs": 2.6051400000142166
+    },
+    {
+      "query": "vegetarian lunch",
+      "target": "food",
+      "rank": 1,
+      "topScore": 0.8385914650318471,
+      "latencyMs": 1.7954459999600658
+    },
+    {
+      "query": "concise written replies",
+      "target": "reply",
+      "rank": 1,
+      "topScore": 0.8486004026217107,
+      "latencyMs": 1.724696000565018
+    },
+    {
+      "query": "backup cabinet seven",
+      "target": "backup",
+      "rank": 1,
+      "topScore": 0.7957839565157482,
+      "latencyMs": 1.7475270005888888
+    },
+    {
+      "query": "Nila invoices Thursday",
+      "target": "review",
+      "rank": 1,
+      "topScore": 0.849643288235741,
+      "latencyMs": 2.693892000024789
+    },
+    {
+      "query": "flight cancelled train",
+      "target": "reason",
+      "rank": 1,
+      "topScore": 0.7607790768112713,
+      "latencyMs": 1.689677000285883
+    },
+    {
+      "query": "Jos\u00e9 Mart\u00ednez Saffron",
+      "target": "name",
+      "rank": 1,
+      "topScore": 0.6715706736069438,
+      "latencyMs": 2.440330999888829
+    },
+    {
+      "query": "Juniper offline",
+      "target": "privacy",
+      "rank": 1,
+      "topScore": 0.7452497118453741,
+      "latencyMs": 2.4888309999369085
+    },
+    {
+      "query": "walk breakfast thirty",
+      "target": "routine",
+      "rank": 1,
+      "topScore": 0.7068884520801388,
+      "latencyMs": 3.2739700000092853
+    },
+    {
+      "query": "Where is my investor presentation?",
+      "target": "deck",
+      "rank": 0,
+      "topScore": 0.32775899773629724,
+      "latencyMs": 2.405305000138469
+    },
+    {
+      "query": "Where is the financial workbook?",
+      "target": "budget",
+      "rank": 1,
+      "topScore": 0.4624698746737407,
+      "latencyMs": 2.613320999444113
+    },
+    {
+      "query": "When does the fundraising conversation begin?",
+      "target": "call",
+      "rank": 0,
+      "topScore": 0.3622979260910931,
+      "latencyMs": 2.1412340001916164
+    },
+    {
+      "query": "When does my rail journey leave?",
+      "target": "travel",
+      "rank": 0,
+      "topScore": 0.4097590297322873,
+      "latencyMs": 2.1378869996624417
+    },
+    {
+      "query": "What meat-free food do I choose?",
+      "target": "food",
+      "rank": 1,
+      "topScore": 0.6631807873937878,
+      "latencyMs": 2.2907829998075613
+    },
+    {
+      "query": "What writing style do I prefer?",
+      "target": "reply",
+      "rank": 0,
+      "topScore": 0.43404221525736886,
+      "latencyMs": 2.2635280001850333
+    },
+    {
+      "query": "Where is the spare disk?",
+      "target": "backup",
+      "rank": 1,
+      "topScore": 0.4795030628593057,
+      "latencyMs": 2.156774000468431
+    },
+    {
+      "query": "Who checks bills weekly?",
+      "target": "review",
+      "rank": 1,
+      "topScore": 0.500842988912365,
+      "latencyMs": 5.290494000291801
+    },
+    {
+      "query": "Why did I avoid flying?",
+      "target": "reason",
+      "rank": 0,
+      "topScore": 0.4477343910382555,
+      "latencyMs": 4.419771999891964
+    },
+    {
+      "query": "Who owns the Saffron design?",
+      "target": "name",
+      "rank": 1,
+      "topScore": 0.7683008475469523,
+      "latencyMs": 4.189926999970339
+    },
+    {
+      "query": "Which notes cannot go online?",
+      "target": "privacy",
+      "rank": 1,
+      "topScore": 0.5879067730191432,
+      "latencyMs": 3.4174020001955796
+    },
+    {
+      "query": "What exercise follows my morning meal?",
+      "target": "routine",
+      "rank": 1,
+      "topScore": 0.6077664631950717,
+      "latencyMs": 2.997591999701399
+    }
+  ],
+  "negativeQueries": [
+    {
+      "query": "What is my favourite mountain?",
+      "maxScore": 0.24400402219935485,
+      "abstained": true
+    },
+    {
+      "query": "What is my passport number?",
+      "maxScore": 0.12478821803043841,
+      "abstained": true
+    },
+    {
+      "query": "Who is my dentist?",
+      "maxScore": 0.2164787471114104,
+      "abstained": true
+    },
+    {
+      "query": "What is my bank account balance?",
+      "maxScore": 0.25736534118432247,
+      "abstained": true
+    },
+    {
+      "query": "What is my birthday?",
+      "maxScore": 0.1278112764346429,
+      "abstained": true
+    },
+    {
+      "query": "What is my blood type?",
+      "maxScore": 0.040148608751731346,
+      "abstained": true
+    },
+    {
+      "query": "Who is my spouse?",
+      "maxScore": 0.1280557550502123,
+      "abstained": true
+    },
+    {
+      "query": "Which university did I attend?",
+      "maxScore": 0.25908238154854757,
+      "abstained": true
+    },
+    {
+      "query": "What is my shoe size?",
+      "maxScore": 0.19841977707578767,
+      "abstained": true
+    },
+    {
+      "query": "Where was I born?",
+      "maxScore": 0.177687499254944,
+      "abstained": true
+    },
+    {
+      "query": "What is my dog called?",
+      "maxScore": 0.12377534335044013,
+      "abstained": true
+    },
+    {
+      "query": "What is my home address?",
+      "maxScore": 0.1465253156239855,
+      "abstained": true
+    }
+  ],
+  "scope": "standalone model ranking; not secured application integration",
+  "zeroApiCharge": true
+}

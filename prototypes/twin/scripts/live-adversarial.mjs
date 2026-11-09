@@ -33,5 +33,5 @@ try{
  }
 }finally{globalThis.fetch=realFetch;}
 const report={measuredAt:new Date().toISOString(),model:process.env.TWIN_AGENT_MODEL,scope:'six synthetic genuine inference cases through JWT adapter, secured runtime and SQLite D1 adapter; not hosted D1',modelCalls:calls,providerCharge:0,rows};
-await fs.writeFile('../../docs/intelligence/remediation/real-model-challenge.json',JSON.stringify(report,null,2)+'\n');
+await fs.writeFile(process.env.TWIN_LIVE_REPORT ?? '../../docs/intelligence/remediation/real-model-challenge.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report));process.exitCode=rows.length===cases.length&&rows.every(r=>r.pass)?0:1;

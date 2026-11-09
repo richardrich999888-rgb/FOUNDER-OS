@@ -1,3 +1,5 @@
+import { embeddingScores, type EmbeddingPort } from "../intelligence/embeddings";
+import { principalBinding } from "./principal";
 import { IntelligenceError } from "../intelligence/model";
 import { z } from "zod";
 import { intelligenceTools, type IntelligenceTool } from "../intelligence/agent-adapter";
@@ -34,7 +36,7 @@ const evidence = z
 const result = z
   .object({ status: z.enum(["ok", "no_evidence"]), evidence: z.array(evidence).max(5) })
   .strict();
-export function createIntelligenceRegistry(db: D1Database) {
+export function createIntelligenceRegistry(db: D1Database, embeddings?: EmbeddingPort) {
   const tools: AnyToolDefinition[] = intelligenceTools.map((name) => {
     const keys =
       name === "find_commitments"
@@ -91,8 +93,15 @@ export function createIntelligenceRegistry(db: D1Database) {
               : name === "retrieve_procedure"
                 ? { query: parsed.query, kind: "procedure" }
                 : { query: parsed.query };
+        let scores: ReadonlyMap<string,number> | undefined;
+        if (embeddings && parsed.query) {
+          // Local-only principals cannot cause provider disclosure, even with a miswired registry.
+          if (principalBinding(ctx.principal).destination !== "provider") throw new AgentError("AUTHORIZATION_REVOKED");
+          scores = await embeddingScores(s, parsed.query, embeddings, ctx.signal);
+          await verifyCurrentPrincipal(ctx.principal, db);
+        }
         let recalled;
-        try { recalled = retrieveContext(s, query); }
+        try { recalled = retrieveContext(s, query, Date.now(), scores); }
         catch (error) {
           if (error instanceof IntelligenceError && error.code === "LIMIT")
             throw new AgentError("TOOL_RESULT_TOO_LARGE");

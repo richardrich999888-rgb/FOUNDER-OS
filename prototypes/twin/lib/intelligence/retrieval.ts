@@ -114,7 +114,7 @@ export function eligibleRecords(s: Snapshot, now = Date.now()): RecordNode[] {
   return s.records.filter((r) => valid(r));
 }
 
-export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
+export function retrieveContext(s: Snapshot, input: unknown, now = Date.now(), semanticScores?: ReadonlyMap<string, number>) {
   const q = querySchema.parse(input),
     words = terms(q.query),
     byId = new Map(s.records.map((r) => [r.id, r]));
@@ -197,8 +197,9 @@ export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
         q.since ||
         q.until
       );
+      const semantic = q.mode === "hybrid" ? semanticScores?.get(r.id) ?? 0 : 0;
       const score =
-        hits * 3 +
+        semantic * 10 + hits * 3 +
         exact +
         (structured ? 2 : 0) +
         (r.content?.kind === "fact" &&
@@ -213,7 +214,7 @@ export function retrieveContext(s: Snapshot, input: unknown, now = Date.now()) {
           q.mode === "structured"
             ? structured || hits > 0
             : words.length
-              ? hits > 0 || (structured && q.mode === "hybrid")
+              ? hits > 0 || semantic > 0 || (structured && q.mode === "hybrid")
               : structured,
       };
     })
