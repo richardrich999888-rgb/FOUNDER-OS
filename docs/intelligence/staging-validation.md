@@ -2,6 +2,8 @@
 
 This is the concrete remaining deployment gate. The existing owner-private Sites instance is unchanged; do not replace its identity settings with this branch without approved staging and account-link validation. Local workerd is runtime compatibility evidence, not hosted authentication evidence.
 
+The P0-003 [staging runner and runbook](staging-harness/runbook.md) now automate a finite subset of these checks, with [local verification evidence](staging-harness/verification.md). Hosted execution remains blocked; the runner does not deploy or replace the manual gates below.
+
 ## Missing inputs
 
 - An authorized staging Worker, D1 database and Access-protected hostname; direct Worker URL or evidence that direct ingress is disabled.

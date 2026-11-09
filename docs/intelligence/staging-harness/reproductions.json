@@ -1,0 +1,53 @@
+{
+  "category": "Local synthetic reproductions only; no production data or hosted provider requests",
+  "findings": [
+    {
+      "id": "initialization-race-and-error-disclosure",
+      "command": "node --test tests/staging-harness.test.mjs (initial two regression cases against copied P0-004 runner)",
+      "source": "P0-004 runner 98174493e4a2b242a3b8eb8385f7ac41e13ea4aa, adapted to P0-003 routes/migrations",
+      "beforeExit": 1,
+      "beforePassed": 0,
+      "beforeFailed": 2,
+      "observed": [
+        "memory.add and erase issued against concurrently initialized fixture",
+        "SYNTHETIC_SECRET_TOKEN appeared as report failure code"
+      ],
+      "beforeLog": "staging-before.log",
+      "afterLog": "staging-after.log",
+      "afterExit": 0,
+      "beforeLogSha256": "280fb57bfbebda7a7f9a176cfdd91c67394c8506b2942281054b74ff7c2a8dd8",
+      "afterLogSha256": "b93b832721cf9aa952ec23ec5982c2c33bd0543eb4b6ff9c962d00c8561f5aaf"
+    },
+    {
+      "id": "generation-format-correction",
+      "command": "node --test tests/staging-harness.test.mjs",
+      "beforeExit": 1,
+      "observed": [
+        "real API integration rejected the actual 32-hex generation with INITIALIZE_OWNERSHIP_UNPROVEN"
+      ],
+      "beforeLog": "staging-integration.log",
+      "afterLog": "staging-integration-final.log",
+      "afterExit": 0,
+      "beforeLogSha256": "6ce9aa74cb9d9bbb919a8ab1f80ea922ee6e04768fb6f2a49a18629166ef56f4",
+      "afterLogSha256": "9dfb8d49910d9a61b87d092e3b1bb7d1200658091c4fc246759a2333dc49b513"
+    },
+    {
+      "id": "same-version-account-recreation",
+      "command": "node --test --test-name-pattern=client generation preconditions tests/staging-harness.test.mjs",
+      "beforeExit": 1,
+      "observed": [
+        "stale memory.add returned 200 and modified replacement account",
+        "stale erase returned 200 and deleted replacement account"
+      ],
+      "beforeLog": "staging-generation-before.log",
+      "afterLog": "staging-generation-after.log",
+      "afterExit": 0,
+      "expectedAfter": [
+        "409 for both stale requests; replacement preserved",
+        "valid generation-bound repeated saves succeed"
+      ],
+      "beforeLogSha256": "9b8bfdaacfbe4762c24138524dbdfa2466cc94bff4664615f4836c952d634455",
+      "afterLogSha256": "eea2b3a06600a51aa31aba69685f5e519beb33076c2fe7426766c3e0d745d15e"
+    }
+  ]
+}
