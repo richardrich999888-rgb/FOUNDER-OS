@@ -817,3 +817,15 @@ test('model lookup denied by schema is a failed run, not successful missing evid
  assert.equal(r.status,'failed');assert.equal(r.errorCode,'INVALID_ARGUMENTS');assert.equal(r.answer,null);
  assert.equal(r.receipts[0].status,'denied');
 });
+
+test('server-selected initial lookup maps to a named function without granting additional authority', async () => {
+ const u=await user('initial-tool');
+ const model=scripted([turn('send_email',{}),final('Sent')]);
+ const s=await session(u,{model});s.deps.requireEvidence=true;s.deps.initialTool='search_personal_memory';
+ const r=await s.run();
+ assert.deepEqual(model.calls[0].toolChoice,{name:'search_personal_memory'});
+ assert.equal(r.receipts[0].errorCode,'UNKNOWN_TOOL');assert.equal(r.answer,null);
+ const body=m('chat-completions-adapter').buildChatCompletionsBody('synthetic',model.calls[0]);
+ assert.deepEqual(body.tool_choice,{type:'function',function:{name:'search_personal_memory'}});
+ assert.equal(body.tools.length,5);
+});

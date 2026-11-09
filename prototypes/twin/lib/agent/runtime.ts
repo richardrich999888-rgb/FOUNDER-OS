@@ -63,6 +63,8 @@ export type AgentDependencies = Readonly<{
   validateContext: () => Promise<void>;
   evidenceOnly?: boolean;
   requireEvidence?: boolean;
+  /** Server-selected first read. Does not bypass executor authorization. */
+  initialTool?: string;
 }>;
 
 export type AgentRunInput = Readonly<{
@@ -260,7 +262,9 @@ async function loop(
             instructions: AGENT_INSTRUCTIONS,
             items: [...state.items],
             tools: deps.registry.specs(),
-            toolChoice: finalIteration ? "none" : deps.requireEvidence && state.outcomes.length === 0 ? "required" : "auto",
+            toolChoice: finalIteration ? "none"
+              : state.outcomes.length === 0 && deps.initialTool ? { name: deps.initialTool }
+              : deps.requireEvidence && state.outcomes.length === 0 ? "required" : "auto",
             maxOutputTokens: limits.maxOutputTokens,
           },
           signal,

@@ -81,7 +81,9 @@ export function buildChatCompletionsBody(
       type: "function",
       function: { name: t.name, description: t.description, parameters: t.parameters },
     })),
-    tool_choice: request.toolChoice,
+    tool_choice: typeof request.toolChoice === "object"
+      ? { type: "function", function: { name: request.toolChoice.name } }
+      : request.toolChoice,
     max_tokens: request.maxOutputTokens,
     // Deterministic decoding for evaluation reproducibility (greedy). Not a security control.
     temperature: 0,

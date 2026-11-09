@@ -64,6 +64,7 @@ export async function runModelIntelligence(
       newId: () => crypto.randomUUID(),
       limits: PRODUCTION_LIMITS,
       requireEvidence: true,
+      initialTool: "search_personal_memory",
       validateContext: () => verifyCurrentPrincipal(principal, db).then(() => undefined),
     },
   );

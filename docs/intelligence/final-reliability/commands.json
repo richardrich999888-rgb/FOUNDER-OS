@@ -1,0 +1,35 @@
+{
+  "scope": "final retained code; app working directory; local only",
+  "commands": [
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm test",
+      "exitCode": 0,
+      "passedCases": 126
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "passedCases": null
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "passedCases": null
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run build",
+      "exitCode": 0,
+      "passedCases": null
+    },
+    {
+      "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run test:built",
+      "exitCode": 0,
+      "passedCases": 1
+    },
+    {
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "passedCases": 200
+    }
+  ]
+}
