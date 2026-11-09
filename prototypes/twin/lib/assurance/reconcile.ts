@@ -152,10 +152,14 @@ export async function checkExecution(
     )
       return result("CANNOT_PROVE", "EXECUTION_UNFINISHED");
     if (
-      r.tool_executions !== receipts.length ||
+      !Number.isInteger(r.tool_executions) ||
+      r.tool_executions < receipts.length ||
       receipts.some(
         (e, i) =>
-          e.call_index !== i ||
+          !Number.isInteger(e.call_index) ||
+          e.call_index < 0 ||
+          e.call_index >= r.tool_executions ||
+          (i > 0 && e.call_index <= receipts[i - 1].call_index) ||
           e.request_id !== r.request_id ||
           e.user_id !== w.owner ||
           e.generation !== w.generation ||
@@ -170,6 +174,8 @@ export async function checkExecution(
       )
     )
       return result("DIVERGENT", "RECEIPT_CONTRADICTION");
+    if (r.tool_executions > receipts.length)
+      return result("CANNOT_PROVE", "MISSING_EXECUTION_RECEIPTS");
     if (plan.mode === "local" && (receipts.length !== 1 || receipts[0].tool_id !== plan.tool))
       return result("DIVERGENT", "PLAN_EXECUTION_MISMATCH");
     return result("VERIFIED", "EXECUTOR_RECORDS_AGREE");
@@ -191,13 +197,20 @@ export async function reconcile(user: Identity, db: D1Database, id: string) {
     if (!w) return { ...none, events: [] };
     let result = await checkExecution(w, e.auth, e.run, e.receipts);
     if (
-      e.events.length !== w.version + 1 ||
       e.events.some(
-        (v, i) => v.version !== i || v.previous_state !== (i ? e.events[i - 1].new_state : null),
+        (v, i) =>
+          v.version < 0 ||
+          v.version > w.version ||
+          (v.version === 0 && v.previous_state !== null) ||
+          (i > 0 &&
+            v.version === e.events[i - 1].version + 1 &&
+            v.previous_state !== e.events[i - 1].new_state),
       ) ||
-      e.events.at(-1)?.new_state !== w.state
+      (e.events.at(-1)?.version === w.version && e.events.at(-1)?.new_state !== w.state)
     )
       result = { ...result, conclusion: "DIVERGENT", reason: "TRANSITION_HISTORY_MISMATCH" };
+    else if (e.events.length !== w.version + 1 && result.conclusion !== "DIVERGENT")
+      result = { ...result, conclusion: "CANNOT_PROVE", reason: "MISSING_TRANSITION_HISTORY" };
     else if (result.conclusion === "VERIFIED") {
       if (!e.outcome)
         result = { ...result, conclusion: "CANNOT_PROVE", reason: "MISSING_PERSISTED_OUTCOME" };

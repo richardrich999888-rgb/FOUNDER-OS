@@ -856,6 +856,32 @@ await scenario(
   },
 );
 
+await scenario(
+  "Incomplete evidence is CANNOT_PROVE; contradictory surviving history remains DIVERGENT",
+  async () => {
+    const u = await user("evidence-gaps"),
+      w = await approved(u);
+    await action(u, w, "execute");
+    const e = await rec.readEvidence(u, h.db.d1, w.id);
+    const missingReceipt = await rec.checkExecution(
+      e.w,
+      e.auth,
+      { ...e.run, tool_executions: 2 },
+      e.receipts,
+    );
+    assert.equal(missingReceipt.conclusion, "CANNOT_PROVE");
+    h.db.sql
+      .prepare("DELETE FROM twin_workflow_events WHERE owner=? AND workflow_id=? AND version=1")
+      .run(u.userId, w.id);
+    assert.equal((await rec.reconcile(u, h.db.d1, w.id)).conclusion, "CANNOT_PROVE");
+    h.db.sql
+      .prepare(
+        "UPDATE twin_workflow_events SET previous_state='FAILED' WHERE owner=? AND workflow_id=? AND version=4",
+      )
+      .run(u.userId, w.id);
+    assert.equal((await rec.reconcile(u, h.db.d1, w.id)).conclusion, "DIVERGENT");
+  },
+);
 test.after(async () => {
   if (process.env.TWIN_ASSURANCE_REPORT) {
     await fs.writeFile(
