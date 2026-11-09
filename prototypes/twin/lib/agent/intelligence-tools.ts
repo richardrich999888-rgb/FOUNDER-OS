@@ -2,6 +2,7 @@ import { embeddingScores, type EmbeddingPort } from "../intelligence/embeddings"
 import { principalBinding } from "./principal";
 import { IntelligenceError } from "../intelligence/model";
 import { z } from "zod";
+import { span } from "../assurance/telemetry";
 import { intelligenceTools, type IntelligenceTool } from "../intelligence/agent-adapter";
 import { retrieveContext } from "../intelligence/retrieval";
 import { compatibleState } from "../intelligence/service";
@@ -101,7 +102,7 @@ export function createIntelligenceRegistry(db: D1Database, embeddings?: Embeddin
           await verifyCurrentPrincipal(ctx.principal, db);
         }
         let recalled;
-        try { recalled = retrieveContext(s, query, Date.now(), scores); }
+        try { recalled = await span("memory.retrieve", async () => retrieveContext(s, query, Date.now(), scores)); }
         catch (error) {
           if (error instanceof IntelligenceError && error.code === "LIMIT")
             throw new AgentError("TOOL_RESULT_TOO_LARGE");

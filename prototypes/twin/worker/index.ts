@@ -1,3 +1,4 @@
+import { withDiagnostics } from "../lib/assurance/telemetry";
 import handler from "vinext/server/fetch-handler";
 import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
@@ -23,7 +24,7 @@ const worker = {
         },
       };
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    return withDiagnostics(request, env as unknown as Record<string,string|undefined>, () => runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx)), (ctx as unknown as { tracing?: Parameters<typeof withDiagnostics>[3] }).tracing);
   },
 };
 

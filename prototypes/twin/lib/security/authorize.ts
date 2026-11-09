@@ -21,6 +21,8 @@ const ownerActions = new Set([
   "chat.memory",
   "chat.ai",
   "tools.delegate",
+  "assurance.read",
+  "assurance.write",
 ]);
 
 export function authorize(principal: Identity, action: string, ownerId: string): void {

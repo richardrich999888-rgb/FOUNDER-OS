@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { createIdentityAdapter } from "./identity";
 import { type AuthEnvironment, SecurityError } from "./verify-token";
 import { audit } from "./audit";
+import { span } from "../assurance/telemetry";
 
 let cached: { key: string; adapter: ReturnType<typeof createIdentityAdapter> } | undefined;
 
@@ -24,5 +25,6 @@ export async function requestIdentity() {
     throw new SecurityError("AUTH_CONFIG");
   }
   // Only verifier/JWKS configuration is shared; never cache a request identity.
-  return adapter(await headers());
+  const h = await headers();
+  return span("identity.verify", () => adapter(h));
 }

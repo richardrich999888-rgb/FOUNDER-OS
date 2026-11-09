@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "mode": "local-deterministic-synthetic",
+  "hostedAccess": "BLOCKED: not executed by this suite",
+  "realModel": "NOT_EXECUTED",
+  "modelCost": null,
+  "scenarios": [
+    {
+      "name": "A / continuity: refresh retains checkpoint; read completes, sending is never claimed",
+      "result": "PASS",
+      "durationMs": 753.4358400000001,
+      "databaseOperations": 125
+    },
+    {
+      "name": "B / priorities: confirmed commitment, goal, project, preference and override have sources",
+      "result": "PASS",
+      "durationMs": 102.81045199999971,
+      "databaseOperations": 68
+    },
+    {
+      "name": "C / false completion: client and model claims cannot set completed state",
+      "result": "PASS",
+      "durationMs": 25.50070400000004,
+      "databaseOperations": 14
+    },
+    {
+      "name": "D / revocation: consent changes while model runs stop execution and stale writes",
+      "result": "PASS",
+      "durationMs": 116.1339710000002,
+      "databaseOperations": 78
+    },
+    {
+      "name": "E / D1 failure: receipt-write fault never becomes success; atomic transition rollback",
+      "result": "PASS",
+      "durationMs": 59.028809999999794,
+      "databaseOperations": 102
+    },
+    {
+      "name": "F / correction: current value wins and invalidates old authorization",
+      "result": "PASS",
+      "durationMs": 107.51176399999986,
+      "databaseOperations": 142
+    },
+    {
+      "name": "G / isolation: signed second account cannot read, cancel, resume or alter another workflow",
+      "result": "PASS",
+      "durationMs": 54.570919999999205,
+      "databaseOperations": 54
+    },
+    {
+      "name": "H / reconciliation: missing, tampered and contradictory receipts never verify",
+      "result": "PASS",
+      "durationMs": 49.424590000000535,
+      "databaseOperations": 126
+    },
+    {
+      "name": "I / telemetry: closed attributes and safe errors contain no personal content or account ID",
+      "result": "PASS",
+      "durationMs": 46.800366999999824,
+      "databaseOperations": 114
+    },
+    {
+      "name": "J / restart: expired read lease recovers only via new approval; no duplicate transitions",
+      "result": "PASS",
+      "durationMs": 80.23707099999956,
+      "databaseOperations": 163
+    },
+    {
+      "name": "Duplicate calls: concurrent execute has one admission and one successful read",
+      "result": "PASS",
+      "durationMs": 41.55981400000019,
+      "databaseOperations": 127
+    },
+    {
+      "name": "Cancellation: cancelled work never resumes, late execute never writes",
+      "result": "PASS",
+      "durationMs": 13.484025000000656,
+      "databaseOperations": 43
+    },
+    {
+      "name": "Deletion: generation and all workflow artifacts disappear; recovery cannot recreate them",
+      "result": "PASS",
+      "durationMs": 23.735211000000163,
+      "databaseOperations": 38
+    },
+    {
+      "name": "Expired authorization and corrupted checkpoint require attention",
+      "result": "PASS",
+      "durationMs": 26.345515999999407,
+      "databaseOperations": 45
+    },
+    {
+      "name": "Prompt injection and unregistered action never acquire workflow authority",
+      "result": "PASS",
+      "durationMs": 54.33099299999958,
+      "databaseOperations": 117
+    },
+    {
+      "name": "HTTP assurance: strict schema, origin, signed identity, current version",
+      "result": "PASS",
+      "durationMs": 13.459374000000025,
+      "databaseOperations": 11
+    },
+    {
+      "name": "Model claims: a forged sent claim with a real citation is replaced by execution evidence",
+      "result": "PASS",
+      "durationMs": 67.1301940000003,
+      "databaseOperations": 120
+    },
+    {
+      "name": "Model timeout / interruption: a nonresponsive provider produces UNKNOWN without an outcome",
+      "result": "PASS",
+      "durationMs": 826.2229750000006,
+      "databaseOperations": 83
+    },
+    {
+      "name": "In-flight cancel: new request revokes the running read before any late tool starts",
+      "result": "PASS",
+      "durationMs": 203.2873380000001,
+      "databaseOperations": 90
+    },
+    {
+      "name": "Missing outcome alone yields CANNOT_PROVE even with successful tool receipts",
+      "result": "PASS",
+      "durationMs": 37.77215400000023,
+      "databaseOperations": 120
+    },
+    {
+      "name": "Outcome persistence fault rolls back completion and retains an unresolved checkpoint",
+      "result": "PASS",
+      "durationMs": 38.37331400000039,
+      "databaseOperations": 110
+    },
+    {
+      "name": "Dependencies and superseded intent cannot be authorized or resumed prematurely",
+      "result": "PASS",
+      "durationMs": 16.686321999999564,
+      "databaseOperations": 46
+    },
+    {
+      "name": "Proposal idempotency preserves one workflow; changed intent cannot reuse the key",
+      "result": "PASS",
+      "durationMs": 9.910388999998759,
+      "databaseOperations": 17
+    },
+    {
+      "name": "Structured intent graph: confirmed project, goal and deadline feed priorities without frequency scoring",
+      "result": "PASS",
+      "durationMs": 40.099473999998736,
+      "databaseOperations": 102
+    },
+    {
+      "name": "Retry exhaustion: three interrupted attempts require approval and a fourth is denied",
+      "result": "PASS",
+      "durationMs": 43.93792899999971,
+      "databaseOperations": 146
+    },
+    {
+      "name": "Workflow expiration and partial receipts cannot produce completion",
+      "result": "PASS",
+      "durationMs": 174.83087700000033,
+      "databaseOperations": 134
+    },
+    {
+      "name": "Telemetry export failure is bounded; OTLP attributes and trace relationships remain valid",
+      "result": "PASS",
+      "durationMs": 2.1077669999995123,
+      "databaseOperations": 0
+    }
+  ]
+}

@@ -1,0 +1,1575 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "30302930-ecf3-451d-abd4-ebcdd1b86f11",
+  "prevId": "a75158a0-3ab7-491f-90b0-50179e36d9af",
+  "tables": {
+    "twin_accounts": {
+      "name": "twin_accounts",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        }
+      },
+      "indexes": {
+        "twin_account_generation": {
+          "name": "twin_account_generation",
+          "columns": [
+            "user_id",
+            "generation"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_ai_requests": {
+      "name": "twin_ai_requests",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "ai_user_time": {
+          "name": "ai_user_time",
+          "columns": [
+            "user_id",
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_intelligence_dependencies": {
+      "name": "twin_intelligence_dependencies",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "record_id": {
+          "name": "record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ancestor_id": {
+          "name": "ancestor_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_intelligence_dependencies_owner_record_id_twin_intelligence_records_owner_id_fk": {
+          "name": "twin_intelligence_dependencies_owner_record_id_twin_intelligence_records_owner_id_fk",
+          "tableFrom": "twin_intelligence_dependencies",
+          "tableTo": "twin_intelligence_records",
+          "columnsFrom": [
+            "owner",
+            "record_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "twin_intelligence_dependencies_owner_ancestor_id_twin_intelligence_records_owner_id_fk": {
+          "name": "twin_intelligence_dependencies_owner_ancestor_id_twin_intelligence_records_owner_id_fk",
+          "tableFrom": "twin_intelligence_dependencies",
+          "tableTo": "twin_intelligence_records",
+          "columnsFrom": [
+            "owner",
+            "ancestor_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_intelligence_dependencies_owner_record_id_ancestor_id_pk": {
+          "columns": [
+            "owner",
+            "record_id",
+            "ancestor_id"
+          ],
+          "name": "twin_intelligence_dependencies_owner_record_id_ancestor_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_intelligence_guard": {
+      "name": "twin_intelligence_guard",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expected_epoch": {
+          "name": "expected_epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_intelligence_guard_owner_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "twin_intelligence_guard_owner_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "twin_intelligence_guard",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_intelligence_heads": {
+      "name": "twin_intelligence_heads",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "epoch": {
+          "name": "epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {
+        "intelligence_head_generation": {
+          "name": "intelligence_head_generation",
+          "columns": [
+            "owner",
+            "generation"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "twin_intelligence_heads_owner_generation_twin_accounts_user_id_generation_fk": {
+          "name": "twin_intelligence_heads_owner_generation_twin_accounts_user_id_generation_fk",
+          "tableFrom": "twin_intelligence_heads",
+          "tableTo": "twin_accounts",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "user_id",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_intelligence_receipts": {
+      "name": "twin_intelligence_receipts",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tool": {
+          "name": "tool",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "epoch": {
+          "name": "epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_intelligence_receipts_owner_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "twin_intelligence_receipts_owner_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "twin_intelligence_receipts",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_intelligence_records": {
+      "name": "twin_intelligence_records",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "quote": {
+          "name": "quote",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "confirmation": {
+          "name": "confirmation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "validity": {
+          "name": "validity",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valid_from": {
+          "name": "valid_from",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valid_to": {
+          "name": "valid_to",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "privacy": {
+          "name": "privacy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {
+        "intelligence_record_generation": {
+          "name": "intelligence_record_generation",
+          "columns": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "isUnique": true
+        },
+        "twin_intelligence_owner_status": {
+          "name": "twin_intelligence_owner_status",
+          "columns": [
+            "owner",
+            "validity",
+            "confirmation",
+            "kind",
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "twin_intelligence_records_owner_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "twin_intelligence_records_owner_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "twin_intelligence_records",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "twin_intelligence_records_owner_source_id_twin_intelligence_records_owner_id_fk": {
+          "name": "twin_intelligence_records_owner_source_id_twin_intelligence_records_owner_id_fk",
+          "tableFrom": "twin_intelligence_records",
+          "tableTo": "twin_intelligence_records",
+          "columnsFrom": [
+            "owner",
+            "source_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_intelligence_records_owner_id_pk": {
+          "columns": [
+            "owner",
+            "id"
+          ],
+          "name": "twin_intelligence_records_owner_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "agent_execution_receipts": {
+      "name": "agent_execution_receipts",
+      "columns": {
+        "execution_id": {
+          "name": "execution_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "request_id": {
+          "name": "request_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "call_index": {
+          "name": "call_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tool_id": {
+          "name": "tool_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "authorization": {
+          "name": "authorization",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "duration_ms": {
+          "name": "duration_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "error_code": {
+          "name": "error_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_ids": {
+          "name": "source_ids",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'[]'"
+        }
+      },
+      "indexes": {
+        "agent_call_once": {
+          "name": "agent_call_once",
+          "columns": [
+            "request_id",
+            "call_index"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "agent_execution_receipts_request_id_user_id_generation_agent_runs_request_id_user_id_generation_fk": {
+          "name": "agent_execution_receipts_request_id_user_id_generation_agent_runs_request_id_user_id_generation_fk",
+          "tableFrom": "agent_execution_receipts",
+          "tableTo": "agent_runs",
+          "columnsFrom": [
+            "request_id",
+            "user_id",
+            "generation"
+          ],
+          "columnsTo": [
+            "request_id",
+            "user_id",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "agent_runs": {
+      "name": "agent_runs",
+      "columns": {
+        "request_id": {
+          "name": "request_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "epoch": {
+          "name": "epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answer_source": {
+          "name": "answer_source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deadline_at": {
+          "name": "deadline_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "duration_ms": {
+          "name": "duration_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "iterations": {
+          "name": "iterations",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "tool_executions": {
+          "name": "tool_executions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "input_tokens": {
+          "name": "input_tokens",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "output_tokens": {
+          "name": "output_tokens",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "error_code": {
+          "name": "error_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "agent_run_owner_generation": {
+          "name": "agent_run_owner_generation",
+          "columns": [
+            "request_id",
+            "user_id",
+            "generation"
+          ],
+          "isUnique": true
+        },
+        "agent_run_owner_time": {
+          "name": "agent_run_owner_time",
+          "columns": [
+            "user_id",
+            "started_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "agent_runs_user_id_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "agent_runs_user_id_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "agent_runs",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "user_id",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_priority_overrides": {
+      "name": "twin_priority_overrides",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_ref": {
+          "name": "source_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "project_importance": {
+          "name": "project_importance",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_priority_overrides_owner_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "twin_priority_overrides_owner_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "twin_priority_overrides",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_priority_overrides_owner_source_ref_pk": {
+          "columns": [
+            "owner",
+            "source_ref"
+          ],
+          "name": "twin_priority_overrides_owner_source_ref_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "override_priority": {
+          "name": "override_priority",
+          "value": "\"twin_priority_overrides\".\"priority\" BETWEEN 0 AND 3"
+        },
+        "override_project_importance": {
+          "name": "override_project_importance",
+          "value": "\"twin_priority_overrides\".\"project_importance\" BETWEEN 0 AND 3"
+        }
+      }
+    },
+    "twin_workflow_authorizations": {
+      "name": "twin_workflow_authorizations",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "epoch": {
+          "name": "epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "plan_hash": {
+          "name": "plan_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "issued_at": {
+          "name": "issued_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "requires_consent": {
+          "name": "requires_consent",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_workflow_authorizations_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk": {
+          "name": "twin_workflow_authorizations_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk",
+          "tableFrom": "twin_workflow_authorizations",
+          "tableTo": "twin_workflows",
+          "columnsFrom": [
+            "owner",
+            "generation",
+            "workflow_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_workflow_authorizations_owner_id_pk": {
+          "columns": [
+            "owner",
+            "id"
+          ],
+          "name": "twin_workflow_authorizations_owner_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "workflow_requires_consent": {
+          "name": "workflow_requires_consent",
+          "value": "\"twin_workflow_authorizations\".\"requires_consent\" IN (0,1)"
+        }
+      }
+    },
+    "twin_workflow_events": {
+      "name": "twin_workflow_events",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "previous_state": {
+          "name": "previous_state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "new_state": {
+          "name": "new_state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "at": {
+          "name": "at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "actor": {
+          "name": "actor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "authorization_id": {
+          "name": "authorization_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "run_id": {
+          "name": "run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "correlation_id": {
+          "name": "correlation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_workflow_events_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk": {
+          "name": "twin_workflow_events_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk",
+          "tableFrom": "twin_workflow_events",
+          "tableTo": "twin_workflows",
+          "columnsFrom": [
+            "owner",
+            "generation",
+            "workflow_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_workflow_events_owner_workflow_id_version_pk": {
+          "columns": [
+            "owner",
+            "workflow_id",
+            "version"
+          ],
+          "name": "twin_workflow_events_owner_workflow_id_version_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_workflow_guard": {
+      "name": "twin_workflow_guard",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expected_version": {
+          "name": "expected_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expected_epoch": {
+          "name": "expected_epoch",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "valid_until": {
+          "name": "valid_until",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_workflow_guard_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk": {
+          "name": "twin_workflow_guard_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk",
+          "tableFrom": "twin_workflow_guard",
+          "tableTo": "twin_workflows",
+          "columnsFrom": [
+            "owner",
+            "generation",
+            "workflow_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_workflow_guard_owner_workflow_id_pk": {
+          "columns": [
+            "owner",
+            "workflow_id"
+          ],
+          "name": "twin_workflow_guard_owner_workflow_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "twin_workflow_outcomes": {
+      "name": "twin_workflow_outcomes",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "run_id": {
+          "name": "run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "authorization_id": {
+          "name": "authorization_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "manifest_hash": {
+          "name": "manifest_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "receipt_count": {
+          "name": "receipt_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "twin_workflow_outcomes_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk": {
+          "name": "twin_workflow_outcomes_owner_generation_workflow_id_twin_workflows_owner_generation_id_fk",
+          "tableFrom": "twin_workflow_outcomes",
+          "tableTo": "twin_workflows",
+          "columnsFrom": [
+            "owner",
+            "generation",
+            "workflow_id"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "twin_workflow_outcomes_run_id_owner_generation_agent_runs_request_id_user_id_generation_fk": {
+          "name": "twin_workflow_outcomes_run_id_owner_generation_agent_runs_request_id_user_id_generation_fk",
+          "tableFrom": "twin_workflow_outcomes",
+          "tableTo": "agent_runs",
+          "columnsFrom": [
+            "run_id",
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "request_id",
+            "user_id",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_workflow_outcomes_owner_run_id_pk": {
+          "columns": [
+            "owner",
+            "run_id"
+          ],
+          "name": "twin_workflow_outcomes_owner_run_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "workflow_receipt_count": {
+          "name": "workflow_receipt_count",
+          "value": "\"twin_workflow_outcomes\".\"receipt_count\">0"
+        }
+      }
+    },
+    "twin_workflows": {
+      "name": "twin_workflows",
+      "columns": {
+        "owner": {
+          "name": "owner",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "generation": {
+          "name": "generation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "intent": {
+          "name": "intent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "plan": {
+          "name": "plan",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "plan_hash": {
+          "name": "plan_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_refs": {
+          "name": "source_refs",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "dependencies": {
+          "name": "dependencies",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "project_importance": {
+          "name": "project_importance",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "state": {
+          "name": "state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deadline_at": {
+          "name": "deadline_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "authorization_id": {
+          "name": "authorization_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "run_id": {
+          "name": "run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lease_until": {
+          "name": "lease_until",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "actor": {
+          "name": "actor",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "correlation_id": {
+          "name": "correlation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "checkpoint_hash": {
+          "name": "checkpoint_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "twin_workflow_activity": {
+          "name": "twin_workflow_activity",
+          "columns": [
+            "owner",
+            "updated_at"
+          ],
+          "isUnique": false
+        },
+        "twin_workflows_owner_generation_id_unique": {
+          "name": "twin_workflows_owner_generation_id_unique",
+          "columns": [
+            "owner",
+            "generation",
+            "id"
+          ],
+          "isUnique": true
+        },
+        "twin_workflows_owner_generation_idempotency_key_unique": {
+          "name": "twin_workflows_owner_generation_idempotency_key_unique",
+          "columns": [
+            "owner",
+            "generation",
+            "idempotency_key"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "twin_workflows_owner_generation_twin_intelligence_heads_owner_generation_fk": {
+          "name": "twin_workflows_owner_generation_twin_intelligence_heads_owner_generation_fk",
+          "tableFrom": "twin_workflows",
+          "tableTo": "twin_intelligence_heads",
+          "columnsFrom": [
+            "owner",
+            "generation"
+          ],
+          "columnsTo": [
+            "owner",
+            "generation"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "twin_workflows_owner_id_pk": {
+          "columns": [
+            "owner",
+            "id"
+          ],
+          "name": "twin_workflows_owner_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "workflow_priority": {
+          "name": "workflow_priority",
+          "value": "\"twin_workflows\".\"priority\" BETWEEN 0 AND 3"
+        },
+        "workflow_project_importance": {
+          "name": "workflow_project_importance",
+          "value": "\"twin_workflows\".\"project_importance\" BETWEEN 0 AND 3"
+        },
+        "workflow_attempts": {
+          "name": "workflow_attempts",
+          "value": "\"twin_workflows\".\"attempts\" BETWEEN 0 AND 3"
+        },
+        "workflow_state": {
+          "name": "workflow_state",
+          "value": "\"twin_workflows\".\"state\" IN ('PROPOSED','AWAITING_APPROVAL','AUTHORIZED','RUNNING','COMPLETED','FAILED','CANCELLED','UNKNOWN')"
+        },
+        "workflow_actor": {
+          "name": "workflow_actor",
+          "value": "\"twin_workflows\".\"actor\" IN ('user','runtime','reconciler','system')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

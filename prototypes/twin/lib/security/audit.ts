@@ -18,6 +18,8 @@ const actions = new Set([
   "chat.memory",
   "chat.ai",
   "tools.delegate",
+  "assurance.read",
+  "assurance.write",
   "memory.list",
   "memory.read",
   "memory.search",

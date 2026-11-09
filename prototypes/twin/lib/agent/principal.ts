@@ -2,6 +2,7 @@ import { isVerifiedIdentity, type Identity } from "../security/identity";
 import { authorize } from "../security/authorize";
 import { readSnapshot } from "../intelligence/store";
 import { AgentError } from "./errors";
+import { span } from "../assurance/telemetry";
 export type Scope = "memory:read";
 declare const brand: unique symbol;
 export type VerifiedPrincipal = Readonly<{
@@ -63,7 +64,7 @@ export function permitsTool(p: VerifiedPrincipal, tool: string) {
 export async function verifyCurrentPrincipal(p: VerifiedPrincipal, db: D1Database) {
   const binding = principalBinding(p);
   try {
-    const s = await readSnapshot(binding.identity, db);
+    const s = await span("authorization.check", () => readSnapshot(binding.identity, db));
     if (
       s.generation !== binding.generation ||
       s.epoch !== binding.epoch ||

@@ -9,6 +9,7 @@ import { createD1ReceiptStore } from "./receipts";
 import { runAgent } from "./runtime";
 import { systemClock } from "./deadline";
 import { PRODUCTION_LIMITS } from "./limits";
+import type { RunControls } from "./run-controls";
 
 export const modelRunSchema = z
   .object({
@@ -25,6 +26,7 @@ export async function runModelIntelligence(
   db: D1Database,
   env: Record<string, string | undefined>,
   fetchImpl?: typeof fetch,
+  controls: RunControls = {},
 ) {
   const p = modelRunSchema.parse(input);
   if (!env.TWIN_AGENT_ENDPOINT || !env.TWIN_AGENT_MODEL)
@@ -58,13 +60,16 @@ export async function runModelIntelligence(
         db,
         principal,
         p.requestId,
-        Date.now() + PRODUCTION_LIMITS.totalDeadlineMs,
+        Math.min(Date.now() + PRODUCTION_LIMITS.totalDeadlineMs, controls.deadlineAt ?? Infinity),
+        controls.workflow,
       ),
       clock: systemClock,
       newId: () => crypto.randomUUID(),
       limits: PRODUCTION_LIMITS,
       requireEvidence: true,
-      validateContext: () => verifyCurrentPrincipal(principal, db).then(() => undefined),
+      evidenceOnly: Boolean(controls.workflow),
+      controls,
+      validateContext: async () => { await verifyCurrentPrincipal(principal, db); await controls.validateContext?.(); },
     },
   );
   return {

@@ -25,6 +25,7 @@ import {
   type ReceiptStore,
 } from "./receipts";
 import type { EvidenceItem, ToolRegistry } from "./tool-registry";
+import { span } from "../assurance/telemetry";
 
 export type ExecutorContext = Readonly<{
   principal: VerifiedPrincipal;
@@ -180,7 +181,7 @@ export async function executeToolCall(
     "DEADLINE_EXCEEDED",
   );
   const callIndex = budget.nextCallIndex++;
-  const validated = validateCall(call, ctx, budget);
+  const validated = await span("tool.validate", async () => validateCall(call, ctx, budget));
   if ("code" in validated) return deny(call, validated, ctx, budget, callIndex);
   const { tool, args } = validated;
 
@@ -215,12 +216,12 @@ export async function executeToolCall(
   let evidence: readonly EvidenceItem[] = [];
   try {
     const timeoutMs = Math.min(ctx.limits.toolTimeoutMs, ctx.deadlineAt - ctx.clock.now());
-    const raw = await runBounded(
+    const raw = await span("tool.execute", () => runBounded(
       (signal) => tool.execute(args, { principal: ctx.principal, signal }),
       timeoutMs,
       ctx.runSignal,
       "TOOL_TIMEOUT",
-    );
+    ), { "gen_ai.operation.name": "execute_tool", "gen_ai.tool.name": tool.name });
     await runBounded(
       () => ctx.validateContext(),
       ctx.deadlineAt - ctx.clock.now(),

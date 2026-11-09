@@ -45,11 +45,15 @@ export async function createHarness(name) {
     const db=drizzle(d1);export const getDb=()=>db;`,
   );
   const files = {
+    "assurance-route.mjs": "app/api/assurance/route.ts",
+    ...Object.fromEntries(["model","store","service","priorities","reconcile","telemetry"].map(n=>[`assurance-${n}.mjs`,`lib/assurance/${n}.ts`])),
     "schema.mjs": "db/schema.ts",
     "agent-schema.mjs": "db/agent-schema.ts",
+    "assurance-schema.mjs": "db/assurance-schema.ts",
     "agent-route.mjs": "app/api/agent/route.ts",
     ...Object.fromEntries(
       [
+        "run-controls",
         "admission",
         "authorization",
         "deadline",
@@ -171,10 +175,12 @@ export async function createHarness(name) {
     );
   }
   const modules = {};
+  for (const name of ["model","store","service","priorities","reconcile","telemetry"]) modules[`assurance-${name}`] = await import(path.join(dir, `assurance-${name}.mjs`));
   for (const name of ["model", "extraction", "retrieval", "embeddings", "store", "service", "agent-adapter"])
     modules[`intelligence-${name}`] = await import(path.join(dir, `intelligence-${name}.mjs`));
   for (const name of [
-    "admission",
+    "run-controls",
+        "admission",
     "authorization",
     "deadline",
     "errors",
@@ -223,7 +229,14 @@ export async function createHarness(name) {
   }
   for (const name of ["identity", "authorize", "tool-permissions", "audit", "server", "core"])
     modules[name] = await import(path.join(dir, `${name}.mjs`));
+  const assurance = await import(path.join(dir,"assurance-route.mjs"));
+  async function assuranceCall(user,payload,extra={}) {
+    const req=new Request("https://twin.test/api/assurance",{method:payload?"POST":"GET",headers:{Origin:"https://twin.test",...(user?{"Cf-Access-Jwt-Assertion":await token(user)}:{}),...extra},...(payload?{body:JSON.stringify(payload)}:{})});
+    const r=await context.run(req.headers,()=>payload?assurance.POST(req):assurance.GET(req));
+    return {httpStatus:r.status,...await r.json()};
+  }
   return {
+    assuranceCall,
     call,
     agentCall,
     intelligenceCall,
