@@ -283,6 +283,9 @@ async function loop(
       "DEADLINE_EXCEEDED",
     );
     addUsage(state, turn);
+    // A syntactically valid prefix is not a completed provider decision. Preserve
+    // reported usage, but release no answer and execute none of this turn's calls.
+    if (turn.truncated) return failed("MODEL_INCOMPLETE_RESPONSE");
     if (turn.toolCalls.length === 0) {
       if (deps.evidenceOnly) {
         const unsuccessful = state.outcomes.find((outcome) => outcome.status !== "succeeded");

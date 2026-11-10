@@ -1,5 +1,7 @@
 # P0-003 implementation and acceptance status — 8 November 2026
 
+This page preserves the original base-branch delivery. For the 10 November remediation evidence, including 151 local tests and fifteen scoped genuine-model checks, see the [provider-boundary verification report](provider-boundary/verification.md). Hosted and human validation remain separate open gates; the historical results below are not the latest remediation results.
+
 The persistent intelligence layer and model-directed read-only runtime are implemented on the P0-001 security branch foundation. **Full P0-003 acceptance remains blocked by real-model validation on this secured branch, hosted identity validation and real-user productivity measurement.** Code completion is not production verification.
 
 ## What this delivery adds

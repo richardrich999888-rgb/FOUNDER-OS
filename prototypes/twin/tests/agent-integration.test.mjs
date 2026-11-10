@@ -93,6 +93,26 @@ const noDisclosure = (r) => {
   assert.deepEqual(r.sources, []);
 };
 
+test('incomplete provider tool selection cannot execute even with valid JSON arguments', async () => {
+  const u=await user('incomplete-selection');
+  await capture(u,'I prefer concise answers.');
+  const s=await session(u,{model:scripted([{...turn('search_personal_memory',{query:'concise'}),truncated:true,usage:{inputTokens:10,outputTokens:5}}])});
+  const r=await s.run();noDisclosure(r);
+  assert.equal(r.errorCode,'MODEL_INCOMPLETE_RESPONSE');assert.equal(r.toolExecutions,0);
+  assert.equal(h.db.sql.prepare('SELECT count(*) n FROM agent_execution_receipts WHERE request_id=?').get(s.requestId).n,0);
+  const run=h.db.sql.prepare('SELECT status,error_code,output_tokens FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');assert.equal(run.output_tokens,5);
+});
+
+test('incomplete cited answer fails closed after a real authorized evidence read', async () => {
+  const u=await user('incomplete-answer');await capture(u,'I prefer concise answers.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'concise'}),{...final('You prefer concise answers [E1].'),truncated:true}])});
+  const r=await s.run();noDisclosure(r);assert.equal(r.errorCode,'MODEL_INCOMPLETE_RESPONSE');
+  assert.equal(r.receipts.length,1);assert.equal(r.receipts[0].status,'succeeded');
+  const run=h.db.sql.prepare('SELECT status,error_code FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');
+});
+
 test("real JWT -> local HTTP agent -> authorized graph read -> persisted execution receipt", async () => {
   const u = await user("http");
   await capture(u, "I prefer concise answers.");
@@ -695,6 +715,38 @@ test("model mode denies absent consent and request-selected destinations before 
   assert.equal((await h.agentCall("model-denied", input)).httpStatus, 503);
 });
 
+test('HTTP model mode rejects truncated and filtered responses with persisted failed runs', async () => {
+  for(const reason of ['length','content_filter']) for(const phase of ['selection','answer']) {
+    // Each independent case has its own synthetic account; keep real admission limits intact.
+    const u=await user(`terminal-${reason}-${phase}`,true);await capture(u,'I prefer concise answers.');
+    const requestId=crypto.randomUUID();let calls=0;
+    const result=await m('model-run').runModelIntelligence(u,{mode:'model',requestId,message:'Find my concise preference'},h.db.d1,modelEnv,async()=>{
+      calls++;const selecting=calls===1;
+      return Response.json({choices:[{finish_reason:(phase==='selection'||!selecting)?reason:'tool_calls',message:selecting?
+        {content:null,tool_calls:[{id:'terminal-lookup',type:'function',function:{name:'search_personal_memory',arguments:'{"query":"concise"}'}}]}:
+        {content:'You prefer concise answers [E1].'}}],usage:{prompt_tokens:10,completion_tokens:5}});
+    });
+    assert.equal(result.status,503);assert.equal(result.body.text,null);assert.deepEqual(result.body.sources,[]);
+    assert.equal(result.body.execution.errorCode,'MODEL_INCOMPLETE_RESPONSE');
+    assert.equal(calls,phase==='selection'?1:2);
+    const receipts=h.db.sql.prepare('SELECT status FROM agent_execution_receipts WHERE request_id=?').all(requestId);
+    assert.equal(receipts.length,phase==='selection'?0:1);assert.ok(receipts.every(r=>r.status==='succeeded'));
+    const run=h.db.sql.prepare('SELECT status,error_code,output_tokens FROM agent_runs WHERE request_id=?').get(requestId);
+    assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');assert.equal(run.output_tokens,5*calls);
+    assert.doesNotMatch(JSON.stringify(run),/concise/);
+  }
+});
+
+test('chat protocol requires a recognized terminal reason without treating truncated prefixes as complete', () => {
+  const parse=m('chat-completions-adapter').parseChatCompletionsBody;
+  for(const reason of [undefined,null,'','in_progress','function_call','SYNTHETIC_PRIVATE_ERROR']) {
+    assert.throws(()=>parse({choices:[{finish_reason:reason,message:{content:'Unverified'}}]}),e=>e.code==='MODEL_MALFORMED_RESPONSE'&&!e.message.includes('SYNTHETIC'));
+  }
+  assert.throws(()=>parse({choices:[{finish_reason:'tool_calls',message:{content:'Done'}}]}),e=>e.code==='MODEL_MALFORMED_RESPONSE');
+  for(const reason of ['length','content_filter']) assert.equal(parse({choices:[{finish_reason:reason,message:{content:'Prefix'}}]}).truncated,true);
+  assert.equal(parse({choices:[{finish_reason:'stop',message:{content:'Complete'}}]}).truncated,false);
+});
+
 test("model route cannot release unsupported personal claims or post-revocation answers", async () => {
   const u = await user("model-claims", true);
   const run = (fn) =>
@@ -788,6 +840,55 @@ test("model redirects fail closed without following a second destination", async
     (e) => e.code === "MODEL_UNAVAILABLE",
   );
   assert.equal(calls, 1);
+});
+
+const transportRequest={instructions:'Synthetic',items:[],tools:[],toolChoice:'none',maxOutputTokens:10};
+test('synchronous transport abort and exception cannot leave an unhandled rejection', async () => {
+  const controller=new AbortController();
+  const model=m('chat-completions-adapter').createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:()=>{
+    controller.abort();throw Error('SYNTHETIC_PRIVATE_TRANSPORT_DETAIL');
+  }});
+  await assert.rejects(()=>model.respond(transportRequest,controller.signal),e=>e.code==='MODEL_TIMEOUT'&&!e.message.includes('SYNTHETIC'));
+  // Let Node's test runner observe any unhandled abort-promise rejection.
+  await new Promise(r=>setImmediate(r));
+});
+test('chat transport skips pre-aborted requests and cancels rejected HTTP bodies', async () => {
+  const adapter=m('chat-completions-adapter');let calls=0;
+  const aborted=new AbortController();aborted.abort();
+  const pre=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>{calls++;return chatResponse({content:'Complete'});}});
+  await assert.rejects(()=>pre.respond(transportRequest,aborted.signal),e=>e.code==='MODEL_TIMEOUT');assert.equal(calls,0);
+  for(const status of [302,401,503]) {
+    let cancelled=false;
+    const model=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>new Response(new ReadableStream({cancel(){cancelled=true;}}),{status})});
+    await assert.rejects(()=>model.respond(transportRequest,new AbortController().signal),e=>e.code==='MODEL_UNAVAILABLE');
+    assert.equal(cancelled,true,`unread ${status} response must be cancelled`);
+  }
+});
+
+test('chat transport abort settles stalled reads and cancels late fetch responses', async () => {
+  const adapter=m('chat-completions-adapter');
+  for(const phase of ['body','fetch']) {
+    let cancelled=false,resolveFetch,streamController;const controller=new AbortController();
+    const response=new Response(new ReadableStream({start(c){streamController=c;},cancel(){cancelled=true;}}));
+    const model=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:()=>phase==='body'?Promise.resolve(response):new Promise(r=>{resolveFetch=r;})});
+    const pending=model.respond(transportRequest,controller.signal).then(()=> 'UNEXPECTED_SUCCESS',e=>e.code);
+    await new Promise(r=>setImmediate(r));controller.abort();
+    let timer;const result=await Promise.race([pending,new Promise(r=>{timer=setTimeout(()=>r('DID_NOT_STOP'),200);})]);clearTimeout(timer);
+    if(resolveFetch)resolveFetch(response);
+    await new Promise(r=>setImmediate(r));
+    if(!cancelled)streamController.close();
+    assert.equal(result,'MODEL_TIMEOUT',phase);assert.equal(cancelled,true,phase);
+  }
+});
+
+test('chat transport does not wait indefinitely for an oversized stream cancellation', async () => {
+  let cancelled=false;
+  const model=m('chat-completions-adapter').createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>new Response(new ReadableStream({
+    pull(c){c.enqueue(new Uint8Array(600000));},cancel(){cancelled=true;return new Promise(()=>{});}
+  }))});
+  let timer;
+  const result=await Promise.race([model.respond(transportRequest,new AbortController().signal).then(()=> 'UNEXPECTED_SUCCESS',e=>e.code),new Promise(r=>{timer=setTimeout(()=>r('DID_NOT_STOP'),200);})]);clearTimeout(timer);
+  assert.equal(result,'MODEL_MALFORMED_RESPONSE');assert.equal(cancelled,true);
 });
 
 test('evidence-required model requests a lookup first and still abstains if provider ignores it', async () => {

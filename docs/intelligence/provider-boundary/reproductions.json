@@ -1,0 +1,53 @@
+{
+  "baseCommit": "a4395338b2eac153a122da0bb37171af5497e842",
+  "category": "controlled synthetic provider regressions, real signed identity and SQL; not genuine inference",
+  "reproductions": [
+    {
+      "id": "incomplete-output",
+      "command": "node --test --test-name-pattern='incomplete provider|incomplete cited' tests/agent-integration.test.mjs",
+      "beforeExit": 1,
+      "failedBefore": 2,
+      "log": "provider-incomplete-before.log",
+      "observed": [
+        "A truncated valid-JSON tool selection executed and the run completed",
+        "A truncated final answer with valid citation completed instead of failing"
+      ],
+      "logSha256": "a2cdaff6ad1f64b076cb5bf6ac482e78f9dd8b3b64dbde30a738fc2f74853382"
+    },
+    {
+      "id": "abort-cleanup",
+      "command": "node --test --test-name-pattern='chat transport' tests/agent-integration.test.mjs",
+      "beforeExit": 1,
+      "failedBefore": 2,
+      "log": "provider-cancel-before.log",
+      "observed": [
+        "A pre-aborted request still reached the transport and completed",
+        "A stalled body ignored abort and did not settle within the 200 ms observation window; outer runtime deadline still existed"
+      ],
+      "logSha256": "8ac0421c1e8b68bb7132b9ea1823fb030ab119b3d7777c9f799b2dcefc41bf29"
+    },
+    {
+      "id": "test-account-quota",
+      "command": "node --test --test-name-pattern='incomplete provider|incomplete cited|HTTP model mode rejects|chat protocol requires' tests/agent-integration.test.mjs",
+      "beforeExit": 1,
+      "log": "provider-incomplete-after.log",
+      "observed": [
+        "Four provider-boundary probes reused one account and the fourth correctly returned 429",
+        "Changed fixture setup to one synthetic account per independent case; production limits and assertions unchanged"
+      ],
+      "logSha256": "2fdf0a1609090660614e7155f8cae763f6b7c647af920131a9a8c517bdc1b986"
+    },
+    {
+      "id": "candidate-synchronous-abort",
+      "implementation": "First cancellation candidate, not the parent commit",
+      "command": "node --test --test-name-pattern='synchronous transport abort' tests/agent-integration.test.mjs",
+      "beforeExit": 1,
+      "log": "provider-sync-abort-before.log",
+      "logSha256": "8c9763d5fa5229445c462d34c16c15eef9471022943d4f320266f5c80a806721",
+      "observed": [
+        "A transport aborting and throwing synchronously left an unhandled MODEL_TIMEOUT rejection",
+        "Deferred transport invocation until Promise.race handlers were attached; final regression passes without unhandled rejection"
+      ]
+    }
+  ]
+}

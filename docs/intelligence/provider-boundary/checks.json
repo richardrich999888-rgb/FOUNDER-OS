@@ -1,0 +1,106 @@
+{
+  "baseCommit": "a4395338b2eac153a122da0bb37171af5497e842",
+  "environment": {
+    "node": "v24.22.1",
+    "CLOUDFLARE_CF_FETCH_ENABLED": "false"
+  },
+  "commands": [
+    {
+      "command": "node --test --test-name-pattern=incomplete provider|incomplete cited|HTTP model mode rejects|chat protocol requires|chat transport|synchronous transport abort tests/agent-integration.test.mjs",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:47:59.087887+00:00",
+      "seconds": 2.493,
+      "logSha256": "3dc8134ff4950a9ff86a80065a84d3b2a87888ea2ef0ea6b07c242f988f3ef57",
+      "summary": [
+        "\u2139 tests 8",
+        "\u2139 pass 8",
+        "\u2139 fail 0"
+      ]
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:01.598096+00:00",
+      "seconds": 7.812,
+      "logSha256": "55cf3163e452dc84ece0a09fdc3e4cba468cc24ef0ca1430a8f25afa08c43474",
+      "summary": [
+        "\u2139 tests 151",
+        "\u2139 pass 151",
+        "\u2139 fail 0"
+      ]
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:09.432724+00:00",
+      "seconds": 5.0,
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696",
+      "summary": []
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:14.446059+00:00",
+      "seconds": 8.061,
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a",
+      "summary": []
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:22.521802+00:00",
+      "seconds": 10.707,
+      "logSha256": "54f4b087d5e765849f430bd89b52ee2f4aed18ec0eb8f431ea7faf941f735919",
+      "summary": []
+    },
+    {
+      "command": "npm run test:built",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:33.253797+00:00",
+      "seconds": 1.118,
+      "logSha256": "d47a21e73219d182a290b9a426d81bdfbf724816ce54d20f75f90fba7c576e5f",
+      "summary": [
+        "\u2139 tests 1",
+        "\u2139 pass 1",
+        "\u2139 fail 0"
+      ]
+    },
+    {
+      "command": "npm run test:staging -- --local --report /workspace/scratch/a0c107a3799b/founder-os-continue/docs/intelligence/provider-boundary/staging-local.json",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:34.385003+00:00",
+      "seconds": 6.7,
+      "logSha256": "ccdd29f26441875d419d22f25cfd4c5ef6721684c859727157c63f0323166381",
+      "summary": []
+    },
+    {
+      "command": "npm run test:staging -- --hosted --report /workspace/scratch/a0c107a3799b/founder-os-continue/docs/intelligence/provider-boundary/staging-hosted.json",
+      "exitCode": 2,
+      "measuredAt": "2026-11-10T08:48:41.096828+00:00",
+      "seconds": 0.317,
+      "logSha256": "317ad9110a986e802e36862104b836898406b9e18e8ef85e114d0102eadee2c8",
+      "summary": []
+    },
+    {
+      "command": "npm run eval:intelligence",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:48:41.422980+00:00",
+      "seconds": 5.3,
+      "logSha256": "b55da0e416c9dfbd3e7fe21ea666cf155db3abeb8493af956db66723069a5a1b",
+      "summary": []
+    }
+  ],
+  "testedFileSha256": {
+    "prototypes/twin/lib/agent/chat-completions-adapter.ts": "b7e19facf4d50285a1768da896e47d1b7a3034fcea22b7bef311bde208610a46",
+    "prototypes/twin/lib/agent/errors.ts": "5d1faf29c75d627656a5fc1d22aaf196117a5abcc7738f367026395e0416d935",
+    "prototypes/twin/lib/agent/runtime.ts": "4f0af7ee3fe77895119affda40bff87db5c0c559a4cc2cd7de2afe03a8d71390",
+    "prototypes/twin/tests/agent-integration.test.mjs": "3c91aa4027622e0f86e720f86f52ae019576a7bc83b148188da4583a5685f296",
+    "prototypes/twin/scripts/live-provider-completion.mjs": "7f103e11c75cfd02babbad4aa626b770a3f60fe66e09c8e34ad5b407210afb55"
+  },
+  "setup": {
+    "command": "npm run install:ci",
+    "exitCode": 0,
+    "dependencyChanges": "none; installer package-cache configuration restored before verification"
+  },
+  "ciScope": "Local evidence. Parent a439533 had no returned PR workflow runs or combined status entries; not a hosted CI pass."
+}
