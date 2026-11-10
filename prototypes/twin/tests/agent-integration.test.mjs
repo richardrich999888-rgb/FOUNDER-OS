@@ -93,6 +93,26 @@ const noDisclosure = (r) => {
   assert.deepEqual(r.sources, []);
 };
 
+test('incomplete provider tool selection cannot execute even with valid JSON arguments', async () => {
+  const u=await user('incomplete-selection');
+  await capture(u,'I prefer concise answers.');
+  const s=await session(u,{model:scripted([{...turn('search_personal_memory',{query:'concise'}),truncated:true,usage:{inputTokens:10,outputTokens:5}}])});
+  const r=await s.run();noDisclosure(r);
+  assert.equal(r.errorCode,'MODEL_INCOMPLETE_RESPONSE');assert.equal(r.toolExecutions,0);
+  assert.equal(h.db.sql.prepare('SELECT count(*) n FROM agent_execution_receipts WHERE request_id=?').get(s.requestId).n,0);
+  const run=h.db.sql.prepare('SELECT status,error_code,output_tokens FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');assert.equal(run.output_tokens,5);
+});
+
+test('incomplete cited answer fails closed after a real authorized evidence read', async () => {
+  const u=await user('incomplete-answer');await capture(u,'I prefer concise answers.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'concise'}),{...final('You prefer concise answers [E1].'),truncated:true}])});
+  const r=await s.run();noDisclosure(r);assert.equal(r.errorCode,'MODEL_INCOMPLETE_RESPONSE');
+  assert.equal(r.receipts.length,1);assert.equal(r.receipts[0].status,'succeeded');
+  const run=h.db.sql.prepare('SELECT status,error_code FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');
+});
+
 test("real JWT -> local HTTP agent -> authorized graph read -> persisted execution receipt", async () => {
   const u = await user("http");
   await capture(u, "I prefer concise answers.");
@@ -695,6 +715,38 @@ test("model mode denies absent consent and request-selected destinations before 
   assert.equal((await h.agentCall("model-denied", input)).httpStatus, 503);
 });
 
+test('HTTP model mode rejects truncated and filtered responses with persisted failed runs', async () => {
+  for(const reason of ['length','content_filter']) for(const phase of ['selection','answer']) {
+    // Each independent case has its own synthetic account; keep real admission limits intact.
+    const u=await user(`terminal-${reason}-${phase}`,true);await capture(u,'I prefer concise answers.');
+    const requestId=crypto.randomUUID();let calls=0;
+    const result=await m('model-run').runModelIntelligence(u,{mode:'model',requestId,message:'Find my concise preference'},h.db.d1,modelEnv,async()=>{
+      calls++;const selecting=calls===1;
+      return Response.json({choices:[{finish_reason:(phase==='selection'||!selecting)?reason:'tool_calls',message:selecting?
+        {content:null,tool_calls:[{id:'terminal-lookup',type:'function',function:{name:'search_personal_memory',arguments:'{"query":"concise"}'}}]}:
+        {content:'You prefer concise answers [E1].'}}],usage:{prompt_tokens:10,completion_tokens:5}});
+    });
+    assert.equal(result.status,503);assert.equal(result.body.text,null);assert.deepEqual(result.body.sources,[]);
+    assert.equal(result.body.execution.errorCode,'MODEL_INCOMPLETE_RESPONSE');
+    assert.equal(calls,phase==='selection'?1:2);
+    const receipts=h.db.sql.prepare('SELECT status FROM agent_execution_receipts WHERE request_id=?').all(requestId);
+    assert.equal(receipts.length,phase==='selection'?0:1);assert.ok(receipts.every(r=>r.status==='succeeded'));
+    const run=h.db.sql.prepare('SELECT status,error_code,output_tokens FROM agent_runs WHERE request_id=?').get(requestId);
+    assert.equal(run.status,'failed');assert.equal(run.error_code,'MODEL_INCOMPLETE_RESPONSE');assert.equal(run.output_tokens,5*calls);
+    assert.doesNotMatch(JSON.stringify(run),/concise/);
+  }
+});
+
+test('chat protocol requires a recognized terminal reason without treating truncated prefixes as complete', () => {
+  const parse=m('chat-completions-adapter').parseChatCompletionsBody;
+  for(const reason of [undefined,null,'','in_progress','function_call','SYNTHETIC_PRIVATE_ERROR']) {
+    assert.throws(()=>parse({choices:[{finish_reason:reason,message:{content:'Unverified'}}]}),e=>e.code==='MODEL_MALFORMED_RESPONSE'&&!e.message.includes('SYNTHETIC'));
+  }
+  assert.throws(()=>parse({choices:[{finish_reason:'tool_calls',message:{content:'Done'}}]}),e=>e.code==='MODEL_MALFORMED_RESPONSE');
+  for(const reason of ['length','content_filter']) assert.equal(parse({choices:[{finish_reason:reason,message:{content:'Prefix'}}]}).truncated,true);
+  assert.equal(parse({choices:[{finish_reason:'stop',message:{content:'Complete'}}]}).truncated,false);
+});
+
 test("model route cannot release unsupported personal claims or post-revocation answers", async () => {
   const u = await user("model-claims", true);
   const run = (fn) =>
@@ -788,4 +840,156 @@ test("model redirects fail closed without following a second destination", async
     (e) => e.code === "MODEL_UNAVAILABLE",
   );
   assert.equal(calls, 1);
+});
+
+const transportRequest={instructions:'Synthetic',items:[],tools:[],toolChoice:'none',maxOutputTokens:10};
+test('synchronous transport abort and exception cannot leave an unhandled rejection', async () => {
+  const controller=new AbortController();
+  const model=m('chat-completions-adapter').createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:()=>{
+    controller.abort();throw Error('SYNTHETIC_PRIVATE_TRANSPORT_DETAIL');
+  }});
+  await assert.rejects(()=>model.respond(transportRequest,controller.signal),e=>e.code==='MODEL_TIMEOUT'&&!e.message.includes('SYNTHETIC'));
+  // Let Node's test runner observe any unhandled abort-promise rejection.
+  await new Promise(r=>setImmediate(r));
+});
+test('chat transport skips pre-aborted requests and cancels rejected HTTP bodies', async () => {
+  const adapter=m('chat-completions-adapter');let calls=0;
+  const aborted=new AbortController();aborted.abort();
+  const pre=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>{calls++;return chatResponse({content:'Complete'});}});
+  await assert.rejects(()=>pre.respond(transportRequest,aborted.signal),e=>e.code==='MODEL_TIMEOUT');assert.equal(calls,0);
+  for(const status of [302,401,503]) {
+    let cancelled=false;
+    const model=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>new Response(new ReadableStream({cancel(){cancelled=true;}}),{status})});
+    await assert.rejects(()=>model.respond(transportRequest,new AbortController().signal),e=>e.code==='MODEL_UNAVAILABLE');
+    assert.equal(cancelled,true,`unread ${status} response must be cancelled`);
+  }
+});
+
+test('chat transport abort settles stalled reads and cancels late fetch responses', async () => {
+  const adapter=m('chat-completions-adapter');
+  for(const phase of ['body','fetch']) {
+    let cancelled=false,resolveFetch,streamController;const controller=new AbortController();
+    const response=new Response(new ReadableStream({start(c){streamController=c;},cancel(){cancelled=true;}}));
+    const model=adapter.createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:()=>phase==='body'?Promise.resolve(response):new Promise(r=>{resolveFetch=r;})});
+    const pending=model.respond(transportRequest,controller.signal).then(()=> 'UNEXPECTED_SUCCESS',e=>e.code);
+    await new Promise(r=>setImmediate(r));controller.abort();
+    let timer;const result=await Promise.race([pending,new Promise(r=>{timer=setTimeout(()=>r('DID_NOT_STOP'),200);})]);clearTimeout(timer);
+    if(resolveFetch)resolveFetch(response);
+    await new Promise(r=>setImmediate(r));
+    if(!cancelled)streamController.close();
+    assert.equal(result,'MODEL_TIMEOUT',phase);assert.equal(cancelled,true,phase);
+  }
+});
+
+test('chat transport does not wait indefinitely for an oversized stream cancellation', async () => {
+  let cancelled=false;
+  const model=m('chat-completions-adapter').createChatCompletionsModel({endpoint:modelEnv.TWIN_AGENT_ENDPOINT,model:'synthetic',fetchImpl:async()=>new Response(new ReadableStream({
+    pull(c){c.enqueue(new Uint8Array(600000));},cancel(){cancelled=true;return new Promise(()=>{});}
+  }))});
+  let timer;
+  const result=await Promise.race([model.respond(transportRequest,new AbortController().signal).then(()=> 'UNEXPECTED_SUCCESS',e=>e.code),new Promise(r=>{timer=setTimeout(()=>r('DID_NOT_STOP'),200);})]);clearTimeout(timer);
+  assert.equal(result,'MODEL_MALFORMED_RESPONSE');assert.equal(cancelled,true);
+});
+
+test('evidence-required model requests a lookup first and still abstains if provider ignores it', async () => {
+  const u = await user('required-lookup');
+  const model = scripted([final('Invented personal answer')]);
+  const s = await session(u, {model});
+  s.deps.requireEvidence = true;
+  const r = await s.run();
+  assert.equal(model.calls[0].toolChoice, 'required');
+  assert.equal(r.grounding, 'no_evidence');
+  assert.notEqual(r.answer, 'Invented personal answer');
+});
+
+test('provider tool schemas expose the same status enum and text bounds enforced by execution', () => {
+  const registry=m('intelligence-tools').createIntelligenceRegistry(h.db.d1);
+  const properties=registry.get('find_commitments').parameters.properties;
+  assert.deepEqual(properties.status.enum,['active','confirmed','completed','overdue','no-deadline','follow-up']);
+  assert.equal(properties.person.maxLength,160);
+  assert.equal(registry.get('search_personal_memory').parameters.properties.query.maxLength,500);
+});
+
+test('model lookup denied by schema is a failed run, not successful missing evidence', async () => {
+ const u=await user('denied-lookup');
+ const s=await session(u,{model:scripted([turn('find_commitments',{status:'invented',person:'',project:''}),final('No commitments found')])});
+ s.deps.requireEvidence=true;
+ const r=await s.run();
+ assert.equal(r.status,'failed');assert.equal(r.errorCode,'INVALID_ARGUMENTS');assert.equal(r.answer,null);
+ assert.equal(r.receipts[0].status,'denied');
+});
+
+test('server-selected initial lookup maps to a named function without granting additional authority', async () => {
+ const u=await user('initial-tool');
+ const model=scripted([turn('send_email',{}),final('Sent')]);
+ const s=await session(u,{model});s.deps.requireEvidence=true;s.deps.initialTool='search_personal_memory';
+ const r=await s.run();
+ assert.deepEqual(model.calls[0].toolChoice,{name:'search_personal_memory'});
+ assert.equal(r.receipts[0].errorCode,'UNKNOWN_TOOL');assert.equal(r.answer,null);
+ const body=m('chat-completions-adapter').buildChatCompletionsBody('synthetic',model.calls[0]);
+ assert.deepEqual(body.tool_choice,{type:'function',function:{name:'search_personal_memory'}});
+ assert.equal(body.tools.length,5);
+});
+
+test('valid citation cannot launder a fabricated numeric budget into a personal answer', async () => {
+  const u = await user('numeric-budget');
+  await capture(u, 'I prefer the amber folder for the Orion budget spreadsheet.');
+  const s = await session(u, { model: scripted([
+    turn('search_personal_memory', { query: 'Orion budget' }),
+    final('Your Orion budget is INR 9000000 [E1].'),
+  ]) });
+  const r = await s.run();
+  assert.equal(r.errorCode, 'GROUNDING_UNSUPPORTED_NUMBER');
+  assert.equal(r.answerSource, 'runtime_evidence_fallback');
+  assert.doesNotMatch(r.answer, /9000000/);
+  assert.equal(r.receipts[0].status, 'succeeded');
+});
+
+test('numeric grounding keeps values atomic and does not borrow metadata or uncited sources', () => {
+  const {createEvidenceLedger, verifyCitations, hasSupportedNumericLiterals} = m('evidence');
+  const ledger = createEvidenceLedger();
+  ledger.add([
+    {sourceId:'memory:one',kind:'memory',label:'Misleading label INR 9000000',createdAt:2026,updatedAt:2027,
+      excerpt:'Budget INR 20 million; rate 5%; departure 18:15; deadline 2026-12-01T10:00:00Z; balance -20; charge $50. The reference is 2e3.'},
+    {sourceId:'memory:two',kind:'memory',label:'Other',createdAt:1,updatedAt:1,excerpt:'Unrelated cost INR 9000000.'},
+  ]);
+  const check = (answer) => {const c=verifyCitations(answer,ledger);return c.kind==='cited' && hasSupportedNumericLiterals(answer,c.cited);};
+  for (const answer of ['Budget INR 20 million [E1].','Rate 5% [E1].','Departure 18:15 [E1].',
+    'Deadline 2026-12-01T10:00:00Z [E1].','Balance -20 [E1].','Charge $50 [E1].','Reference 2e3 [E1].',
+    'Budget ＩＮＲ ２０ million [E1].','Budget INR 2\u200b0 million [E1].','No numeric assertion [E1].'])
+    assert.equal(check(answer),true,answer);
+  for (const answer of ['Budget INR 9000000 [E1].','Budget INR 20 billion [E1].','Budget USD 20 million [E1].',
+    'Rate 50% [E1].','Departure 15:18 [E1].','Deadline 2026-01-12T10:00:00Z [E1].',
+    'Balance +20 [E1].','Charge ₹50 [E1].','Charge -$50 [E1].','Charge $-50 [E1].',
+    'Charge - $50 [E1].','Reference 2e6 [E1].','Value 2027 [E1].',
+    '[E1, INR 9000000]','Budget INR ９００００００ [E1].','Budget INR 9\u200b000000 [E1].'])
+    assert.equal(check(answer),false,answer);
+  assert.equal(check('Cost INR 9000000 [E2].'),true);
+});
+
+test('numeric grounding rejects novel values across a deterministic mutation set', () => {
+  const {hasSupportedNumericLiterals} = m('evidence');
+  for(let value=11;value<=60;value++) {
+    const cited=[{citation:'E1',excerpt:`The budget is INR ${value} million.`}];
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value} million [E1].`,cited),true);
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value+100} million [E1].`,cited),false);
+    assert.equal(hasSupportedNumericLiterals(`Budget INR ${value} billion [E1].`,cited),false);
+  }
+});
+
+test('numeric fallback retains authorization and fails closed if its run receipt cannot be saved', async () => {
+  const u=await user('numeric-receipt');await capture(u,'I prefer amber folders.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'amber'}),final('Budget INR 9000000 [E1].')])});
+  h.db.setFailPattern(/UPDATE agent_runs/);
+  try{const r=await s.run();noDisclosure(r);assert.equal(r.errorCode,'RECEIPT_WRITE_FAILED');}
+  finally{h.db.setFailPattern(null);}
+});
+
+test('numeric grounding records only a sanitized reason in the run receipt', async () => {
+  const u=await user('numeric-audit');await capture(u,'I prefer amber folders.');
+  const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'amber'}),final('Budget INR 9000000 [E1].')])});
+  const r=await s.run();assert.equal(r.errorCode,'GROUNDING_UNSUPPORTED_NUMBER');
+  const row=h.db.sql.prepare('SELECT * FROM agent_runs WHERE request_id=?').get(s.requestId);
+  assert.equal(row.error_code,'GROUNDING_UNSUPPORTED_NUMBER');
+  assert.doesNotMatch(JSON.stringify(row),/9000000|amber|folders/);
 });

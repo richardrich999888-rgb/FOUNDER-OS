@@ -1,0 +1,126 @@
+diff --git a/prototypes/twin/lib/agent/chat-completions-adapter.ts b/prototypes/twin/lib/agent/chat-completions-adapter.ts
+index e8ee1a3..2dcdd2e 100644
+--- a/prototypes/twin/lib/agent/chat-completions-adapter.ts
++++ b/prototypes/twin/lib/agent/chat-completions-adapter.ts
+@@ -74,16 +74,21 @@ export function buildChatCompletionsBody(
+   model: string,
+   request: ModelRequest,
+ ): Record<string, unknown> {
++  const choice = request.toolChoice;
++  // A single advertised tool plus required is equivalent to named selection and
++  // works with providers that only implement string-valued tool_choice.
++  const advertised = typeof choice === "object"
++    ? request.tools.filter((t) => t.name === choice.name) : request.tools;
++  if (typeof choice === "object" && advertised.length !== 1)
++    throw new AgentError("MODEL_MALFORMED_RESPONSE");
+   return {
+     model,
+     messages: toChatMessages(request.instructions, request.items),
+-    tools: request.tools.map((t) => ({
++    tools: advertised.map((t) => ({
+       type: "function",
+       function: { name: t.name, description: t.description, parameters: t.parameters },
+     })),
+-    tool_choice: typeof request.toolChoice === "object"
+-      ? { type: "function", function: { name: request.toolChoice.name } }
+-      : request.toolChoice,
++    tool_choice: typeof choice === "object" ? "required" : choice,
+     max_tokens: request.maxOutputTokens,
+     // Deterministic decoding for evaluation reproducibility (greedy). Not a security control.
+     temperature: 0,
+diff --git a/prototypes/twin/lib/agent/instructions.ts b/prototypes/twin/lib/agent/instructions.ts
+index 4cda000..d406dcf 100644
+--- a/prototypes/twin/lib/agent/instructions.ts
++++ b/prototypes/twin/lib/agent/instructions.ts
+@@ -54,3 +54,10 @@ export function evidenceFallbackText(evidence: readonly CitedEvidence[]): string
+   const lines = evidence.map((e, i) => `[${i + 1}] ${e.excerpt}`);
+   return `I found these passages in your saved information but could not verify a generated answer, so here they are directly:\n\n${lines.join("\n\n")}`;
+ }
++
++/** Only offered after successful retrieval; this marker can withhold, never authorize. */
++export const INSUFFICIENT_EVIDENCE = "[INSUFFICIENT_EVIDENCE]";
++export const ANSWER_INSTRUCTIONS = AGENT_INSTRUCTIONS + "\n" +
++  "Now inspect the retrieved passages. Answer only if they contain the specific information requested. " +
++  "A shared topic is insufficient: a storage location does not establish an amount or price. " +
++  "If they do not answer the question, output exactly " + INSUFFICIENT_EVIDENCE + " with no citations.";
+diff --git a/prototypes/twin/lib/agent/runtime.ts b/prototypes/twin/lib/agent/runtime.ts
+index 088246a..3488a99 100644
+--- a/prototypes/twin/lib/agent/runtime.ts
++++ b/prototypes/twin/lib/agent/runtime.ts
+@@ -43,6 +43,8 @@ import {
+ import {
+   ABSTENTION_TEXT,
+   AGENT_INSTRUCTIONS,
++  ANSWER_INSTRUCTIONS,
++  INSUFFICIENT_EVIDENCE,
+   evidenceFallbackText,
+   renderObservation,
+ } from "./instructions";
+@@ -168,6 +170,9 @@ function finalize(
+   // action happened) is not shown. Verified evidence, if any, still is.
+   if (state.outcomes.some((o) => o.errorCode === "UNKNOWN_TOOL"))
+     return degrade(state, "MODEL_POLICY_VIOLATION");
++  if (text === INSUFFICIENT_EVIDENCE && state.outcomes.some((o) => o.status === "succeeded"))
++    return { status: "completed", errorCode: null, answer: ABSTENTION_TEXT,
++      answerSource: "runtime_abstention", grounding: "no_evidence", sources: [] };
+   const hasEvidence = state.ledger.all().length > 0;
+   const check = verifyCitations(text, state.ledger);
+   if (check.kind === "fabricated") return degrade(state, "GROUNDING_FABRICATED_CITATION");
+@@ -259,7 +264,8 @@ async function loop(
+       (signal) =>
+         deps.model.respond(
+           {
+-            instructions: AGENT_INSTRUCTIONS,
++            instructions: state.outcomes.some((o) => o.status === "succeeded")
++              ? ANSWER_INSTRUCTIONS : AGENT_INSTRUCTIONS,
+             items: [...state.items],
+             tools: deps.registry.specs(),
+             toolChoice: finalIteration ? "none"
+diff --git a/prototypes/twin/tests/agent-integration.test.mjs b/prototypes/twin/tests/agent-integration.test.mjs
+index 9dddd31..7e53e6d 100644
+--- a/prototypes/twin/tests/agent-integration.test.mjs
++++ b/prototypes/twin/tests/agent-integration.test.mjs
+@@ -621,7 +621,8 @@ test("model HTTP mode executes verified tools and persists receipts through the
+     assert.equal(options.redirect, "manual");
+     const body = JSON.parse(options.body);
+     assert.equal(body.model, modelEnv.TWIN_AGENT_MODEL);
+-    assert.equal(body.tools.length, 5);
++    assert.equal(body.tools.length, calls === 1 ? 1 : 5);
++    if (calls === 1) { assert.equal(body.tool_choice, "required"); assert.equal(body.tools[0].function.name, "search_personal_memory"); }
+     if (calls === 1)
+       return chatResponse({
+         content: null,
+@@ -826,6 +827,31 @@ test('server-selected initial lookup maps to a named function without granting a
+  assert.deepEqual(model.calls[0].toolChoice,{name:'search_personal_memory'});
+  assert.equal(r.receipts[0].errorCode,'UNKNOWN_TOOL');assert.equal(r.answer,null);
+  const body=m('chat-completions-adapter').buildChatCompletionsBody('synthetic',model.calls[0]);
+- assert.deepEqual(body.tool_choice,{type:'function',function:{name:'search_personal_memory'}});
+- assert.equal(body.tools.length,5);
++ assert.equal(body.tool_choice,'required');
++ assert.equal(body.tools.length,1);
++ assert.equal(body.tools[0].function.name,'search_personal_memory');
++ assert.throws(()=>m('chat-completions-adapter').buildChatCompletionsBody('synthetic',{...model.calls[0],toolChoice:{name:'send_email'}}));
++});
++
++test('post-lookup abstention withholds related evidence without changing initial search instructions', async () => {
++ const u=await user('postlookup');await capture(u,'I prefer vegetarian meals.');
++ const model=scripted([turn('search_personal_memory',{query:'vegetarian'}),final('[INSUFFICIENT_EVIDENCE]')]);
++ const s=await session(u,{model});s.deps.requireEvidence=true;
++ const r=await s.run();
++ assert.equal(model.calls[0].instructions,m('instructions').AGENT_INSTRUCTIONS);
++ assert.equal(model.calls[1].instructions,m('instructions').ANSWER_INSTRUCTIONS);
++ assert.equal(r.status,'completed');assert.equal(r.grounding,'no_evidence');
++ assert.equal(r.answer,m('instructions').ABSTENTION_TEXT);assert.deepEqual(r.sources,[]);
++ assert.equal(r.receipts[0].status,'succeeded');
++});
++
++test('post-lookup abstention cannot hide denied tools or failed receipt persistence', async () => {
++ const u=await user('postlookup-denied');
++ const denied=await session(u,{model:scripted([turn('send_email',{}),final('[INSUFFICIENT_EVIDENCE]')])});
++ const d=await denied.run();assert.equal(d.status,'failed');assert.equal(d.answer,null);
++ await capture(u,'I prefer vegetarian meals.');
++ const s=await session(u,{model:scripted([turn('search_personal_memory',{query:'vegetarian'}),final('[INSUFFICIENT_EVIDENCE]')])});
++ h.db.setFailPattern(/UPDATE agent_execution_receipts/);
++ try{const r=await s.run();assert.equal(r.status,'failed');assert.equal(r.answer,null);assert.deepEqual(r.sources,[]);}
++ finally{h.db.setFailPattern(null);}
+ });

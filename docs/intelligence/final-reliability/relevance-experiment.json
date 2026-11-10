@@ -1,0 +1,687 @@
+{
+  "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+  "minimumLogit": 0,
+  "thresholdSelection": "fixed zero-logit cutoff selected before evaluation; not tuned on these cases",
+  "category": "standalone real local relevance inference, no generative planner or application integration",
+  "networkIsolation": "seccomp before native imports",
+  "metrics": {
+    "old-challenge": {
+      "positives": 24,
+      "recallAt5": 0.625,
+      "negativeCount": 0,
+      "abstentions": 0
+    },
+    "holdout": {
+      "positives": 12,
+      "recallAt5": 0.4166666666666667,
+      "negativeCount": 12,
+      "abstentions": 12
+    },
+    "near-miss": {
+      "positives": 0,
+      "recallAt5": null,
+      "negativeCount": 12,
+      "abstentions": 5
+    }
+  },
+  "rows": [
+    {
+      "query": "Orion pitch deck indigo",
+      "target": "deck",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 8.552674293518066,
+      "latencyMs": 66.78820200068003,
+      "selectedIds": [
+        "deck"
+      ]
+    },
+    {
+      "query": "Orion budget amber",
+      "target": "budget",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 7.359437942504883,
+      "latencyMs": 54.98285599969677,
+      "selectedIds": [
+        "budget"
+      ]
+    },
+    {
+      "query": "Zephyr investor call",
+      "target": "call",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 9.102081298828125,
+      "latencyMs": 49.99633300030837,
+      "selectedIds": [
+        "call"
+      ]
+    },
+    {
+      "query": "Zephyr train departs",
+      "target": "travel",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 9.12326431274414,
+      "latencyMs": 59.34679799975129,
+      "selectedIds": [
+        "travel"
+      ]
+    },
+    {
+      "query": "vegetarian lunch",
+      "target": "food",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 5.149253845214844,
+      "latencyMs": 84.02913399913814,
+      "selectedIds": [
+        "food"
+      ]
+    },
+    {
+      "query": "concise written replies",
+      "target": "reply",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 6.975527286529541,
+      "latencyMs": 46.16321699904802,
+      "selectedIds": [
+        "reply"
+      ]
+    },
+    {
+      "query": "backup cabinet seven",
+      "target": "backup",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 8.216236114501953,
+      "latencyMs": 67.1753839997109,
+      "selectedIds": [
+        "backup"
+      ]
+    },
+    {
+      "query": "Nila invoices Thursday",
+      "target": "review",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 8.659026145935059,
+      "latencyMs": 71.14287799959129,
+      "selectedIds": [
+        "review"
+      ]
+    },
+    {
+      "query": "flight cancelled train",
+      "target": "reason",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 6.420578479766846,
+      "latencyMs": 43.07373700066819,
+      "selectedIds": [
+        "reason"
+      ]
+    },
+    {
+      "query": "Jos\u00e9 Mart\u00ednez Saffron",
+      "target": "name",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 8.237236976623535,
+      "latencyMs": 60.26246599867591,
+      "selectedIds": [
+        "name"
+      ]
+    },
+    {
+      "query": "Juniper offline",
+      "target": "privacy",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 7.465029716491699,
+      "latencyMs": 53.335006999986945,
+      "selectedIds": [
+        "privacy"
+      ]
+    },
+    {
+      "query": "walk breakfast thirty",
+      "target": "routine",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 6.341985702514648,
+      "latencyMs": 88.05907700116222,
+      "selectedIds": [
+        "routine"
+      ]
+    },
+    {
+      "query": "Where is my investor presentation?",
+      "target": "deck",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -5.619276523590088,
+      "latencyMs": 83.96424000056868,
+      "selectedIds": []
+    },
+    {
+      "query": "Where is the financial workbook?",
+      "target": "budget",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -9.55317497253418,
+      "latencyMs": 64.15882600049372,
+      "selectedIds": []
+    },
+    {
+      "query": "When does the fundraising conversation begin?",
+      "target": "call",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -8.622590065002441,
+      "latencyMs": 65.85785399875022,
+      "selectedIds": []
+    },
+    {
+      "query": "When does my rail journey leave?",
+      "target": "travel",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -3.029226303100586,
+      "latencyMs": 84.75056399947789,
+      "selectedIds": []
+    },
+    {
+      "query": "What meat-free food do I choose?",
+      "target": "food",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -0.6442158818244934,
+      "latencyMs": 86.03488399967318,
+      "selectedIds": []
+    },
+    {
+      "query": "What writing style do I prefer?",
+      "target": "reply",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 4.473445892333984,
+      "latencyMs": 84.18851799979166,
+      "selectedIds": [
+        "reply"
+      ]
+    },
+    {
+      "query": "Where is the spare disk?",
+      "target": "backup",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -8.17776107788086,
+      "latencyMs": 83.1690820014046,
+      "selectedIds": []
+    },
+    {
+      "query": "Who checks bills weekly?",
+      "target": "review",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -9.546842575073242,
+      "latencyMs": 75.83257199985383,
+      "selectedIds": []
+    },
+    {
+      "query": "Why did I avoid flying?",
+      "target": "reason",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -2.928377628326416,
+      "latencyMs": 198.69429200116429,
+      "selectedIds": []
+    },
+    {
+      "query": "Who owns the Saffron design?",
+      "target": "name",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 10.259716987609863,
+      "latencyMs": 106.37040499932482,
+      "selectedIds": [
+        "name"
+      ]
+    },
+    {
+      "query": "Which notes cannot go online?",
+      "target": "privacy",
+      "partition": "old-challenge",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 1.0351002216339111,
+      "latencyMs": 87.16789199934283,
+      "selectedIds": [
+        "privacy"
+      ]
+    },
+    {
+      "query": "What exercise follows my morning meal?",
+      "target": "routine",
+      "partition": "old-challenge",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -6.715175628662109,
+      "latencyMs": 79.22143100040557,
+      "selectedIds": []
+    },
+    {
+      "query": "Which folder contains the Orion slides?",
+      "target": "deck",
+      "partition": "holdout",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 6.27877140045166,
+      "latencyMs": 48.33406299985654,
+      "selectedIds": [
+        "deck",
+        "budget"
+      ]
+    },
+    {
+      "query": "Where do we keep financial projections for Orion?",
+      "target": "budget",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -1.4287688732147217,
+      "latencyMs": 67.8301250009099,
+      "selectedIds": []
+    },
+    {
+      "query": "What time am I speaking with Zephyr investors?",
+      "target": "call",
+      "partition": "holdout",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 7.651424407958984,
+      "latencyMs": 82.98194899907685,
+      "selectedIds": [
+        "call",
+        "travel"
+      ]
+    },
+    {
+      "query": "When is Zephyr's railway departure?",
+      "target": "travel",
+      "partition": "holdout",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 9.415030479431152,
+      "latencyMs": 82.05998700032069,
+      "selectedIds": [
+        "travel",
+        "call"
+      ]
+    },
+    {
+      "query": "Do my midday meals contain meat?",
+      "target": "food",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -8.14145278930664,
+      "latencyMs": 83.11053099896526,
+      "selectedIds": []
+    },
+    {
+      "query": "Should you write long responses or short ones?",
+      "target": "reply",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -2.627389669418335,
+      "latencyMs": 140.9351020010945,
+      "selectedIds": []
+    },
+    {
+      "query": "Where can I find the spare storage device?",
+      "target": "backup",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -9.493023872375488,
+      "latencyMs": 68.04378800006816,
+      "selectedIds": []
+    },
+    {
+      "query": "Who checks the bills each week?",
+      "target": "review",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -8.875337600708008,
+      "latencyMs": 87.38838200042665,
+      "selectedIds": []
+    },
+    {
+      "query": "What caused me to take the train?",
+      "target": "reason",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -0.630764901638031,
+      "latencyMs": 76.25800499954494,
+      "selectedIds": []
+    },
+    {
+      "query": "Who handles design for Saffron?",
+      "target": "name",
+      "partition": "holdout",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 5.726633548736572,
+      "latencyMs": 49.50955800086376,
+      "selectedIds": [
+        "name"
+      ]
+    },
+    {
+      "query": "Can Juniper meeting notes be uploaded?",
+      "target": "privacy",
+      "partition": "holdout",
+      "rank": 1,
+      "abstained": false,
+      "topLogit": 2.0859618186950684,
+      "latencyMs": 64.84349699894665,
+      "selectedIds": [
+        "privacy"
+      ]
+    },
+    {
+      "query": "What do I do for exercise after eating in the morning?",
+      "target": "routine",
+      "partition": "holdout",
+      "rank": 0,
+      "abstained": true,
+      "topLogit": -2.61053729057312,
+      "latencyMs": 173.93337000066822,
+      "selectedIds": []
+    },
+    {
+      "query": "Which hospital delivered me?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -10.850380897521973,
+      "latencyMs": 61.89837400052056,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my national identification number?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.35325813293457,
+      "latencyMs": 71.61591299882275,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my favourite ocean?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.228985786437988,
+      "latencyMs": 53.763822999826516,
+      "selectedIds": []
+    },
+    {
+      "query": "Which vaccine did I receive?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -10.973073959350586,
+      "latencyMs": 78.24083900050027,
+      "selectedIds": []
+    },
+    {
+      "query": "What was my childhood nickname?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.092020034790039,
+      "latencyMs": 89.93453799848794,
+      "selectedIds": []
+    },
+    {
+      "query": "Who is my grandmother?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.229171752929688,
+      "latencyMs": 124.8120239997661,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my wedding date?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.20753002166748,
+      "latencyMs": 89.86433400059468,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my credit card PIN?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.303234100341797,
+      "latencyMs": 85.2340789988375,
+      "selectedIds": []
+    },
+    {
+      "query": "Which school did my daughter attend?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -10.934157371520996,
+      "latencyMs": 123.57070700090844,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my car registration?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -11.240584373474121,
+      "latencyMs": 64.43882500025211,
+      "selectedIds": []
+    },
+    {
+      "query": "Which language did I learn first?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -10.394418716430664,
+      "latencyMs": 88.67743500013603,
+      "selectedIds": []
+    },
+    {
+      "query": "What is my favourite dessert?",
+      "target": null,
+      "partition": "holdout",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -9.348723411560059,
+      "latencyMs": 49.86741900029301,
+      "selectedIds": []
+    },
+    {
+      "query": "How much is the Orion budget?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 0.35312381386756897,
+      "latencyMs": 57.628042000942514,
+      "selectedIds": [
+        "budget"
+      ]
+    },
+    {
+      "query": "How many slides are in the Orion pitch deck?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 0.6986393928527832,
+      "latencyMs": 68.36430299881613,
+      "selectedIds": [
+        "deck"
+      ]
+    },
+    {
+      "query": "Who will attend the Zephyr investor call?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 4.189709663391113,
+      "latencyMs": 58.19664400041802,
+      "selectedIds": [
+        "call"
+      ]
+    },
+    {
+      "query": "What is the price of the Zephyr train ticket?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -1.5047407150268555,
+      "latencyMs": 61.63067399938882,
+      "selectedIds": []
+    },
+    {
+      "query": "Which dessert is my favourite?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -8.288707733154297,
+      "latencyMs": 51.96406499999284,
+      "selectedIds": []
+    },
+    {
+      "query": "Which font do I use for written replies?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 0.18950413167476654,
+      "latencyMs": 189.01340299998992,
+      "selectedIds": [
+        "reply"
+      ]
+    },
+    {
+      "query": "How much capacity does the backup drive have?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 0.11052965372800827,
+      "latencyMs": 158.60687600070378,
+      "selectedIds": [
+        "backup"
+      ]
+    },
+    {
+      "query": "How much are the invoices?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -5.524593353271484,
+      "latencyMs": 54.399331000240636,
+      "selectedIds": []
+    },
+    {
+      "query": "Which airline cancelled my flight?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 0.3012567460536957,
+      "latencyMs": 42.841430000407854,
+      "selectedIds": [
+        "reason"
+      ]
+    },
+    {
+      "query": "What is Jos\u00e9 Mart\u00ednez\u2019s phone number?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -2.7860147953033447,
+      "latencyMs": 48.06113099948561,
+      "selectedIds": []
+    },
+    {
+      "query": "How many Juniper meeting notes are there?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": true,
+      "topLogit": -1.1156322956085205,
+      "latencyMs": 35.93136999916169,
+      "selectedIds": []
+    },
+    {
+      "query": "Which street do I walk along after breakfast?",
+      "target": null,
+      "partition": "near-miss",
+      "rank": null,
+      "abstained": false,
+      "topLogit": 3.0044517517089844,
+      "latencyMs": 58.274290000554174,
+      "selectedIds": [
+        "routine"
+      ]
+    }
+  ]
+}

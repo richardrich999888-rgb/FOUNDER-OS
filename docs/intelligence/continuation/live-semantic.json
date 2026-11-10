@@ -1,0 +1,58 @@
+{
+  "measuredAt": "2026-11-09T07:18:41.017Z",
+  "model": "qwen3-1.7b-q8",
+  "embeddingModel": "all-MiniLM-L6-v2",
+  "minimumScore": 0.31,
+  "category": "genuine model plus genuine embeddings via JWT/API/runtime/SQLite D1 adapter; not hosted staging",
+  "modelCalls": 4,
+  "embeddingCalls": 2,
+  "rows": [
+    {
+      "name": "paraphrase",
+      "httpStatus": 200,
+      "grounding": "cited",
+      "errorCode": null,
+      "latencyMs": 28573.043791,
+      "usage": {
+        "inputTokens": 1849,
+        "outputTokens": 39
+      },
+      "receipts": [
+        {
+          "executionId": "de63149d-f152-4a02-91cc-6c2c10746483",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 1,
+      "pass": true
+    },
+    {
+      "name": "missing",
+      "httpStatus": 200,
+      "grounding": "no_evidence",
+      "errorCode": null,
+      "latencyMs": 7006.652718000001,
+      "usage": {
+        "inputTokens": 1752,
+        "outputTokens": 41
+      },
+      "receipts": [
+        {
+          "executionId": "02a6335a-47e4-44a2-9d45-bea429cf360a",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ],
+      "persistedReceipts": 1,
+      "sourceCount": 0,
+      "pass": true
+    }
+  ],
+  "providerCharge": 0
+}

@@ -16,6 +16,7 @@ test("production bundle fails closed without verified identity configuration", a
     path: path.join(root, file),
   }));
   const mf = new Miniflare({
+    cf: false, // Use local metadata; never fetch workers.cloudflare.com during tests.
     modules,
     modulesRoot: root,
     compatibilityDate: "2026-05-15",

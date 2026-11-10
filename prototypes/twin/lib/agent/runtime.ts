@@ -28,6 +28,7 @@ import { AgentError, ReceiptWriteError, codeOf, type ErrorCode } from "./errors"
 import {
   createEvidenceLedger,
   verifyCitations,
+  hasSupportedNumericLiterals,
   type CitedEvidence,
   type EvidenceLedger,
 } from "./evidence";
@@ -63,6 +64,8 @@ export type AgentDependencies = Readonly<{
   validateContext: () => Promise<void>;
   evidenceOnly?: boolean;
   requireEvidence?: boolean;
+  /** Server-selected first read. Does not bypass executor authorization. */
+  initialTool?: string;
 }>;
 
 export type AgentRunInput = Readonly<{
@@ -123,6 +126,8 @@ function failed(code: ErrorCode): Verdict {
 
 /** Degrade without model text: evidence fallback, abstention, or failure. */
 function degrade(state: RunState, code: ErrorCode | null): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const evidence = state.ledger.all();
   if (evidence.length) {
     return {
@@ -154,6 +159,8 @@ function finalize(
   limits: RuntimeLimits,
   requireEvidence = false,
 ): Verdict {
+  if (state.outcomes.length && state.outcomes.every((o) => o.status !== "succeeded"))
+    return failed(state.outcomes[0].errorCode ?? "TOOL_FAILED");
   const text = turn.text.trim();
   if (!text) return degrade(state, "MODEL_EMPTY_RESPONSE");
   if (text.length > limits.maxAnswerChars) return degrade(state, "MODEL_MALFORMED_RESPONSE");
@@ -167,6 +174,8 @@ function finalize(
   if (check.kind === "fabricated") return degrade(state, "GROUNDING_FABRICATED_CITATION");
   if (hasEvidence) {
     if (check.kind === "uncited") return degrade(state, "GROUNDING_CITATION_MISSING");
+    if (!hasSupportedNumericLiterals(text, check.cited))
+      return degrade(state, "GROUNDING_UNSUPPORTED_NUMBER");
     return {
       status: "completed",
       errorCode: null,
@@ -256,7 +265,9 @@ async function loop(
             instructions: AGENT_INSTRUCTIONS,
             items: [...state.items],
             tools: deps.registry.specs(),
-            toolChoice: finalIteration ? "none" : "auto",
+            toolChoice: finalIteration ? "none"
+              : state.outcomes.length === 0 && deps.initialTool ? { name: deps.initialTool }
+              : deps.requireEvidence && state.outcomes.length === 0 ? "required" : "auto",
             maxOutputTokens: limits.maxOutputTokens,
           },
           signal,
@@ -272,6 +283,9 @@ async function loop(
       "DEADLINE_EXCEEDED",
     );
     addUsage(state, turn);
+    // A syntactically valid prefix is not a completed provider decision. Preserve
+    // reported usage, but release no answer and execute none of this turn's calls.
+    if (turn.truncated) return failed("MODEL_INCOMPLETE_RESPONSE");
     if (turn.toolCalls.length === 0) {
       if (deps.evidenceOnly) {
         const unsuccessful = state.outcomes.find((outcome) => outcome.status !== "succeeded");

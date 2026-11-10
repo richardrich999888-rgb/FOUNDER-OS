@@ -1,0 +1,191 @@
+baseline-tests
+
+✔ real JWT -> local HTTP agent -> authorized graph read -> persisted execution receipt (107.33074ms)
+✔ all five tools execute through the integrated runtime and preserve sibling source citations (83.251598ms)
+✔ forged/cloned principal and scope escalation cannot reach tools or planner (10.807197ms)
+✔ cross-account entity selectors cannot read another owner (32.579206ms)
+✔ consent revoked during planner wait prevents tool and replay disclosure (28.84503ms)
+✔ forget during second planner call prevents final prose AND evidence fallback (20.792262ms)
+✔ context changed during final receipt completion is withheld (16.049633ms)
+✔ deleted account generations cannot revive admission, runs or receipts (16.068296ms)
+✔ atomic admission enforces duplicate and minute limit under concurrency (7.440884ms)
+✔ real schema, FK cascade, upgrade metadata and receipt privacy (2.277759ms)
+✔ planner timeout has deterministic classification when audit succeeds; failed receipts never return results (259.06643ms)
+✔ verified long Unicode legacy account mappings remain valid; expired principals do not run (5.665464ms)
+✔ late noncooperative D1 run inserts fail the SQL deadline guard (96.223092ms)
+✔ receipt database failures discard already read evidence (11.409251ms)
+✔ unknown tools, injected argument ownership and repeated calls stay denied and bounded (28.775347ms)
+✔ integrated search preserves unimported legacy and unrelated residual documents (35.156975ms)
+✔ local evidence-only tool failure is an error, never a successful empty recall (27.196499ms)
+✔ valid long procedures fail with a size limit instead of disappearing (13.423791ms)
+✔ model HTTP mode executes verified tools and persists receipts through the chat adapter (47.541957ms)
+✔ model mode denies absent consent and request-selected destinations before disclosure (10.344429ms)
+✔ model route cannot release unsupported personal claims or post-revocation answers (26.680027ms)
+✔ chat adapter rejects unsafe destinations, malformed calls and oversized streamed responses (2.417416ms)
+✔ model redirects fail closed without following a second destination (0.483595ms)
+✔ API security and persistence flow (152.863723ms)
+✔ unconfirmed memories cannot influence recall or search (9.125799ms)
+✔ confirmed memory retrieval preserves provenance (1.063572ms)
+✔ unknown information produces abstention (0.293602ms)
+✔ remember commands propose rather than silently saving (0.307745ms)
+✔ task commands require review and do not schedule notifications (0.263758ms)
+✔ imported document instructions are returned only as excerpts (0.689203ms)
+✔ forgetting removes the fact from subsequent retrieval (0.28784ms)
+✔ same-origin requests accepted; absent or foreign origins denied (0.609501ms)
+✔ calendar export encodes control characters instead of injecting events (2.022464ms)
+✔ calendar export requires a valid date (0.383849ms)
+✔ activity history remains bounded (4.157774ms)
+✔ A: confirmed memory persists across a new authenticated session with source (149.735895ms)
+✔ B: commitments link people/projects and preserve explicit deadlines and next actions (160.607432ms)
+✔ C: conflicts require explicit approval, supersede atomically, retain revision metadata (62.226741ms)
+✔ D: forgetting scrubs original source, descendants, procedures and active contexts (57.737527ms)
+✔ legacy import leaves rows intact; correction/deletion invalidates derived content transactionally (121.233446ms)
+✔ E: only repeated reviewed outcomes propose a procedure; separate activation is mandatory (125.092492ms)
+✔ F: standalone tool adapter enforces grants and receipts; P0-002 execution is not asserted (37.636633ms)
+✔ G: forged principals, cross-user writes/reads and activation fail (47.393585ms)
+✔ untrusted extraction, false provenance, unsafe states and invalid dates are rejected (25.337527ms)
+✔ sensitive evidence stays out of assistant context even after confirmation (19.750262ms)
+✔ partial batch failures roll back every record and epoch; stale concurrent writes fail (7.958216ms)
+✔ account erase/recreate cannot revive stale graph writes or receipts (25.526519ms)
+✔ current source version and consent are revalidated before disclosing an earlier context (32.956937ms)
+✔ exact entity resolution and one-hop relationship traversal keep provenance (84.687958ms)
+✔ same-property contextual corrections and archived forgetting remain explicit (43.747488ms)
+✔ all five read-only tools use strict arguments, current consent and database receipts (88.793567ms)
+✔ concurrent graph updates commit exactly once and do not leak sensitive content in audit logs (7.872062ms)
+✔ review regressions: long legacy queries and proposed legacy imports remain usable (45.885405ms)
+✔ forgetting learned-procedure evidence scrubs generated sources too (59.332939ms)
+✔ dependency capacity is rejected before commit while existing reads and forget remain usable (142.670932ms)
+✔ repeated identical user feedback is allowed for distinct reviewed runs (57.889956ms)
+✔ in-flight AI accounting cannot reappear after account erase/recreation (12.500201ms)
+✔ applied migrations match the declared indexes and have no foreign-key violations (5.670757ms)
+✔ real authentication adapter rejects unauthenticated and invalid requests before D1 (191.623475ms)
+✔ configuration errors and JWKS failure fail closed (3.968872ms)
+✔ verified subject alone controls ownership; claim/body/header authority is ignored (49.290887ms)
+✔ legacy account mapping preserves IDs and never links by subject/email coincidence (10.481575ms)
+✔ concurrent identities stay isolated and competing state writes retain CAS (41.248362ms)
+✔ opaque principals, resource ownership, and default deny reject self-granted authority (2.963699ms)
+✔ tools only execute specifically granted confirmed-memory reads, including malicious input (24.967042ms)
+✔ grants expire and are rechecked after asynchronous work (2.308076ms)
+✔ authorization logs contain only the closed audit schema (4.299138ms)
+✔ confirmation, correction, task deletion and document deletion remain intact (34.007318ms)
+✔ Cloudflare Worker HTTP identity boundary and D1 account isolation (5161.031044ms)
+ℹ tests 110
+ℹ suites 0
+ℹ pass 110
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11785.760369
+
+final-tests
+
+✔ real JWT -> local HTTP agent -> authorized graph read -> persisted execution receipt (141.247567ms)
+✔ all five tools execute through the integrated runtime and preserve sibling source citations (98.215068ms)
+✔ forged/cloned principal and scope escalation cannot reach tools or planner (15.266062ms)
+✔ cross-account entity selectors cannot read another owner (50.34867ms)
+✔ consent revoked during planner wait prevents tool and replay disclosure (56.548286ms)
+✔ forget during second planner call prevents final prose AND evidence fallback (70.478793ms)
+✔ context changed during final receipt completion is withheld (36.204573ms)
+✔ deleted account generations cannot revive admission, runs or receipts (34.122506ms)
+✔ atomic admission enforces duplicate and minute limit under concurrency (11.12088ms)
+✔ real schema, FK cascade, upgrade metadata and receipt privacy (2.576372ms)
+✔ planner timeout has deterministic classification when audit succeeds; failed receipts never return results (263.927588ms)
+✔ verified long Unicode legacy account mappings remain valid; expired principals do not run (17.228467ms)
+✔ late noncooperative D1 run inserts fail the SQL deadline guard (100.243102ms)
+✔ receipt database failures discard already read evidence (27.632987ms)
+✔ unknown tools, injected argument ownership and repeated calls stay denied and bounded (74.948454ms)
+✔ integrated search preserves unimported legacy and unrelated residual documents (29.720566ms)
+✔ local evidence-only tool failure is an error, never a successful empty recall (30.038331ms)
+✔ valid long procedures fail with a size limit instead of disappearing (20.58172ms)
+✔ model HTTP mode executes verified tools and persists receipts through the chat adapter (43.940717ms)
+✔ model mode denies absent consent and request-selected destinations before disclosure (7.62458ms)
+✔ model route cannot release unsupported personal claims or post-revocation answers (28.471861ms)
+✔ chat adapter rejects unsafe destinations, malformed calls and oversized streamed responses (3.960434ms)
+✔ model redirects fail closed without following a second destination (0.318935ms)
+✔ evidence-required model requests a lookup first and still abstains if provider ignores it (9.598529ms)
+✔ provider tool schemas expose the same status enum and text bounds enforced by execution (0.311518ms)
+✔ model lookup denied by schema is a failed run, not successful missing evidence (8.776764ms)
+✔ API security and persistence flow (418.513955ms)
+✔ unconfirmed memories cannot influence recall or search (6.406448ms)
+✔ confirmed memory retrieval preserves provenance (1.214343ms)
+✔ unknown information produces abstention (0.54122ms)
+✔ remember commands propose rather than silently saving (0.657372ms)
+✔ task commands require review and do not schedule notifications (0.332328ms)
+✔ imported document instructions are returned only as excerpts (0.807729ms)
+✔ forgetting removes the fact from subsequent retrieval (0.442421ms)
+✔ same-origin requests accepted; absent or foreign origins denied (0.709383ms)
+✔ calendar export encodes control characters instead of injecting events (1.57955ms)
+✔ calendar export requires a valid date (0.622035ms)
+✔ activity history remains bounded (34.996914ms)
+✔ A: confirmed memory persists across a new authenticated session with source (165.1138ms)
+✔ B: commitments link people/projects and preserve explicit deadlines and next actions (142.292831ms)
+✔ C: conflicts require explicit approval, supersede atomically, retain revision metadata (116.128139ms)
+✔ D: forgetting scrubs original source, descendants, procedures and active contexts (69.620642ms)
+✔ legacy import leaves rows intact; correction/deletion invalidates derived content transactionally (111.824409ms)
+✔ E: only repeated reviewed outcomes propose a procedure; separate activation is mandatory (376.758666ms)
+✔ F: standalone tool adapter enforces grants and receipts; P0-002 execution is not asserted (73.888697ms)
+✔ G: forged principals, cross-user writes/reads and activation fail (71.292934ms)
+✔ untrusted extraction, false provenance, unsafe states and invalid dates are rejected (43.710741ms)
+✔ sensitive evidence stays out of assistant context even after confirmation (30.53966ms)
+✔ partial batch failures roll back every record and epoch; stale concurrent writes fail (12.99963ms)
+✔ account erase/recreate cannot revive stale graph writes or receipts (36.901336ms)
+✔ current source version and consent are revalidated before disclosing an earlier context (46.518853ms)
+✔ exact entity resolution and one-hop relationship traversal keep provenance (99.682068ms)
+✔ same-property contextual corrections and archived forgetting remain explicit (65.506056ms)
+✔ all five read-only tools use strict arguments, current consent and database receipts (135.403279ms)
+✔ concurrent graph updates commit exactly once and do not leak sensitive content in audit logs (12.351397ms)
+✔ review regressions: long legacy queries and proposed legacy imports remain usable (83.306235ms)
+✔ forgetting learned-procedure evidence scrubs generated sources too (304.393674ms)
+✔ dependency capacity is rejected before commit while existing reads and forget remain usable (179.538292ms)
+✔ repeated identical user feedback is allowed for distinct reviewed runs (146.19338ms)
+✔ in-flight AI accounting cannot reappear after account erase/recreation (41.119584ms)
+✔ applied migrations match the declared indexes and have no foreign-key violations (9.838628ms)
+✔ corrupt validity metadata and empty provenance cannot enter active context (120.270232ms)
+✔ oversized eligible procedure is a size failure, not missing evidence (35.565111ms)
+✔ API rejects forged execution receipts and tool-call replay (54.775894ms)
+✔ SQLite snapshot restore preserves integrity; pre-deletion backups require erasure reconciliation (31.483508ms)
+✔ alpha scoring includes setup and rejects missing consent and duplicate observations (3.036807ms)
+✔ real authentication adapter rejects unauthenticated and invalid requests before D1 (142.43762ms)
+✔ configuration errors and JWKS failure fail closed (4.622782ms)
+✔ verified subject alone controls ownership; claim/body/header authority is ignored (107.646085ms)
+✔ legacy account mapping preserves IDs and never links by subject/email coincidence (24.532889ms)
+✔ concurrent identities stay isolated and competing state writes retain CAS (57.703565ms)
+✔ opaque principals, resource ownership, and default deny reject self-granted authority (4.776605ms)
+✔ tools only execute specifically granted confirmed-memory reads, including malicious input (30.842934ms)
+✔ grants expire and are rechecked after asynchronous work (3.979679ms)
+✔ authorization logs contain only the closed audit schema (5.812657ms)
+✔ confirmation, correction, task deletion and document deletion remain intact (48.249283ms)
+✔ Cloudflare Worker HTTP identity boundary and D1 account isolation (6031.761079ms)
+ℹ tests 118
+ℹ suites 0
+ℹ pass 118
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8202.491733
+
+baseline-built
+
+✔ production bundle fails closed without verified identity configuration (3366.376418ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4526.367874
+
+final-built
+
+✔ production bundle fails closed without verified identity configuration (3676.075688ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8560.575434

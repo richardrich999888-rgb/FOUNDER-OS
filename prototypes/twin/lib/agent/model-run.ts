@@ -1,3 +1,4 @@
+import { createEmbeddingPort } from "../intelligence/embeddings";
 import { z } from "zod";
 import type { Identity } from "../security/identity";
 import { createChatCompletionsModel } from "./chat-completions-adapter";
@@ -36,6 +37,7 @@ export async function runModelIntelligence(
     apiKey: env.TWIN_AGENT_API_KEY,
     fetchImpl,
   });
+  const embeddings = createEmbeddingPort(env, fetchImpl);
   const admission = await admitAgent(principal, p.requestId, Date.now(), db);
   if (admission !== "admitted")
     return {
@@ -51,7 +53,7 @@ export async function runModelIntelligence(
     { principal, requestId: p.requestId, message: p.message },
     {
       model,
-      registry: createIntelligenceRegistry(db),
+      registry: createIntelligenceRegistry(db, embeddings),
       receipts: createD1ReceiptStore(
         db,
         principal,
@@ -62,6 +64,7 @@ export async function runModelIntelligence(
       newId: () => crypto.randomUUID(),
       limits: PRODUCTION_LIMITS,
       requireEvidence: true,
+      initialTool: "search_personal_memory",
       validateContext: () => verifyCurrentPrincipal(principal, db).then(() => undefined),
     },
   );

@@ -94,3 +94,39 @@ export function verifyCitations(text: string, ledger: EvidenceLedger): Grounding
   }
   return cited.length ? { kind: "cited", cited } : { kind: "uncited" };
 }
+
+// A conservative literal check, NOT an entailment model. Keep dates/times, signs,
+// decimal/group separators, currencies and common magnitude suffixes together:
+// the separate digits in 2026-12-01 must not license 2026-01-12 or INR 20 million.
+const CURRENCY = "USD|INR|EUR|GBP|JPY|AUD|CAD|CHF|CNY|SGD|AED";
+const MAGNITUDE = "thousand|million|billion|trillion|lakh|crore|percent|bps|kg|mg|km|cm|mm|ml|k|m|b";
+const NUMERIC_LITERAL = new RegExp(
+  String.raw`(?<![\p{L}\p{N}_])(?:[+\-−]\s*)?(?:(?:${CURRENCY})\s*|[$€£₹¥]\s*)?(?:[+\-−]\s*)?\p{Nd}+(?:[.,:/Tt+\-]\p{Nd}+)*(?:[eE][+\-]?\p{Nd}+)?(?:\s*(?:${MAGNITUDE}|${CURRENCY})(?![\p{L}\p{N}_])|\s*[%‰]|[zZ](?![\p{L}\p{N}_]))?`,
+  "giu",
+);
+
+function numericLiterals(text: string): string[] {
+  // Normalize display variants, not values: no arithmetic, unit/currency conversion,
+  // rounding, locale-dependent comma interpretation or inference from timestamps.
+  const normalized = text.normalize("NFKC").replace(/\p{Cf}/gu, "");
+  return [...normalized.matchAll(NUMERIC_LITERAL)].map((match) =>
+    match[0].replace(/\s+/gu, "").replace(/−/g, "-").toLowerCase(),
+  );
+}
+
+/**
+ * Reject novel numeric literals in model prose even when its citation IDs are real.
+ * Only cited excerpts can support a value — not labels, metadata, the question or
+ * uncited retrieved material. A match does NOT prove the number's relation, units
+ * outside the recognized grammar, spelled-out quantities or nonnumeric claims.
+ * Unsupported representations safely use the existing evidence-only fallback.
+ */
+export function hasSupportedNumericLiterals(text: string, cited: readonly CitedEvidence[]): boolean {
+  // Remove only citation tokens, not the rest of a mixed bracket group. In
+  // "[E1, INR 900]", INR 900 remains a claim requiring evidence.
+  const prose = text.replace(BRACKET_GROUP, (whole, inner: string) =>
+    `[${inner.split(/([\s,;]+)/).map((token) => CITATION_TOKEN.test(token) ? " " : token).join("")}]`,
+  );
+  const supported = new Set(cited.flatMap((item) => numericLiterals(item.excerpt)));
+  return numericLiterals(prose).every((literal) => supported.has(literal));
+}

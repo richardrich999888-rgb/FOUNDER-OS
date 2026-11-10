@@ -1,0 +1,67 @@
+{
+  "baseCommit": "76d6e8c76acf49544ea4650f8b0f88783de3da98",
+  "category": "local deterministic and workerd checks; not hosted; no live model",
+  "baseline": {
+    "tests": 126,
+    "typecheckExit": 0,
+    "lintExit": 0,
+    "productionBuildExit": 0,
+    "builtWorkerTests": 1
+  },
+  "reproduction": {
+    "command": "node --test --test-name-pattern='valid citation cannot launder' tests/agent-integration.test.mjs",
+    "beforeExit": 1,
+    "observed": "Generated INR 9000000 with a valid E1 citation accepted; errorCode null",
+    "afterExit": 0
+  },
+  "final": {
+    "tests": 131,
+    "focusedTests": 5,
+    "numericMutationAssertions": 150,
+    "baselineCases": 200,
+    "commands": [
+      {
+        "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm test",
+        "exitCode": 0
+      },
+      {
+        "command": "npm run typecheck",
+        "exitCode": 0
+      },
+      {
+        "command": "npm run lint",
+        "exitCode": 0
+      },
+      {
+        "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run build",
+        "exitCode": 0
+      },
+      {
+        "command": "CLOUDFLARE_CF_FETCH_ENABLED=false npm run test:built",
+        "exitCode": 0
+      },
+      {
+        "command": "npm run eval:intelligence",
+        "exitCode": 0
+      }
+    ]
+  },
+  "ci": "GitHub commit-workflow query returned no pull-request-triggered workflow runs for parent; local results are not hosted CI results",
+  "realModelCommands": [
+    {
+      "command": "TWIN_LIVE_REPORT=../../docs/intelligence/numeric-grounding/live-challenge.json node scripts/live-adversarial.mjs",
+      "exitCode": 0,
+      "passed": 6
+    },
+    {
+      "command": "TWIN_LIVE_REPORT=../../docs/intelligence/numeric-grounding/live-numeric.json node scripts/live-numeric-grounding.mjs",
+      "exitCode": 0,
+      "passed": 4
+    },
+    {
+      "command": "TWIN_LIVE_REPORT=../../docs/intelligence/numeric-grounding/live-lifecycle.json node scripts/live-lifecycle.mjs",
+      "exitCode": 0,
+      "passed": 2
+    }
+  ]
+}

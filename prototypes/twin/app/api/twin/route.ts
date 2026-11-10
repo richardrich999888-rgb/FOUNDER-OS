@@ -16,7 +16,7 @@ const schema=z.discriminatedUnion('action',[
  z.object({action:z.literal('document.add'),name:z.string().trim().min(1).max(160),text:z.string().trim().min(1).max(60000)}),z.object({action:z.literal('document.delete'),id}),
  z.object({action:z.literal('profile.update'),name:z.string().trim().min(1).max(60),aiConsent:z.boolean()}),z.object({action:z.literal('erase'),confirmation:z.literal('DELETE MY DATA')}),
 ]);
-export async function GET(){try{const user=await identity(),data=await load(user);return json({...data,initialized:!!data,model:modelStatus()});}catch(e){return fail(e);}}
+export async function GET(){try{const user=await identity(),data=await load(user);return json({...data,initialized:!!data,generationPrecondition:true,model:modelStatus()});}catch(e){return fail(e);}}
 export async function POST(request:Request){try{
  assertOrigin(request.headers.get('origin'),request.url);const user=await identity();
  if(Number(request.headers.get('content-length')||0)>100000)return json({error:'This upload is too large.'},413);
@@ -30,6 +30,10 @@ export async function POST(request:Request){try{
   authorize(user,'initialize',user.userId);await db.insert(accounts).values({userId:user.userId,state:JSON.stringify(state),version:0}).onConflictDoNothing();return json({...await load(user),initialized:true,model:modelStatus()});
  }
  if(!current)return json({error:'Start your twin first.'},409);if((body as {version?:unknown}).version!==current.version)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
+ // Opt-in client precondition closes the erase/reinitialize ABA window between
+ // HTTP requests. Authority still comes only from the verified identity; the
+ // existing SQL generation/version guard covers races after this snapshot.
+ if(Object.hasOwn(body as object,'expectedGeneration') && (body as {expectedGeneration?:unknown}).expectedGeneration!==current.generation)return json({error:'Your account changed. Refresh and try again.'},409);
  const state=structuredClone(current.state),now=new Date().toISOString();
  if(data.action==='erase'){if(!await eraseAccount(user,current.version,current.generation))return json({error:'Your data changed. Refresh before deleting.'},409);return json({initialized:false,model:modelStatus()});}
  if(data.action==='memory.add'){if(state.memories.length>=300)return json({error:'The prototype supports up to 300 memories.'},400);state.memories.unshift({id:crypto.randomUUID(),text:data.text,category:data.category,source:'You told Twin',status:'confirmed',createdAt:now,updatedAt:now});event(state,'Memory added','Confirmed by you.');}
@@ -44,5 +48,5 @@ export async function POST(request:Request){try{
  if(data.action==='document.delete'){if(!state.documents.some(d=>d.id===data.id))return json({error:'Document not found.'},404);state.documents=state.documents.filter(d=>d.id!==data.id);event(state,'Document deleted','Removed from active search.');}
  if(data.action==='profile.update'){state.name=data.name;state.aiConsent=data.aiConsent;event(state,'Preferences updated',data.aiConsent?'AI context sharing allowed when a model is configured.':'AI context sharing is off.');}
  authorize(user,data.action,user.userId);const updated=await db.update(accounts).set({state:JSON.stringify(state),version:current.version+1}).where(and(eq(accounts.userId,user.userId),eq(accounts.version,current.version),eq(accounts.generation,current.generation))).returning();if(!updated.length)return json({error:'Your twin changed in another tab. Refresh and try again.'},409);
- return json({state,version:current.version+1,initialized:true,model:modelStatus()});
+ return json({state,version:current.version+1,generation:current.generation,initialized:true,model:modelStatus()});
  }catch(e){return fail(e);}}

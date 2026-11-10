@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "mode": "local-signed-synthetic-jwt-and-worker-d1",
+  "status": "PASS",
+  "exitCode": 0,
+  "timedOut": false,
+  "tests": [
+    "tests/security.test.mjs",
+    "tests/worker-security.test.mjs",
+    "tests/agent-integration.test.mjs",
+    "tests/remediation.test.mjs",
+    "tests/semantic.test.mjs",
+    "tests/intelligence.test.mjs",
+    "tests/staging-harness.test.mjs"
+  ],
+  "logSha256": "416f191812389bb4a1794bde58ec32db83ad75eab7d1dca93cbd8945d7ba3e79",
+  "summary": [
+    "ℹ tests 121",
+    "ℹ pass 121",
+    "ℹ fail 0",
+    "ℹ skipped 0"
+  ],
+  "hosted": {
+    "status": "BLOCKED",
+    "reason": "Local workerd and synthetic JWKS do not validate hosted Access."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "measuredAt": "2026-11-09T07:47:06.564Z",
+  "model": "qwen3-1.7b-q8",
+  "category": "genuine inference; synthetic JWT/API/D1-adapter lifecycle; revocation deliberately timed before releasing original provider response",
+  "modelCalls": 3,
+  "rows": [
+    {
+      "name": "approved-temporal-correction",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "cited",
+      "errorCode": null,
+      "currentSource": true,
+      "oldSource": false,
+      "mentionsApprovedValue": true,
+      "latencyMs": 42132.480449999995,
+      "receipts": [
+        {
+          "executionId": "935bb034-b971-4c9f-9f75-062a65954561",
+          "tool": "search_personal_memory",
+          "authorization": "allow",
+          "status": "succeeded",
+          "errorCode": null
+        }
+      ]
+    },
+    {
+      "name": "consent-revoked-during-genuine-model-response",
+      "pass": true,
+      "httpStatus": 409,
+      "errorCode": "AUTHORIZATION_REVOKED",
+      "latencyMs": 4702.681543999999,
+      "modelCalls": 1,
+      "sourceCount": 0
+    }
+  ],
+  "providerCharge": 0
+}

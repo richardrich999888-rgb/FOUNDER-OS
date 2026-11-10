@@ -1,0 +1,15 @@
+{
+  "environment": "staging",
+  "syntheticOnly": true,
+  "authorizedSyntheticWrites": false,
+  "suite": "p0-003",
+  "baseURL": "https://AUTHORIZED-STAGING-HOST.example",
+  "directURL": "https://AUTHORIZED-DIRECT-WORKER.example",
+  "expectedCommit": "REPLACE_WITH_REVIEWED_40_HEX_COMMIT",
+  "deploymentEvidenceReference": "REPLACE_WITH_OPERATOR_DEPLOYMENT_RECORD",
+  "issuer": "https://YOUR-STAGING-TEAM.cloudflareaccess.com",
+  "audience": "REPLACE_WITH_EXACT_APPLICATION_AUDIENCE",
+  "cloudflareAccountId": "REPLACE_WITH_STAGING_ACCOUNT_ID",
+  "stagingDatabaseId": "REPLACE_WITH_DEDICATED_SYNTHETIC_D1_ID",
+  "legacyMarker": "TWIN-STAGING-LEGACY-OPERATOR-VERIFIED"
+}

@@ -1,0 +1,17 @@
+{
+  "scope": "Frozen before relevance-model inference; questions share entities/topics with the corpus but request missing attributes; synthetic same-author set",
+  "queries": [
+    "How much is the Orion budget?",
+    "How many slides are in the Orion pitch deck?",
+    "Who will attend the Zephyr investor call?",
+    "What is the price of the Zephyr train ticket?",
+    "Which dessert is my favourite?",
+    "Which font do I use for written replies?",
+    "How much capacity does the backup drive have?",
+    "How much are the invoices?",
+    "Which airline cancelled my flight?",
+    "What is José Martínez’s phone number?",
+    "How many Juniper meeting notes are there?",
+    "Which street do I walk along after breakfast?"
+  ]
+}

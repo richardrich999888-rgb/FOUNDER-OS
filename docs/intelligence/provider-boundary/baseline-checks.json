@@ -1,0 +1,58 @@
+{
+  "baseCommit": "a4395338b2eac153a122da0bb37171af5497e842",
+  "commands": [
+    {
+      "id": "tests",
+      "command": "npm test",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:27:19.853126+00:00",
+      "seconds": 5.161,
+      "logSha256": "1afe88628046013acacd323b80f5074e7385e9f8d0452ea315350c6ac16881ee",
+      "summary": [
+        "\u2139 tests 143",
+        "\u2139 pass 143",
+        "\u2139 fail 0"
+      ]
+    },
+    {
+      "id": "typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:27:25.017920+00:00",
+      "seconds": 8.496,
+      "logSha256": "36a055d88e14793280eb252eec591c9f20b5072bf10e0fc0d3c73b0723a6b696",
+      "summary": []
+    },
+    {
+      "id": "lint",
+      "command": "npm run lint",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:27:33.514242+00:00",
+      "seconds": 6.898,
+      "logSha256": "1b25750cada72b065416d2df71e5a844d0c0d3f9ab4d94d834162f07a1e9da8a",
+      "summary": []
+    },
+    {
+      "id": "build",
+      "command": "npm run build",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:27:40.412111+00:00",
+      "seconds": 7.755,
+      "logSha256": "7e06a20306297b5fe3d31bfc56da192f87f818227ad7016bb574a65171b31426",
+      "summary": []
+    },
+    {
+      "id": "built",
+      "command": "npm run test:built",
+      "exitCode": 0,
+      "measuredAt": "2026-11-10T08:27:48.167677+00:00",
+      "seconds": 0.92,
+      "logSha256": "580cc1d6f66f4b332cfc6ef3025bb0635a878bcbfd220c375515b9f2046588c3",
+      "summary": [
+        "\u2139 tests 1",
+        "\u2139 pass 1",
+        "\u2139 fail 0"
+      ]
+    }
+  ]
+}

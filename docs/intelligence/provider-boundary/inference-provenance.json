@@ -1,0 +1,51 @@
+{
+  "model": {
+    "repository": "Qwen/Qwen3-1.7B-GGUF",
+    "revision": "90862c4b9d2787eaed51d12237eafdfe7c5f6077",
+    "file": "Qwen3-1.7B-Q8_0.gguf",
+    "sha256": "061b54daade076b5d3362dac252678d17da8c68f07560be70818cace6590cb1a",
+    "bytes": 1834426016,
+    "license": "Apache-2.0"
+  },
+  "server": {
+    "repository": "ggml-org/llama.cpp",
+    "release": "b11880",
+    "commit": "7790a9231d85b8af26e87ee60d8ed7373f9713f0",
+    "archive": "llama-b11880-bin-ubuntu-x64.tar.gz",
+    "archiveSha256": "eef7734b774a0d0b54af2ba55fcf9444ecc13601842996259258bb0054698579",
+    "bytes": 22490804,
+    "reportedVersion": "0.7.0-dev (build 11880, commit 7790a9231); GNU 11.4.0 Linux x86_64",
+    "license": "MIT"
+  },
+  "launchArguments": [
+    "-m",
+    "/path/to/Qwen3-1.7B-Q8_0.gguf",
+    "--alias",
+    "qwen3-1.7b-q8",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8091",
+    "-c",
+    "8192",
+    "-np",
+    "1",
+    "-t",
+    "4",
+    "--jinja",
+    "--reasoning",
+    "off",
+    "--reasoning-budget",
+    "0",
+    "--cors-origins",
+    "http://127.0.0.1:8091"
+  ],
+  "applicationEnvironment": {
+    "TWIN_AGENT_ENDPOINT": "http://127.0.0.1:8091/v1/chat/completions",
+    "TWIN_AGENT_MODEL": "qwen3-1.7b-q8",
+    "providerCredential": "none",
+    "TWIN_LIVE_REPORT": "distinct report path per script"
+  },
+  "scope": "Synthetic data, local CPU inference; no paid provider; no hosted Worker; server stopped after experiments",
+  "serverLogSha256": "8fcf3b9c9c39d573d2de8fd71b373e1bb34cae7c2dc407e92b40c7c53663bed0"
+}

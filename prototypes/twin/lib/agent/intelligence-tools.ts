@@ -1,3 +1,6 @@
+import { embeddingScores, type EmbeddingPort } from "../intelligence/embeddings";
+import { principalBinding } from "./principal";
+import { IntelligenceError } from "../intelligence/model";
 import { z } from "zod";
 import { intelligenceTools, type IntelligenceTool } from "../intelligence/agent-adapter";
 import { retrieveContext } from "../intelligence/retrieval";
@@ -33,7 +36,7 @@ const evidence = z
 const result = z
   .object({ status: z.enum(["ok", "no_evidence"]), evidence: z.array(evidence).max(5) })
   .strict();
-export function createIntelligenceRegistry(db: D1Database) {
+export function createIntelligenceRegistry(db: D1Database, embeddings?: EmbeddingPort) {
   const tools: AnyToolDefinition[] = intelligenceTools.map((name) => {
     const keys =
       name === "find_commitments"
@@ -49,7 +52,12 @@ export function createIntelligenceRegistry(db: D1Database) {
       argsSchema: schemas[name],
       parameters: {
         type: "object",
-        properties: Object.fromEntries(keys.map((k) => [k, { type: "string", description: k }])),
+        properties: Object.fromEntries(keys.map((k) => [k,
+          k === "status" ? { type: "string", description: "Commitment lifecycle filter", enum: ["active", "confirmed", "completed", "overdue", "no-deadline", "follow-up"] } :
+          k === "entityId" ? { type: "string", description: "Verified entity UUID", format: "uuid" } :
+          k === "query" ? { type: "string", description: "Memory search terms", minLength: 1, maxLength: 500 } :
+          { type: "string", maxLength: 160, description: "Exact name, or empty string for no filter" }
+        ])),
         required: keys,
         additionalProperties: false,
       },
@@ -85,7 +93,20 @@ export function createIntelligenceRegistry(db: D1Database) {
               : name === "retrieve_procedure"
                 ? { query: parsed.query, kind: "procedure" }
                 : { query: parsed.query };
-        const recalled = retrieveContext(s, query);
+        let scores: ReadonlyMap<string,number> | undefined;
+        if (embeddings && parsed.query) {
+          // Local-only principals cannot cause provider disclosure, even with a miswired registry.
+          if (principalBinding(ctx.principal).destination !== "provider") throw new AgentError("AUTHORIZATION_REVOKED");
+          scores = await embeddingScores(s, parsed.query, embeddings, ctx.signal);
+          await verifyCurrentPrincipal(ctx.principal, db);
+        }
+        let recalled;
+        try { recalled = retrieveContext(s, query, Date.now(), scores); }
+        catch (error) {
+          if (error instanceof IntelligenceError && error.code === "LIMIT")
+            throw new AgentError("TOOL_RESULT_TOO_LARGE");
+          throw error;
+        }
         // Do not turn known evidence into a false "no evidence" response or silently
         // truncate a procedure's safety-relevant steps. The full memory API remains available.
         if (recalled.results.some((r) => r.text.length > 4000))

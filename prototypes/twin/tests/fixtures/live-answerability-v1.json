@@ -1,0 +1,29 @@
+{
+  "scope": "Six matched synthetic answerability cases frozen before real-model execution; includes previously observed failure, not an untouched independent holdout",
+  "queries": [
+    {
+      "query": "What is my favourite dessert?",
+      "target": null
+    },
+    {
+      "query": "What do I choose for lunch?",
+      "target": "food"
+    },
+    {
+      "query": "How much is the Orion budget?",
+      "target": null
+    },
+    {
+      "query": "Which folder holds the Orion budget spreadsheet?",
+      "target": "budget"
+    },
+    {
+      "query": "What is the price of the Zephyr train ticket?",
+      "target": null
+    },
+    {
+      "query": "When does the Zephyr train depart?",
+      "target": "travel"
+    }
+  ]
+}

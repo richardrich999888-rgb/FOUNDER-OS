@@ -81,7 +81,9 @@ export function buildChatCompletionsBody(
       type: "function",
       function: { name: t.name, description: t.description, parameters: t.parameters },
     })),
-    tool_choice: request.toolChoice,
+    tool_choice: typeof request.toolChoice === "object"
+      ? { type: "function", function: { name: request.toolChoice.name } }
+      : request.toolChoice,
     max_tokens: request.maxOutputTokens,
     // Deterministic decoding for evaluation reproducibility (greedy). Not a security control.
     temperature: 0,
@@ -102,7 +104,9 @@ const responseSchema = z
       .array(
         z
           .object({
-            finish_reason: z.string().nullable().optional(),
+            // This adapter requests a complete non-streaming response. A missing,
+            // null, deprecated or unknown stop reason cannot establish completion.
+            finish_reason: z.enum(["stop", "tool_calls", "length", "content_filter"]),
             message: z
               .object({
                 content: z.string().nullable().optional(),
@@ -139,6 +143,8 @@ export function parseChatCompletionsBody(body: unknown): ModelTurn {
     });
   }
   if (toolCalls.length > MAX_TOOL_CALLS_PER_TURN) throw new AgentError("MODEL_MALFORMED_RESPONSE");
+  if (choice.finish_reason === "tool_calls" && !toolCalls.length)
+    throw new AgentError("MODEL_MALFORMED_RESPONSE");
   const usage = usageSchema.safeParse(parsed.data.usage);
   return {
     text: choice.message.content ?? "",
@@ -146,7 +152,7 @@ export function parseChatCompletionsBody(body: unknown): ModelTurn {
     usage: usage.success
       ? { inputTokens: usage.data.prompt_tokens, outputTokens: usage.data.completion_tokens }
       : null,
-    truncated: choice.finish_reason === "length",
+    truncated: choice.finish_reason === "length" || choice.finish_reason === "content_filter",
   };
 }
 
@@ -171,55 +177,69 @@ export function createChatCompletionsModel(config: ChatCompletionsConfig): Model
   const doFetch = config.fetchImpl ?? fetch;
   return Object.freeze({
     async respond(request: ModelRequest, signal: AbortSignal): Promise<ModelTurn> {
+      if (signal.aborted) throw new AgentError("MODEL_TIMEOUT");
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (config.apiKey) headers.Authorization = `Bearer ${config.apiKey}`;
-      let response: Response;
+      let response: Response | undefined;
+      let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+      let onAbort!: () => void;
+      const aborted = new Promise<never>((_, reject) => {
+        onAbort = () => reject(new AgentError("MODEL_TIMEOUT"));
+        signal.addEventListener("abort", onAbort, { once: true });
+      });
       try {
-        response = await doFetch(config.endpoint, {
-          method: "POST",
-          headers,
-          body: JSON.stringify(buildChatCompletionsBody(config.model, request)),
-          redirect: "manual",
-          signal,
+        // Attach the race before invoking even a synchronously throwing transport.
+        const pendingResponse = Promise.resolve().then(() => {
+          if (signal.aborted) throw new AgentError("MODEL_TIMEOUT");
+          return doFetch(config.endpoint, {
+            method: "POST",
+            headers,
+            body: JSON.stringify(buildChatCompletionsBody(config.model, request)),
+            redirect: "manual",
+            signal,
+          });
+        }).then((received) => {
+          // A custom transport may ignore cancellation and resolve after the caller
+          // has stopped waiting. Never leave that response's body open or consume it.
+          if (signal.aborted) {
+            if (received.body) void received.body.cancel().catch(() => {});
+            throw new AgentError("MODEL_TIMEOUT");
+          }
+          return received;
         });
-      } catch {
-        throw new AgentError(signal.aborted ? "MODEL_TIMEOUT" : "MODEL_UNAVAILABLE");
-      }
-      if (!response.ok) throw new AgentError("MODEL_UNAVAILABLE");
-      let raw: string;
-      try {
+        response = await Promise.race([pendingResponse, aborted]);
+        if (!response.ok) throw new AgentError("MODEL_UNAVAILABLE");
         if (!response.body) throw new AgentError("MODEL_MALFORMED_RESPONSE");
-        const reader = response.body.getReader();
+        reader = response.body.getReader();
         const decoder = new TextDecoder();
         let bytes = 0;
-        raw = "";
-        try {
-          while (true) {
-            const chunk = await reader.read();
-            if (chunk.done) break;
-            bytes += chunk.value.byteLength;
-            if (bytes > MAX_RESPONSE_CHARS) {
-              await reader.cancel();
-              throw new AgentError("MODEL_MALFORMED_RESPONSE");
-            }
-            raw += decoder.decode(chunk.value, { stream: true });
-          }
-          raw += decoder.decode();
-        } finally {
-          reader.releaseLock();
+        let raw = "";
+        while (true) {
+          const chunk = await Promise.race([reader.read(), aborted]);
+          if (signal.aborted) throw new AgentError("MODEL_TIMEOUT");
+          if (chunk.done) break;
+          bytes += chunk.value.byteLength;
+          if (bytes > MAX_RESPONSE_CHARS) throw new AgentError("MODEL_MALFORMED_RESPONSE");
+          raw += decoder.decode(chunk.value, { stream: true });
         }
+        raw += decoder.decode();
+        if (raw.length > MAX_RESPONSE_CHARS) throw new AgentError("MODEL_MALFORMED_RESPONSE");
+        let body: unknown;
+        try { body = JSON.parse(raw); }
+        catch { throw new AgentError("MODEL_MALFORMED_RESPONSE"); }
+        return parseChatCompletionsBody(body);
       } catch (error) {
         if (error instanceof AgentError) throw error;
         throw new AgentError(signal.aborted ? "MODEL_TIMEOUT" : "MODEL_UNAVAILABLE");
+      } finally {
+        signal.removeEventListener("abort", onAbort);
+        // Cancellation must not consume the audit reserve if a transport's cancel
+        // implementation itself stalls. The runtime retains its existing deadline.
+        if (reader) {
+          void reader.cancel().catch(() => {});
+          reader.releaseLock();
+        } else if (response?.body) void response.body.cancel().catch(() => {});
       }
-      if (raw.length > MAX_RESPONSE_CHARS) throw new AgentError("MODEL_MALFORMED_RESPONSE");
-      let body: unknown;
-      try {
-        body = JSON.parse(raw);
-      } catch {
-        throw new AgentError("MODEL_MALFORMED_RESPONSE");
-      }
-      return parseChatCompletionsBody(body);
     },
   });
 }

@@ -1,0 +1,137 @@
+{
+  "measuredAt": "2026-11-10T08:48:40.199Z",
+  "category": "Genuine local model inference through signed synthetic JWT, API and SQLite D1 adapter",
+  "model": "qwen3-1.7b-q8",
+  "providerCharge": 0,
+  "scope": "Two request-cap truncation probes and one complete-response control; production token/deadline limits unchanged; no response substitution; not hosted or general answer-quality evaluation",
+  "rows": [
+    {
+      "id": "selection-cap",
+      "pass": true,
+      "httpStatus": 503,
+      "grounding": "none",
+      "errorCode": "MODEL_INCOMPLETE_RESPONSE",
+      "sourceCount": 0,
+      "answerReleased": false,
+      "receiptStatuses": [],
+      "run": {
+        "status": "failed",
+        "error_code": "MODEL_INCOMPLETE_RESPONSE",
+        "output_tokens": 1
+      },
+      "modelCalls": [
+        {
+          "call": 1,
+          "requestedMaxTokens": 1,
+          "finishReason": "length",
+          "httpStatus": 200,
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 849,
+            "total_tokens": 850,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          }
+        }
+      ],
+      "latencyMs": 16852.309758
+    },
+    {
+      "id": "answer-cap",
+      "pass": true,
+      "httpStatus": 503,
+      "grounding": "none",
+      "errorCode": "MODEL_INCOMPLETE_RESPONSE",
+      "sourceCount": 0,
+      "answerReleased": false,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "run": {
+        "status": "failed",
+        "error_code": "MODEL_INCOMPLETE_RESPONSE",
+        "output_tokens": 24
+      },
+      "modelCalls": [
+        {
+          "call": 1,
+          "requestedMaxTokens": 1200,
+          "finishReason": "tool_calls",
+          "httpStatus": 200,
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 849,
+            "total_tokens": 872,
+            "prompt_tokens_details": {
+              "cached_tokens": 848
+            }
+          }
+        },
+        {
+          "call": 2,
+          "requestedMaxTokens": 1,
+          "finishReason": "length",
+          "httpStatus": 200,
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 985,
+            "total_tokens": 986,
+            "prompt_tokens_details": {
+              "cached_tokens": 845
+            }
+          }
+        }
+      ],
+      "latencyMs": 5784.825811999999
+    },
+    {
+      "id": "complete-control",
+      "pass": true,
+      "httpStatus": 200,
+      "grounding": "evidence_fallback",
+      "errorCode": "GROUNDING_CITATION_MISSING",
+      "sourceCount": 1,
+      "answerReleased": true,
+      "receiptStatuses": [
+        "succeeded"
+      ],
+      "run": {
+        "status": "completed",
+        "error_code": "GROUNDING_CITATION_MISSING",
+        "output_tokens": 43
+      },
+      "modelCalls": [
+        {
+          "call": 1,
+          "requestedMaxTokens": 1200,
+          "finishReason": "tool_calls",
+          "httpStatus": 200,
+          "usage": {
+            "completion_tokens": 23,
+            "prompt_tokens": 849,
+            "total_tokens": 872,
+            "prompt_tokens_details": {
+              "cached_tokens": 845
+            }
+          }
+        },
+        {
+          "call": 2,
+          "requestedMaxTokens": 1200,
+          "finishReason": "stop",
+          "httpStatus": 200,
+          "usage": {
+            "completion_tokens": 20,
+            "prompt_tokens": 985,
+            "total_tokens": 1005,
+            "prompt_tokens_details": {
+              "cached_tokens": 845
+            }
+          }
+        }
+      ],
+      "latencyMs": 10840.158412999997
+    }
+  ]
+}
