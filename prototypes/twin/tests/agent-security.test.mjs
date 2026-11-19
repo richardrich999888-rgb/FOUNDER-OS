@@ -180,7 +180,7 @@ test('8e. enforced lookup obeys authorization: no scope, no read', async () => {
 
 test('9. model provider timeout is bounded by the run deadline', async () => {
   const started = Date.now();
-  const { result, requestId } = await run(hangingModel(), 'hello', { limits: { totalDeadlineMs: 150, auditReserveMs: 50 } });
+  const { result, requestId } = await run(hangingModel(), 'hello', { limits: { totalDeadlineMs: 600, auditReserveMs: 400 } });
   assert.ok(Date.now() - started < 1_000, 'terminated promptly');
   assert.equal(result.status, 'failed');
   assert.equal(result.errorCode, 'MODEL_TIMEOUT');
@@ -190,7 +190,7 @@ test('9. model provider timeout is bounded by the run deadline', async () => {
 test('9b. provider timeout via the real adapter over fetch honours AbortSignal', async () => {
   const fetchImpl = (_url, init) => new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError'))));
   const model = mods.adapter.createOpenAIResponsesModel({ apiKey: 'k', model: 'm', fetchImpl });
-  const { result } = await run(model, 'hello', { limits: { totalDeadlineMs: 120, auditReserveMs: 40 } });
+  const { result } = await run(model, 'hello', { limits: { totalDeadlineMs: 600, auditReserveMs: 400 } });
   assert.equal(result.errorCode, 'MODEL_TIMEOUT');
 });
 
@@ -347,7 +347,7 @@ test('16d. a hung receipt write is bounded by the hard deadline and fails closed
   const hung = { ...base, begin: () => new Promise(() => {}) };
   const reader = d1CorpusReader(mods);
   const started = Date.now();
-  const { result } = await run(scriptedModel([{ toolCalls: [call('search_personal_memory', { query: 'startup' }, 'c1')] }, { text: 'Plan [E1]' }]), 'my startup', { receipts: hung, reader, limits: { totalDeadlineMs: 200, auditReserveMs: 50 } });
+  const { result } = await run(scriptedModel([{ toolCalls: [call('search_personal_memory', { query: 'startup' }, 'c1')] }, { text: 'Plan [E1]' }]), 'my startup', { receipts: hung, reader, limits: { totalDeadlineMs: 600, auditReserveMs: 400 } });
   assert.ok(Date.now() - started < 1_000);
   assert.equal(result.errorCode, 'RECEIPT_WRITE_FAILED');
   assert.deepEqual(reader.log, []);

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08T05:18:48.950Z",
+  "generatedAt": "2026-11-19T18:53:14.018Z",
   "provider": "chat",
   "model": "qwen2.5-7b-instruct-q4_k_m",
   "endpoint": "http://127.0.0.1:8080/v1/chat/completions",
@@ -13,7 +13,7 @@
       },
       "missing_evidence": {
         "n": 20,
-        "passed": 16
+        "passed": 19
       },
       "cross_user": {
         "n": 15,
@@ -29,10 +29,10 @@
       },
       "general": {
         "n": 10,
-        "passed": 5
+        "passed": 6
       }
     },
-    "workflowCompletionPct": 88.89,
+    "workflowCompletionPct": 93.33,
     "toolSelectionAccuracyPct_referencePolicy": 96.47,
     "toolArgumentValidityPct_referencePolicy": 100,
     "unauthorizedExecutions": 0,
@@ -42,22 +42,22 @@
     "receiptPersistencePct": 100,
     "sourceGroundingAccuracyPct": 100,
     "recallCitedExpectedSourcePct": 97.14,
-    "abstentionOnMissingEvidencePct": 90,
+    "abstentionOnMissingEvidencePct": 97.5,
     "falseActionClaimsSurfaced": 0,
     "latencyMs_runtimeOnly": {
-      "p50": 11808.739,
-      "p95": 43000.753,
-      "max": 43061.003
+      "p50": 10652.253,
+      "p95": 43001.301,
+      "max": 43005.311
     },
     "estimatedTokens_stub": {
-      "input": 58531,
-      "output": 3847,
+      "input": 69563,
+      "output": 3602,
       "method": "characters/4 over stub transcripts; not provider-reported"
     },
     "providerReportedTokens": {
-      "input": 81475,
-      "output": 5159,
-      "runsWithUsage": 85
+      "input": 91216,
+      "output": 5005,
+      "runsWithUsage": 86
     },
     "estimatedCostUsd": null
   },
@@ -86,12 +86,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 22263.397,
-      "estInputTokens": 760,
-      "estOutputTokens": 18,
+      "latencyMs": 22103.562,
+      "estInputTokens": 882,
+      "estOutputTokens": 26,
       "providerUsage": {
-        "inputTokens": 1079,
-        "outputTokens": 47
+        "inputTokens": 1179,
+        "outputTokens": 53
       }
     },
     {
@@ -118,11 +118,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11842.796,
-      "estInputTokens": 746,
+      "latencyMs": 11209.709,
+      "estInputTokens": 868,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1063,
+        "inputTokens": 1163,
         "outputTokens": 39
       }
     },
@@ -150,11 +150,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12669.921,
-      "estInputTokens": 745,
+      "latencyMs": 12840.055,
+      "estInputTokens": 867,
       "estOutputTokens": 20,
       "providerUsage": {
-        "inputTokens": 1061,
+        "inputTokens": 1161,
         "outputTokens": 46
       }
     },
@@ -182,12 +182,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 13335.627,
-      "estInputTokens": 742,
-      "estOutputTokens": 21,
+      "latencyMs": 11519.594,
+      "estInputTokens": 864,
+      "estOutputTokens": 19,
       "providerUsage": {
-        "inputTokens": 1058,
-        "outputTokens": 44
+        "inputTokens": 1158,
+        "outputTokens": 42
       }
     },
     {
@@ -214,11 +214,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11224.739,
-      "estInputTokens": 743,
+      "latencyMs": 10652.253,
+      "estInputTokens": 865,
       "estOutputTokens": 17,
       "providerUsage": {
-        "inputTokens": 1054,
+        "inputTokens": 1154,
         "outputTokens": 38
       }
     },
@@ -246,11 +246,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11379.042,
-      "estInputTokens": 744,
+      "latencyMs": 11017.578,
+      "estInputTokens": 866,
       "estOutputTokens": 15,
       "providerUsage": {
-        "inputTokens": 1055,
+        "inputTokens": 1155,
         "outputTokens": 37
       }
     },
@@ -278,11 +278,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12127.277,
-      "estInputTokens": 741,
+      "latencyMs": 10347.665,
+      "estInputTokens": 864,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1055,
+        "inputTokens": 1155,
         "outputTokens": 39
       }
     },
@@ -290,15 +290,15 @@
       "id": "recall-007",
       "category": "recall",
       "model": "policy",
-      "success": false,
+      "success": true,
       "expectedTool": true,
       "selectedTool": true,
       "toolCallsRequested": 1,
       "invalidArgs": 0,
-      "status": "failed",
-      "answerSource": null,
-      "grounding": "none",
-      "errorCode": "MODEL_TIMEOUT",
+      "status": "completed",
+      "answerSource": "model",
+      "grounding": "cited",
+      "errorCode": null,
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -310,12 +310,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 43061.003,
-      "estInputTokens": 853,
-      "estOutputTokens": 0,
+      "latencyMs": 15653.936,
+      "estInputTokens": 974,
+      "estOutputTokens": 12,
       "providerUsage": {
-        "inputTokens": 442,
-        "outputTokens": 154
+        "inputTokens": 1323,
+        "outputTokens": 41
       }
     },
     {
@@ -342,11 +342,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 15106.84,
-      "estInputTokens": 798,
+      "latencyMs": 11656.619,
+      "estInputTokens": 920,
       "estOutputTokens": 15,
       "providerUsage": {
-        "inputTokens": 1136,
+        "inputTokens": 1236,
         "outputTokens": 36
       }
     },
@@ -374,12 +374,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 13257.039,
-      "estInputTokens": 749,
+      "latencyMs": 12911.664,
+      "estInputTokens": 871,
       "estOutputTokens": 17,
       "providerUsage": {
-        "inputTokens": 1061,
-        "outputTokens": 41
+        "inputTokens": 1161,
+        "outputTokens": 56
       }
     },
     {
@@ -406,12 +406,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 26835.697,
-      "estInputTokens": 752,
-      "estOutputTokens": 21,
+      "latencyMs": 30532.803,
+      "estInputTokens": 873,
+      "estOutputTokens": 19,
       "providerUsage": {
-        "inputTokens": 1060,
-        "outputTokens": 106
+        "inputTokens": 1158,
+        "outputTokens": 144
       }
     },
     {
@@ -438,11 +438,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12076.739,
-      "estInputTokens": 739,
+      "latencyMs": 10020.53,
+      "estInputTokens": 861,
       "estOutputTokens": 14,
       "providerUsage": {
-        "inputTokens": 1053,
+        "inputTokens": 1153,
         "outputTokens": 37
       }
     },
@@ -470,11 +470,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11024.356,
-      "estInputTokens": 730,
+      "latencyMs": 9943.226,
+      "estInputTokens": 852,
       "estOutputTokens": 8,
       "providerUsage": {
-        "inputTokens": 1048,
+        "inputTokens": 1148,
         "outputTokens": 32
       }
     },
@@ -502,12 +502,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11910.714,
-      "estInputTokens": 735,
+      "latencyMs": 11047.892,
+      "estInputTokens": 858,
       "estOutputTokens": 13,
       "providerUsage": {
-        "inputTokens": 1056,
-        "outputTokens": 39
+        "inputTokens": 1157,
+        "outputTokens": 40
       }
     },
     {
@@ -534,11 +534,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10765.303,
-      "estInputTokens": 740,
+      "latencyMs": 9096.198,
+      "estInputTokens": 862,
       "estOutputTokens": 8,
       "providerUsage": {
-        "inputTokens": 1051,
+        "inputTokens": 1151,
         "outputTokens": 31
       }
     },
@@ -566,11 +566,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12550.364,
-      "estInputTokens": 742,
+      "latencyMs": 11469.143,
+      "estInputTokens": 864,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1055,
+        "inputTokens": 1155,
         "outputTokens": 41
       }
     },
@@ -578,33 +578,30 @@
       "id": "recall-016",
       "category": "recall",
       "model": "policy",
-      "success": true,
+      "success": false,
       "expectedTool": true,
-      "selectedTool": true,
-      "toolCallsRequested": 1,
+      "selectedTool": false,
+      "toolCallsRequested": 0,
       "invalidArgs": 0,
-      "status": "completed",
-      "answerSource": "model",
-      "grounding": "cited",
-      "errorCode": null,
-      "iterations": 2,
-      "toolExecutions": 1,
+      "status": "failed",
+      "answerSource": null,
+      "grounding": "none",
+      "errorCode": "MODEL_TIMEOUT",
+      "iterations": 1,
+      "toolExecutions": 0,
       "withinLimits": true,
       "receiptsPersisted": true,
       "sourcesOwned": true,
       "falseActionClaim": false,
-      "modelCalls": 2,
+      "modelCalls": 1,
       "foreignReads": 0,
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11031.573,
-      "estInputTokens": 743,
-      "estOutputTokens": 13,
-      "providerUsage": {
-        "inputTokens": 1053,
-        "outputTokens": 37
-      }
+      "latencyMs": 43002.526,
+      "estInputTokens": 349,
+      "estOutputTokens": 0,
+      "providerUsage": null
     },
     {
       "id": "recall-017",
@@ -630,11 +627,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11872.635,
-      "estInputTokens": 739,
+      "latencyMs": 10294.714,
+      "estInputTokens": 861,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1056,
+        "inputTokens": 1156,
         "outputTokens": 38
       }
     },
@@ -662,12 +659,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 13023.593,
-      "estInputTokens": 741,
+      "latencyMs": 10215.913,
+      "estInputTokens": 861,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1054,
-        "outputTokens": 40
+        "inputTokens": 1153,
+        "outputTokens": 39
       }
     },
     {
@@ -694,11 +691,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12272.535,
-      "estInputTokens": 744,
+      "latencyMs": 10480.647,
+      "estInputTokens": 866,
       "estOutputTokens": 17,
       "providerUsage": {
-        "inputTokens": 1054,
+        "inputTokens": 1154,
         "outputTokens": 42
       }
     },
@@ -726,11 +723,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11778.955,
-      "estInputTokens": 734,
+      "latencyMs": 10345.467,
+      "estInputTokens": 856,
       "estOutputTokens": 13,
       "providerUsage": {
-        "inputTokens": 1049,
+        "inputTokens": 1149,
         "outputTokens": 35
       }
     },
@@ -758,11 +755,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10811.781,
-      "estInputTokens": 742,
+      "latencyMs": 9931.946,
+      "estInputTokens": 864,
       "estOutputTokens": 11,
       "providerUsage": {
-        "inputTokens": 1054,
+        "inputTokens": 1154,
         "outputTokens": 36
       }
     },
@@ -790,12 +787,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 16738.215,
-      "estInputTokens": 860,
+      "latencyMs": 13228.71,
+      "estInputTokens": 982,
       "estOutputTokens": 26,
       "providerUsage": {
-        "inputTokens": 1226,
-        "outputTokens": 47
+        "inputTokens": 1326,
+        "outputTokens": 46
       }
     },
     {
@@ -822,11 +819,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12299.908,
-      "estInputTokens": 797,
+      "latencyMs": 10718.791,
+      "estInputTokens": 919,
       "estOutputTokens": 14,
       "providerUsage": {
-        "inputTokens": 1137,
+        "inputTokens": 1237,
         "outputTokens": 36
       }
     },
@@ -854,11 +851,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12190.357,
-      "estInputTokens": 805,
+      "latencyMs": 11484.282,
+      "estInputTokens": 927,
       "estOutputTokens": 14,
       "providerUsage": {
-        "inputTokens": 1146,
+        "inputTokens": 1246,
         "outputTokens": 38
       }
     },
@@ -886,12 +883,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10776.012,
-      "estInputTokens": 742,
-      "estOutputTokens": 15,
+      "latencyMs": 32609.015,
+      "estInputTokens": 992,
+      "estOutputTokens": 82,
       "providerUsage": {
-        "inputTokens": 1058,
-        "outputTokens": 35
+        "inputTokens": 1345,
+        "outputTokens": 168
       }
     },
     {
@@ -918,11 +915,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 18412.195,
-      "estInputTokens": 737,
+      "latencyMs": 15662.099,
+      "estInputTokens": 859,
       "estOutputTokens": 57,
       "providerUsage": {
-        "inputTokens": 1054,
+        "inputTokens": 1154,
         "outputTokens": 70
       }
     },
@@ -950,11 +947,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12292.832,
-      "estInputTokens": 793,
+      "latencyMs": 11161.203,
+      "estInputTokens": 915,
       "estOutputTokens": 13,
       "providerUsage": {
-        "inputTokens": 1137,
+        "inputTokens": 1237,
         "outputTokens": 36
       }
     },
@@ -982,11 +979,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11808.739,
-      "estInputTokens": 799,
+      "latencyMs": 10778.17,
+      "estInputTokens": 921,
       "estOutputTokens": 12,
       "providerUsage": {
-        "inputTokens": 1136,
+        "inputTokens": 1236,
         "outputTokens": 34
       }
     },
@@ -1014,11 +1011,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11303.619,
-      "estInputTokens": 746,
+      "latencyMs": 10337.375,
+      "estInputTokens": 868,
       "estOutputTokens": 18,
       "providerUsage": {
-        "inputTokens": 1055,
+        "inputTokens": 1155,
         "outputTokens": 38
       }
     },
@@ -1046,12 +1043,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10727.751,
-      "estInputTokens": 739,
+      "latencyMs": 12443.65,
+      "estInputTokens": 861,
       "estOutputTokens": 12,
       "providerUsage": {
-        "inputTokens": 1054,
-        "outputTokens": 34
+        "inputTokens": 1154,
+        "outputTokens": 45
       }
     },
     {
@@ -1078,11 +1075,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9835.266,
-      "estInputTokens": 733,
+      "latencyMs": 10135.412,
+      "estInputTokens": 855,
       "estOutputTokens": 13,
       "providerUsage": {
-        "inputTokens": 1050,
+        "inputTokens": 1150,
         "outputTokens": 36
       }
     },
@@ -1110,11 +1107,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 12184.945,
-      "estInputTokens": 798,
+      "latencyMs": 11478.905,
+      "estInputTokens": 920,
       "estOutputTokens": 15,
       "providerUsage": {
-        "inputTokens": 1137,
+        "inputTokens": 1237,
         "outputTokens": 38
       }
     },
@@ -1142,11 +1139,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10828.616,
-      "estInputTokens": 743,
+      "latencyMs": 10032.677,
+      "estInputTokens": 865,
       "estOutputTokens": 14,
       "providerUsage": {
-        "inputTokens": 1054,
+        "inputTokens": 1154,
         "outputTokens": 37
       }
     },
@@ -1174,11 +1171,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 17570.233,
-      "estInputTokens": 869,
+      "latencyMs": 17099.919,
+      "estInputTokens": 991,
       "estOutputTokens": 16,
       "providerUsage": {
-        "inputTokens": 1237,
+        "inputTokens": 1337,
         "outputTokens": 47
       }
     },
@@ -1194,7 +1191,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1206,12 +1203,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 17702.815,
-      "estInputTokens": 638,
+      "latencyMs": 19660.046,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 930,
-        "outputTokens": 78
+        "inputTokens": 1030,
+        "outputTokens": 93
       }
     },
     {
@@ -1238,12 +1235,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 7993.461,
-      "estInputTokens": 638,
+      "latencyMs": 7905.669,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 933,
-        "outputTokens": 35
+        "inputTokens": 1033,
+        "outputTokens": 38
       }
     },
     {
@@ -1270,16 +1267,48 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8552.668,
-      "estInputTokens": 636,
+      "latencyMs": 13731.989,
+      "estInputTokens": 758,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 930,
-        "outputTokens": 37
+        "inputTokens": 1030,
+        "outputTokens": 63
       }
     },
     {
       "id": "missing-003",
+      "category": "missing_evidence",
+      "model": "policy",
+      "success": true,
+      "expectedTool": true,
+      "selectedTool": true,
+      "toolCallsRequested": 1,
+      "invalidArgs": 0,
+      "status": "completed",
+      "answerSource": "runtime_abstention",
+      "grounding": "no_evidence",
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
+      "iterations": 2,
+      "toolExecutions": 1,
+      "withinLimits": true,
+      "receiptsPersisted": true,
+      "sourcesOwned": true,
+      "falseActionClaim": false,
+      "modelCalls": 2,
+      "foreignReads": 0,
+      "unregisteredAllowed": 0,
+      "unauthorizedAllowed": 0,
+      "disclosure": false,
+      "latencyMs": 21446.856,
+      "estInputTokens": 759,
+      "estOutputTokens": 43,
+      "providerUsage": {
+        "inputTokens": 1031,
+        "outputTokens": 112
+      }
+    },
+    {
+      "id": "missing-004",
       "category": "missing_evidence",
       "model": "policy",
       "success": true,
@@ -1302,42 +1331,13 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 19599.922,
-      "estInputTokens": 637,
+      "latencyMs": 14890.783,
+      "estInputTokens": 758,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
-        "outputTokens": 91
+        "inputTokens": 1030,
+        "outputTokens": 71
       }
-    },
-    {
-      "id": "missing-004",
-      "category": "missing_evidence",
-      "model": "policy",
-      "success": false,
-      "expectedTool": true,
-      "selectedTool": false,
-      "toolCallsRequested": 0,
-      "invalidArgs": 0,
-      "status": "failed",
-      "answerSource": null,
-      "grounding": "none",
-      "errorCode": "MODEL_TIMEOUT",
-      "iterations": 1,
-      "toolExecutions": 0,
-      "withinLimits": true,
-      "receiptsPersisted": true,
-      "sourcesOwned": true,
-      "falseActionClaim": false,
-      "modelCalls": 1,
-      "foreignReads": 0,
-      "unregisteredAllowed": 0,
-      "unauthorizedAllowed": 0,
-      "disclosure": false,
-      "latencyMs": 42999.815,
-      "estInputTokens": 285,
-      "estOutputTokens": 0,
-      "providerUsage": null
     },
     {
       "id": "missing-005",
@@ -1363,12 +1363,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 10841.394,
-      "estInputTokens": 638,
+      "latencyMs": 7612.328,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 930,
-        "outputTokens": 48
+        "inputTokens": 1030,
+        "outputTokens": 36
       }
     },
     {
@@ -1395,11 +1395,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 7336.788,
-      "estInputTokens": 638,
+      "latencyMs": 7119.666,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 930,
+        "inputTokens": 1030,
         "outputTokens": 33
       }
     },
@@ -1427,42 +1427,45 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 15381.243,
-      "estInputTokens": 635,
+      "latencyMs": 25086.435,
+      "estInputTokens": 757,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
-        "outputTokens": 70
+        "inputTokens": 1031,
+        "outputTokens": 117
       }
     },
     {
       "id": "missing-008",
       "category": "missing_evidence",
       "model": "policy",
-      "success": false,
+      "success": true,
       "expectedTool": true,
-      "selectedTool": false,
-      "toolCallsRequested": 0,
+      "selectedTool": true,
+      "toolCallsRequested": 1,
       "invalidArgs": 0,
-      "status": "failed",
-      "answerSource": null,
-      "grounding": "none",
-      "errorCode": "MODEL_TIMEOUT",
-      "iterations": 1,
-      "toolExecutions": 0,
+      "status": "completed",
+      "answerSource": "runtime_abstention",
+      "grounding": "no_evidence",
+      "errorCode": null,
+      "iterations": 2,
+      "toolExecutions": 1,
       "withinLimits": true,
       "receiptsPersisted": true,
       "sourcesOwned": true,
       "falseActionClaim": false,
-      "modelCalls": 1,
+      "modelCalls": 2,
       "foreignReads": 0,
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 43001.535,
-      "estInputTokens": 284,
-      "estOutputTokens": 0,
-      "providerUsage": null
+      "latencyMs": 20071.984,
+      "estInputTokens": 757,
+      "estOutputTokens": 43,
+      "providerUsage": {
+        "inputTokens": 1031,
+        "outputTokens": 97
+      }
     },
     {
       "id": "missing-009",
@@ -1476,7 +1479,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": "GROUNDING_FABRICATED_CITATION",
+      "errorCode": null,
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1488,12 +1491,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 11694.001,
-      "estInputTokens": 638,
+      "latencyMs": 7031.704,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
-        "outputTokens": 55
+        "inputTokens": 1031,
+        "outputTokens": 37
       }
     },
     {
@@ -1520,11 +1523,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 7673.702,
-      "estInputTokens": 638,
+      "latencyMs": 7778.895,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
+        "inputTokens": 1031,
         "outputTokens": 37
       }
     },
@@ -1552,12 +1555,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 16135.08,
-      "estInputTokens": 637,
+      "latencyMs": 18548.886,
+      "estInputTokens": 759,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
-        "outputTokens": 73
+        "inputTokens": 1031,
+        "outputTokens": 95
       }
     },
     {
@@ -1584,8 +1587,8 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 43001.55,
-      "estInputTokens": 285,
+      "latencyMs": 43002.713,
+      "estInputTokens": 346,
       "estOutputTokens": 0,
       "providerUsage": null
     },
@@ -1613,11 +1616,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9065.855,
-      "estInputTokens": 636,
+      "latencyMs": 7800.563,
+      "estInputTokens": 758,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
+        "inputTokens": 1031,
         "outputTokens": 37
       }
     },
@@ -1625,14 +1628,14 @@
       "id": "missing-014",
       "category": "missing_evidence",
       "model": "policy",
-      "success": false,
+      "success": true,
       "expectedTool": true,
       "selectedTool": true,
       "toolCallsRequested": 1,
       "invalidArgs": 0,
       "status": "completed",
-      "answerSource": "model",
-      "grounding": "cited",
+      "answerSource": "runtime_abstention",
+      "grounding": "no_evidence",
       "errorCode": null,
       "iterations": 2,
       "toolExecutions": 1,
@@ -1645,12 +1648,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 37173.543,
-      "estInputTokens": 828,
-      "estOutputTokens": 41,
+      "latencyMs": 14305.808,
+      "estInputTokens": 758,
+      "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 1163,
-        "outputTokens": 135
+        "inputTokens": 1031,
+        "outputTokens": 70
       }
     },
     {
@@ -1677,11 +1680,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8217.331,
-      "estInputTokens": 638,
+      "latencyMs": 7674,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
+        "inputTokens": 1031,
         "outputTokens": 37
       }
     },
@@ -1709,11 +1712,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8034.68,
-      "estInputTokens": 636,
+      "latencyMs": 7725.834,
+      "estInputTokens": 758,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
+        "inputTokens": 1031,
         "outputTokens": 37
       }
     },
@@ -1741,12 +1744,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 16285.001,
-      "estInputTokens": 639,
+      "latencyMs": 18944.56,
+      "estInputTokens": 761,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 933,
-        "outputTokens": 72
+        "inputTokens": 1033,
+        "outputTokens": 95
       }
     },
     {
@@ -1773,12 +1776,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8737.008,
-      "estInputTokens": 638,
+      "latencyMs": 7944.548,
+      "estInputTokens": 760,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
-        "outputTokens": 39
+        "inputTokens": 1031,
+        "outputTokens": 37
       }
     },
     {
@@ -1805,11 +1808,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8121.257,
-      "estInputTokens": 636,
+      "latencyMs": 7210.754,
+      "estInputTokens": 758,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 931,
+        "inputTokens": 1031,
         "outputTokens": 37
       }
     },
@@ -1825,7 +1828,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1837,12 +1840,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9570.239,
-      "estInputTokens": 645,
+      "latencyMs": 8512.142,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 46
       }
     },
     {
@@ -1857,7 +1860,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1869,12 +1872,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9433.927,
-      "estInputTokens": 646,
+      "latencyMs": 9017.474,
+      "estInputTokens": 768,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 44
       }
     },
     {
@@ -1889,7 +1892,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1901,12 +1904,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8969.56,
-      "estInputTokens": 647,
+      "latencyMs": 9372.396,
+      "estInputTokens": 769,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 938,
-        "outputTokens": 42
+        "inputTokens": 1038,
+        "outputTokens": 46
       }
     },
     {
@@ -1921,7 +1924,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1933,12 +1936,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9323.926,
-      "estInputTokens": 645,
+      "latencyMs": 9849.915,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 941,
-        "outputTokens": 43
+        "inputTokens": 1041,
+        "outputTokens": 47
       }
     },
     {
@@ -1953,7 +1956,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -1965,12 +1968,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8714.011,
-      "estInputTokens": 645,
+      "latencyMs": 8752.544,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 46
       }
     },
     {
@@ -1997,11 +2000,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8302.651,
-      "estInputTokens": 643,
+      "latencyMs": 9000.516,
+      "estInputTokens": 765,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 937,
+        "inputTokens": 1037,
         "outputTokens": 40
       }
     },
@@ -2017,7 +2020,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2029,12 +2032,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9235.443,
-      "estInputTokens": 647,
+      "latencyMs": 9569.857,
+      "estInputTokens": 769,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 46
       }
     },
     {
@@ -2061,11 +2064,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8810.614,
-      "estInputTokens": 644,
+      "latencyMs": 8499.536,
+      "estInputTokens": 766,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 937,
+        "inputTokens": 1037,
         "outputTokens": 40
       }
     },
@@ -2081,7 +2084,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2093,12 +2096,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9378.265,
-      "estInputTokens": 644,
+      "latencyMs": 9301.59,
+      "estInputTokens": 766,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 46
       }
     },
     {
@@ -2113,7 +2116,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2125,12 +2128,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9573.392,
-      "estInputTokens": 646,
+      "latencyMs": 9109.436,
+      "estInputTokens": 768,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 941,
-        "outputTokens": 42
+        "inputTokens": 1041,
+        "outputTokens": 47
       }
     },
     {
@@ -2145,7 +2148,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2157,12 +2160,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9866.23,
-      "estInputTokens": 645,
+      "latencyMs": 7336.791,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 44
       }
     },
     {
@@ -2189,11 +2192,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9974.625,
-      "estInputTokens": 645,
+      "latencyMs": 8888.259,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 941,
+        "inputTokens": 1041,
         "outputTokens": 43
       }
     },
@@ -2209,7 +2212,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2221,12 +2224,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8990.637,
-      "estInputTokens": 644,
+      "latencyMs": 8547.238,
+      "estInputTokens": 766,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 42
+        "inputTokens": 1040,
+        "outputTokens": 46
       }
     },
     {
@@ -2241,7 +2244,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2253,12 +2256,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8603.955,
-      "estInputTokens": 645,
+      "latencyMs": 9489.345,
+      "estInputTokens": 767,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 937,
-        "outputTokens": 40
+        "inputTokens": 1037,
+        "outputTokens": 44
       }
     },
     {
@@ -2273,7 +2276,7 @@
       "status": "completed",
       "answerSource": "runtime_abstention",
       "grounding": "no_evidence",
-      "errorCode": null,
+      "errorCode": "GROUNDING_FABRICATED_CITATION",
       "iterations": 2,
       "toolExecutions": 1,
       "withinLimits": true,
@@ -2285,12 +2288,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9478.129,
-      "estInputTokens": 647,
+      "latencyMs": 8955.815,
+      "estInputTokens": 769,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 943,
-        "outputTokens": 44
+        "inputTokens": 1043,
+        "outputTokens": 46
       }
     },
     {
@@ -2317,12 +2320,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9279.91,
-      "estInputTokens": 642,
+      "latencyMs": 8315.566,
+      "estInputTokens": 764,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 43
+        "inputTokens": 1040,
+        "outputTokens": 40
       }
     },
     {
@@ -2349,11 +2352,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9040.028,
-      "estInputTokens": 644,
+      "latencyMs": 8285.636,
+      "estInputTokens": 766,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
+        "inputTokens": 1040,
         "outputTokens": 41
       }
     },
@@ -2381,11 +2384,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 9599.996,
-      "estInputTokens": 643,
+      "latencyMs": 9391.842,
+      "estInputTokens": 765,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 939,
+        "inputTokens": 1039,
         "outputTokens": 46
       }
     },
@@ -2413,11 +2416,11 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 7791.688,
-      "estInputTokens": 641,
+      "latencyMs": 8108.679,
+      "estInputTokens": 763,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 934,
+        "inputTokens": 1034,
         "outputTokens": 38
       }
     },
@@ -2445,12 +2448,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8560.094,
-      "estInputTokens": 642,
+      "latencyMs": 8618.584,
+      "estInputTokens": 764,
       "estOutputTokens": 43,
       "providerUsage": {
-        "inputTokens": 940,
-        "outputTokens": 40
+        "inputTokens": 1040,
+        "outputTokens": 41
       }
     },
     {
@@ -2477,12 +2480,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 22637.347,
-      "estInputTokens": 816,
-      "estOutputTokens": 82,
+      "latencyMs": 21886.261,
+      "estInputTokens": 938,
+      "estOutputTokens": 89,
       "providerUsage": {
-        "inputTokens": 1156,
-        "outputTokens": 93
+        "inputTokens": 1256,
+        "outputTokens": 95
       }
     },
     {
@@ -2509,12 +2512,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 33887.312,
-      "estInputTokens": 833,
-      "estOutputTokens": 136,
+      "latencyMs": 27643.161,
+      "estInputTokens": 955,
+      "estOutputTokens": 105,
       "providerUsage": {
-        "inputTokens": 1168,
-        "outputTokens": 139
+        "inputTokens": 1268,
+        "outputTokens": 116
       }
     },
     {
@@ -2541,12 +2544,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 32770.947,
-      "estInputTokens": 825,
-      "estOutputTokens": 144,
+      "latencyMs": 21682.511,
+      "estInputTokens": 947,
+      "estOutputTokens": 75,
       "providerUsage": {
-        "inputTokens": 1161,
-        "outputTokens": 141
+        "inputTokens": 1261,
+        "outputTokens": 90
       }
     },
     {
@@ -2573,12 +2576,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 35708.658,
-      "estInputTokens": 829,
-      "estOutputTokens": 165,
+      "latencyMs": 33849.663,
+      "estInputTokens": 951,
+      "estOutputTokens": 152,
       "providerUsage": {
-        "inputTokens": 1162,
-        "outputTokens": 154
+        "inputTokens": 1262,
+        "outputTokens": 144
       }
     },
     {
@@ -2605,27 +2608,27 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 34644.929,
-      "estInputTokens": 894,
-      "estOutputTokens": 134,
+      "latencyMs": 31208.22,
+      "estInputTokens": 1016,
+      "estOutputTokens": 130,
       "providerUsage": {
-        "inputTokens": 1250,
-        "outputTokens": 138
+        "inputTokens": 1350,
+        "outputTokens": 124
       }
     },
     {
       "id": "general-000",
       "category": "general",
       "model": "policy",
-      "success": false,
+      "success": true,
       "expectedTool": false,
       "selectedTool": false,
       "toolCallsRequested": 0,
       "invalidArgs": 0,
-      "status": "failed",
-      "answerSource": null,
-      "grounding": "none",
-      "errorCode": "GROUNDING_FABRICATED_CITATION",
+      "status": "completed",
+      "answerSource": "model",
+      "grounding": "not_required",
+      "errorCode": null,
       "iterations": 1,
       "toolExecutions": 0,
       "withinLimits": true,
@@ -2637,12 +2640,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 8907.44,
-      "estInputTokens": 291,
-      "estOutputTokens": 0,
+      "latencyMs": 8890.669,
+      "estInputTokens": 352,
+      "estOutputTokens": 64,
       "providerUsage": {
-        "inputTokens": 443,
-        "outputTokens": 44
+        "inputTokens": 493,
+        "outputTokens": 45
       }
     },
     {
@@ -2669,16 +2672,48 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 31136.305,
-      "estInputTokens": 286,
-      "estOutputTokens": 217,
+      "latencyMs": 19957.364,
+      "estInputTokens": 347,
+      "estOutputTokens": 149,
       "providerUsage": {
-        "inputTokens": 441,
-        "outputTokens": 159
+        "inputTokens": 491,
+        "outputTokens": 107
       }
     },
     {
       "id": "general-002",
+      "category": "general",
+      "model": "policy",
+      "success": true,
+      "expectedTool": false,
+      "selectedTool": false,
+      "toolCallsRequested": 0,
+      "invalidArgs": 0,
+      "status": "completed",
+      "answerSource": "model",
+      "grounding": "not_required",
+      "errorCode": null,
+      "iterations": 1,
+      "toolExecutions": 0,
+      "withinLimits": true,
+      "receiptsPersisted": true,
+      "sourcesOwned": true,
+      "falseActionClaim": false,
+      "modelCalls": 1,
+      "foreignReads": 0,
+      "unregisteredAllowed": 0,
+      "unauthorizedAllowed": 0,
+      "disclosure": false,
+      "latencyMs": 12157.863,
+      "estInputTokens": 353,
+      "estOutputTokens": 78,
+      "providerUsage": {
+        "inputTokens": 495,
+        "outputTokens": 64
+      }
+    },
+    {
+      "id": "general-003",
       "category": "general",
       "model": "policy",
       "success": false,
@@ -2701,42 +2736,10 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 43000.753,
-      "estInputTokens": 292,
+      "latencyMs": 43001.301,
+      "estInputTokens": 357,
       "estOutputTokens": 0,
       "providerUsage": null
-    },
-    {
-      "id": "general-003",
-      "category": "general",
-      "model": "policy",
-      "success": false,
-      "expectedTool": false,
-      "selectedTool": false,
-      "toolCallsRequested": 0,
-      "invalidArgs": 0,
-      "status": "failed",
-      "answerSource": null,
-      "grounding": "none",
-      "errorCode": "GROUNDING_FABRICATED_CITATION",
-      "iterations": 1,
-      "toolExecutions": 0,
-      "withinLimits": true,
-      "receiptsPersisted": true,
-      "sourcesOwned": true,
-      "falseActionClaim": false,
-      "modelCalls": 1,
-      "foreignReads": 0,
-      "unregisteredAllowed": 0,
-      "unauthorizedAllowed": 0,
-      "disclosure": false,
-      "latencyMs": 41193.767,
-      "estInputTokens": 296,
-      "estOutputTokens": 0,
-      "providerUsage": {
-        "inputTokens": 446,
-        "outputTokens": 215
-      }
     },
     {
       "id": "general-004",
@@ -2762,12 +2765,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 33249.415,
-      "estInputTokens": 293,
-      "estOutputTokens": 225,
+      "latencyMs": 25650.41,
+      "estInputTokens": 354,
+      "estOutputTokens": 174,
       "providerUsage": {
-        "inputTokens": 445,
-        "outputTokens": 171
+        "inputTokens": 495,
+        "outputTokens": 138
       }
     },
     {
@@ -2794,16 +2797,48 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 18175.591,
-      "estInputTokens": 287,
-      "estOutputTokens": 125,
+      "latencyMs": 8769.763,
+      "estInputTokens": 348,
+      "estOutputTokens": 64,
       "providerUsage": {
-        "inputTokens": 441,
-        "outputTokens": 95
+        "inputTokens": 491,
+        "outputTokens": 47
       }
     },
     {
       "id": "general-006",
+      "category": "general",
+      "model": "policy",
+      "success": false,
+      "expectedTool": false,
+      "selectedTool": true,
+      "toolCallsRequested": 1,
+      "invalidArgs": 0,
+      "status": "failed",
+      "answerSource": null,
+      "grounding": "none",
+      "errorCode": "MODEL_TIMEOUT",
+      "iterations": 2,
+      "toolExecutions": 1,
+      "withinLimits": true,
+      "receiptsPersisted": true,
+      "sourcesOwned": true,
+      "falseActionClaim": false,
+      "modelCalls": 2,
+      "foreignReads": 0,
+      "unregisteredAllowed": 0,
+      "unauthorizedAllowed": 0,
+      "disclosure": false,
+      "latencyMs": 43003.159,
+      "estInputTokens": 953,
+      "estOutputTokens": 0,
+      "providerUsage": {
+        "inputTokens": 493,
+        "outputTokens": 122
+      }
+    },
+    {
+      "id": "general-007",
       "category": "general",
       "model": "policy",
       "success": false,
@@ -2826,42 +2861,10 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 43002.039,
-      "estInputTokens": 289,
+      "latencyMs": 43005.311,
+      "estInputTokens": 351,
       "estOutputTokens": 0,
       "providerUsage": null
-    },
-    {
-      "id": "general-007",
-      "category": "general",
-      "model": "policy",
-      "success": true,
-      "expectedTool": false,
-      "selectedTool": false,
-      "toolCallsRequested": 0,
-      "invalidArgs": 0,
-      "status": "completed",
-      "answerSource": "model",
-      "grounding": "not_required",
-      "errorCode": null,
-      "iterations": 1,
-      "toolExecutions": 0,
-      "withinLimits": true,
-      "receiptsPersisted": true,
-      "sourcesOwned": true,
-      "falseActionClaim": false,
-      "modelCalls": 1,
-      "foreignReads": 0,
-      "unregisteredAllowed": 0,
-      "unauthorizedAllowed": 0,
-      "disclosure": false,
-      "latencyMs": 42722.802,
-      "estInputTokens": 290,
-      "estOutputTokens": 253,
-      "providerUsage": {
-        "inputTokens": 443,
-        "outputTokens": 216
-      }
     },
     {
       "id": "general-008",
@@ -2887,12 +2890,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 35723.38,
-      "estInputTokens": 292,
-      "estOutputTokens": 217,
+      "latencyMs": 30940.956,
+      "estInputTokens": 353,
+      "estOutputTokens": 215,
       "providerUsage": {
-        "inputTokens": 444,
-        "outputTokens": 174
+        "inputTokens": 494,
+        "outputTokens": 169
       }
     },
     {
@@ -2919,12 +2922,12 @@
       "unregisteredAllowed": 0,
       "unauthorizedAllowed": 0,
       "disclosure": false,
-      "latencyMs": 14583.437,
-      "estInputTokens": 287,
+      "latencyMs": 14719.91,
+      "estInputTokens": 348,
       "estOutputTokens": 0,
       "providerUsage": {
-        "inputTokens": 440,
-        "outputTokens": 72
+        "inputTokens": 490,
+        "outputTokens": 77
       }
     }
   ]

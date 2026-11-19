@@ -93,11 +93,32 @@ Remaining failures (10):
 
 Excluding the 6 CPU timeouts, 80 of the 84 remaining scenarios completed (95.2%). That figure is given for diagnosis only; the acceptance metric is the 88.9% above, over all 90 scenarios.
 
-### Iteration 3: in progress
+### Iteration 3: final run
 
-- **Citation regression fixed at the source.** The instruction now says citation keys exist only in tool results, and that an answer with no tool result must contain no keys. The runtime's fabricated-citation check is unchanged (fail closed). All unit and adversarial tests pass.
-- **missing-014 did not reproduce.** Re-run with the enforced lookup, the model searched for `"chess"`, found no evidence, and the runtime abstained correctly. The cited answer from iteration 2 could not be reproduced under the same greedy decoding. The probable cause is llama.cpp prompt-cache reuse, which makes outputs not bit-identical between runs. It is recorded as **unexplained, not fixed**.
-- **Live 90-scenario re-run: not yet performed.** The local model server reached the session's background-process time limit before the run started. No iteration-3 live metrics exist.
+Changes since iteration 2:
+1. Citation keys are restricted to answers that have tool results.
+2. Timing-sensitive deadline tests (9, 9b and 16d) got wider margins. The P0-003 review reported one of them flaking (`RECEIPT_WRITE_FAILED` where `MODEL_TIMEOUT` was expected). With the wider margins they pass 3/3 on an idle host and 3/3 with all 4 CPUs saturated.
+
+Same model, server, dataset and production limits. Iteration-2 rows are kept in `p0-002-evaluation-live-chat-iter2.json`.
+
+| Metric | Iter 1 | Iter 2 | **Iter 3** |
+|---|---|---|---|
+| **Workflow completion** (target ≥ 95%) | 70.0% | 88.9% | **93.3% (84/90): target missed** |
+| Tool selection | 84.7% | 96.5% | 96.5% |
+| Recall citing the expected source | 65.7% | 97.1% | 97.1% |
+| Abstention on missing evidence | 75% | 90% | 97.5% |
+| Unauthorized / cross-user / unregistered | 0/0/0 | 0/0/0 | 0/0/0 |
+| Limits / receipts / source ownership | 100/100/100% | 100/100/100% | 100/100/100% |
+| False action claims surfaced | 0 | 0 | 0 |
+| Latency p50 / p95 | 10.6 / 41.4 s | 11.8 / 43.0 s | 10.7 / 43.0 s |
+
+Per category, iteration 3: recall 34/35, missing_evidence 19/20, cross_user 15/15, unconfirmed 5/5, prompt_injection 5/5, general 6/10.
+
+Remaining failures (6):
+- **5 × `MODEL_TIMEOUT`.** CPU generation (4 threads, 7B Q4) exceeded the 43 s work deadline. The runtime terminated correctly.
+- **1 × fabricated citation on a general question (general-009).** Down from 3. The answer was correctly rejected.
+
+**Status.** The acceptance target is not met on this hardware. Excluding the 5 hardware timeouts, 84 of 85 completed. That figure is for diagnosis only. Whether the target is reachable needs a faster inference host, or the OpenAI provider, which remains untested (no key).
 
 **Conclusion.** Every security and audit invariant held against a real, non-scripted model, including the poisoned-document scenarios. The completion target was missed, for three main reasons: tool-use discipline on personal questions, citation formatting, and lexical retrieval. False search claims are the highest-severity open issue: no data leaks, but the model claims a search it never performed.
 
