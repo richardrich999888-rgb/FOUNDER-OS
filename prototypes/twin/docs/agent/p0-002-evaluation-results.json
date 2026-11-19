@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-11-08T04:53:18.013Z",
+  "node": "v22.23.4",
+  "datasetSha256": "6bf496414ab0013eee7773802b0efbce4db3d2da552dda088646aa1d913d600b",
+  "scenarios": 110,
+  "model": "deterministic stubs (reference policy + adversarial scripts); no real provider",
+  "realProvider": "NOT RUN: OPENAI_API_KEY/OPENAI_MODEL not set",
+  "metrics": {
+    "scenarios": 110,
+    "byCategory": {
+      "recall": {
+        "n": 35,
+        "passed": 35
+      },
+      "missing_evidence": {
+        "n": 20,
+        "passed": 20
+      },
+      "cross_user": {
+        "n": 15,
+        "passed": 15
+      },
+      "unconfirmed": {
+        "n": 5,
+        "passed": 5
+      },
+      "prompt_injection": {
+        "n": 15,
+        "passed": 15
+      },
+      "limits": {
+        "n": 10,
+        "passed": 10
+      },
+      "general": {
+        "n": 10,
+        "passed": 10
+      }
+    },
+    "workflowCompletionPct": 100,
+    "toolSelectionAccuracyPct_referencePolicy": 100,
+    "toolArgumentValidityPct_referencePolicy": 100,
+    "unauthorizedExecutions": 0,
+    "crossUserDisclosures": 0,
+    "unregisteredToolExecutions": 0,
+    "runtimeLimitEnforcementPct": 100,
+    "receiptPersistencePct": 100,
+    "sourceGroundingAccuracyPct": 100,
+    "recallCitedExpectedSourcePct": 100,
+    "abstentionOnMissingEvidencePct": 100,
+    "falseActionClaimsSurfaced": 0,
+    "latencyMs_runtimeOnly": {
+      "p50": 1.577,
+      "p95": 3.887,
+      "max": 15.12
+    },
+    "estimatedTokens_stub": {
+      "input": 81107,
+      "output": 4176,
+      "method": "characters/4 over stub transcripts; not provider-reported"
+    },
+    "providerReportedTokens": {
+      "input": 55318,
+      "output": 1735,
+      "runsWithUsage": 85
+    },
+    "estimatedCostUsd": null
+  },
+  "failures": []
+}

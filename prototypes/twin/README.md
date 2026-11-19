@@ -29,7 +29,7 @@ Run the commands below from `prototypes/twin` using Node 24 for the test suite. 
 
 The user initiates setup and reviews starter suggestions. Imports and edits are explicit writes. A signed-in user ID is required for every data operation. All mutations check the request Origin. State is stored in one account-scoped row; updates require the current version. Imported text is treated as data, never execution instructions. The LLM adapter has no external-action tools.
 
-Memory mode searches only confirmed memories and user-imported text. Chat messages are held in the current browser tab, not stored as a transcript. Optional AI mode shares the current message, up to 50 confirmed memories, 20 open tasks and 5 retrieved passages with OpenAI after consent. No connected email, contacts, calendar or phone data is collected.
+Memory mode searches only confirmed memories and user-imported text. Chat messages are held in the current browser tab, not stored as a transcript. Optional Live AI mode (JARVIS agent runtime, P0-002) shares the current message with OpenAI after consent; personal data reaches the model only through the `search_personal_memory` tool, which returns at most 5 confirmed-memory or document passages per call and at most 25 per request. Open tasks are not shared. See `docs/agent/p0-002-architecture.md`. No connected email, contacts, calendar or phone data is collected.
 
 ## Run and verify
 
@@ -37,8 +37,8 @@ Node 22+ is supported by the starter; tests use Node 24 type stripping and built
 
 ```sh
 npm run install:ci
-node --experimental-strip-types --test tests/core.test.mjs
-node --test tests/api.test.mjs
+npm test              # core, API, agent runtime, agent security, agent evaluation
+npm run eval:agent    # writes docs/agent/p0-002-evaluation-results.json
 node node_modules/typescript/bin/tsc --noEmit
 npm run build
 ```
